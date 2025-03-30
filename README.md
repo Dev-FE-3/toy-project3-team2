@@ -1,3 +1,6 @@
+# toy-project3-team2
+음악 영상 공유 SNS 플랫폼
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
