@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "gitconfig": "git config --local include.path ./.gitconfig",
+    "gitcase": "git rm -r --cached . && git add .",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
