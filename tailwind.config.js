@@ -31,6 +31,22 @@ export default {
           muted: "#00000066",
         },
       },
+      fontFamily: {
+        sans: ["Noto Sans KR", "sans-serif"],
+      },
+      fontSize: {
+        "title": ["18px", { fontWeight: "700", lineHeight: "normal" }],
+        "body1": ["16px", { lineHeight: "1.3" }],
+        "body1-bold": ["16px", { fontWeight: "700", lineHeight: "normal" }],
+        "body2": ["14px", { lineHeight: "1.3" }],
+        "body2-medium": ["14px", { fontWeight: "500", lineHeight: "1.3" }], // 미디움 추가
+        "body2-bold": ["14px", { fontWeight: "700", lineHeight: "1.3" }],
+        "sub": ["12px", { lineHeight: "1.3" }],
+        "sub-bold": ["12px", { fontWeight: "700", lineHeight: "1.4" }],
+        "sub2": ["12px", { lineHeight: "1.5" }],
+        "tab": ["10px", { lineHeight: "normal" }],
+        "tab-bold": ["10px", { fontWeight: "700", lineHeight: "normal" }],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -3,10 +3,8 @@
 @tailwind utilities;
 
 :root {
+  @apply font-sans; /* Tailwind 설정된 폰트 적용 */
   @apply text-font-primary bg-background-main;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
   /* color-scheme: light dark; */
   font-synthesis: none;
