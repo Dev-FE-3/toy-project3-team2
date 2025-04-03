@@ -4,13 +4,13 @@ interface PlaylistActionsProps {
   playlistId: string;
 }
 
-const PlaylistActions: React.FC<PlaylistActionsProps> = ({ playlistId }) => {
+const PlaylistActions: React.FC<PlaylistActionsProps> = () => {
   // 기본 값으로 더미 데이터 사용 (API 연결 전까지)
   const [isLiked, setIsLiked] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [likes, setLikes] = useState(0);
   const [subscriptions, setSubscriptions] = useState(0);
-  const [comments] = useState(3); // 댓글 수는 단순 표시용
+  const [comments] = useState(0); // 댓글 수는 단순 표시용
 
   const handleLike = () => {
     setIsLiked((prev) => !prev);
