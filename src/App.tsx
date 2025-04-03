@@ -28,7 +28,13 @@ function App() {
   //       const response = await axiosInstance.get<PlaylistItem[]>("/playlist");
 
   //       console.log(response.data);
+  //       console.log(response.data);
 
+  //       setItems(response.data || []);
+  //     } catch (error) {
+  //       console.error("데이터 불러오기 실패:", error);
+  //     }
+  //   };
   //       setItems(response.data || []);
   //     } catch (error) {
   //       console.error("데이터 불러오기 실패:", error);
