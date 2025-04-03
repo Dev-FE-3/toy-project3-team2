@@ -14,7 +14,7 @@ const buttonVariants = cva(
         check:
           "bg-main rounded !text-body2-bold text-background-main hover:bg-button_hover hover:text-font-primary w-[67px] h-[40px]",
         close:
-          "bg-background-toast rounded !text-body2-bold text-background-main hover:bg-font-second hover:text-font-primary w-[64px] h-[38px]",
+          "bg-background-toast rounded !text-body2-bold text-background-main hover:bg-font-muted hover:text-font-primary w-[64px] h-[38px]",
         delete:
           "bg-main rounded !text-body2-bold text-background-main hover:bg-button_hover hover:text-font-primary w-[64px] h-[38px]",
       },
