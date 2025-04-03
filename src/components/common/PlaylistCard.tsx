@@ -45,7 +45,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
             </div>
             {/* 수정, 삭제 메뉴 (본인의 플레이리스트일 때만 표시) */}
             {isOwner && (
-              <div role="button" className="mt-[6 px]">
+              <div role="button" className="mt-[5px]">
                 <img
                   src="src/assets/icons/icon-menu-dots-vertical.svg"
                   alt="메뉴"
