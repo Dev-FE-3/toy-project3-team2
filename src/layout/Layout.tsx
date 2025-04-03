@@ -12,7 +12,7 @@ const Layout = () => {
   return (
     <div className="flex flex-col h-screen">
       {!hideAll && <Header />}
-      <div className="flex-1 pt-[44px]">
+      <div className="flex-1 pt-[56px]">
         <Outlet />
       </div>
 
