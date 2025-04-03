@@ -42,14 +42,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* 하단 메뉴바 없는 페이지 */}
+        {/* 헤더 & 네비게이션 X */}
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/playlist/create" element={<PlaylistCreate />} />
-        <Route path="/user/edit" element={<EditProfile />} />
 
-        {/* 하단 메뉴바 있는 페이지 */}
+        {/* Layout이 적용된 페이지들 */}
         <Route element={<Layout />}>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/user/edit" element={<EditProfile />} />
+          <Route path="/playlist/create" element={<PlaylistCreate />} />
           <Route path="/" element={<Home />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
