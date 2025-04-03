@@ -9,18 +9,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        create:
+        full:
           "bg-main !text-body1-bold text-background-main hover:bg-button_hover hover:text-font-primary w-full h-[40px]",
-        check:
+        small:
           "bg-main rounded !text-body2-bold text-background-main hover:bg-button_hover hover:text-font-primary w-[67px] h-[40px]",
-        close:
-          "bg-background-toast rounded !text-body2-bold text-background-main hover:bg-font-muted hover:text-font-primary w-[64px] h-[38px]",
-        delete:
-          "bg-main rounded !text-body2-bold text-background-main hover:bg-button_hover hover:text-font-primary w-[64px] h-[38px]",
+        secondary:
+          "bg-background-toast rounded !text-body2-bold text-background-main hover:bg-font-muted hover:text-font-primary w-[67px] h-[40px]",
       },
     },
     defaultVariants: {
-      variant: "create",
+      variant: "small",
     },
   }
 )
