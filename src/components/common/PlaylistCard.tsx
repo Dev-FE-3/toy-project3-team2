@@ -1,9 +1,11 @@
+import PlaylistActions from "./PlaylistAction";
+
 interface PlaylistCardProps {
   title: string;
   thumbnailUrl: string;
   userImage?: string;
   showUserImage?: boolean;
-  isPublic: boolean;
+  isPublic?: boolean;
 }
 
 const PlaylistCard: React.FC<PlaylistCardProps> = ({
@@ -14,10 +16,10 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
   isPublic = true,
 }) => {
   return (
-    <div className="w-[100%]">
+    <div>
       {/* 썸네일 */}
-      <div>
-        <img src={thumbnailUrl} alt="Playlist Thumbnail" />
+      <div className="w-full">
+        <img src={thumbnailUrl} alt="Playlist Thumbnail" className="w-full object-cover" />
       </div>
 
       {/* 정보 영역 */}
@@ -41,7 +43,9 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
           </div>
 
           {/* 좋아요, 구독, 댓글 */}
-          <div>{/* PlaylistActions 컴포넌트 들어감 */}</div>
+          <div className="mt-[12px] mb-[6px]">
+            <PlaylistActions playlistId="text-id" />
+          </div>
         </div>
       </div>
     </div>
