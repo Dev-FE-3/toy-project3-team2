@@ -47,7 +47,7 @@ const Header = () => {
       <button onClick={() => navigate(-1)} className="absolute left-4">
         <img src={ArrowLeft} alt="back" />
       </button>
-      <p className="w-full text-center text-title">{title}</p>
+      <h1 className="w-full text-center text-title">{title}</h1>
     </header>
   );
 };
