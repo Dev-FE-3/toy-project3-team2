@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import ArrowLeft from "../assets/icons/arrow-left.svg";
 import Logo from "../assets/icons/logo.svg";
@@ -31,7 +31,10 @@ const Header = () => {
   if (location.pathname === "/" || location.pathname === "/subscriptions") {
     return (
       <header className="absolute top-0 w-full max-w-[430px] flex items-center justify-between p-4">
-        <img src={Logo} alt="logo" className="h-6" />
+        <Link to={"/"}>
+          <img src={Logo} alt="logo" className="h-6" />
+        </Link>
+
         <button>
           <img src={Search} alt="search" className="h-6" />
         </button>
