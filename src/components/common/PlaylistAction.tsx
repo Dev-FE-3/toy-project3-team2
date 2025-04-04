@@ -1,4 +1,7 @@
 import { useState } from "react";
+import BookmarkIcon from "../../assets/icons/bookmark.svg?react";
+import HeartIcon from "../../assets/icons/heart.svg?react";
+import CommentIcon from "../../assets/icons/comment.svg?react";
 
 interface PlaylistActionsProps {
   playlistId: string;
@@ -25,31 +28,19 @@ const PlaylistActions: React.FC<PlaylistActionsProps> = () => {
   return (
     <div className="flex flex-row gap-[16px] text-body2">
       <div onClick={handleSubscribe} role="button" className="flex flex-row gap-[6px] items-center">
-        <img
-          className="w-[14px] h-[14px]"
-          src={
-            isSubscribed
-              ? "src/assets/icons/icon-bookmark-fill.svg"
-              : "src/assets/icons/icon-bookmark-line.svg"
-          }
-          alt="구독"
+        <BookmarkIcon
+          className={`w-[14px] h-[14px] ${isSubscribed ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
         <span>{subscriptions}</span>
       </div>
       <div onClick={handleLike} role="button" className="flex flex-row gap-[6px] items-center">
-        <img
-          className="w-[15px] h-[15px]"
-          src={
-            isLiked
-              ? "/src/assets/icons/icon-heart-fill.svg"
-              : "/src/assets/icons/icon-heart-line.svg"
-          }
-          alt="좋아요"
+        <HeartIcon
+          className={`w-[14px] h-[14px] ${isLiked ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
         <span>{likes}</span>
       </div>
       <div className="flex flex-row gap-[6px] items-center">
-        <img className="w-[14px] h-[14px]" src="src/assets/icons/icon-comment.svg" alt="댓글" />
+        <CommentIcon className="w-[14px] h-[14px]" />
         <span>{comments}</span>
       </div>
     </div>

@@ -33,7 +33,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
             {/* 비공개 아이콘 */}
             {!isPublic && (
               <img
-                src="/src/assets/icons/icon-lock.svg"
+                src="/src/assets/icons/lock.svg"
                 className="w-[16px] h-[16px] inline mr-[4px] mt-[2px]"
               />
             )}
@@ -44,7 +44,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
             {isOwner && (
               <div role="button" className="mt-[2px]">
                 <img
-                  src="src/assets/icons/icon-menu-dots-vertical.svg"
+                  src="src/assets/icons/menu-dots-vertical.svg"
                   alt="메뉴"
                   className="w-[16px] h-[16px]"
                 />
