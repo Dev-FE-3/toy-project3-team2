@@ -5,16 +5,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        container: "#171A1A",
         main: "#27C49A",
         error: "#FF3B3B",
         success: "#25CD22",
+        container: "#171A1A",
         outline: "#3F4949",
+        button_hover: "#1F9479",
         background: {
           main: "#1A1C1C",
+          container: "#202525",
           input: "#363838",
           toast: "#E6E0E9",
-          tabbar: "#202525",
           playlist: "#333333",
         },
         font: {
