@@ -12,7 +12,7 @@ import MyPage from "./pages/MyPage";
 import EditProfile from "./pages/EditProfile";
 
 import Layout from "./layout/Layout";
-import Guide from "./components/common/Guide";
+import Guide from "./pages/Guide";
 
 // interface PlaylistItem {
 //   id: number;
