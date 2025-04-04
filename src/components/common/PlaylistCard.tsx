@@ -8,13 +8,13 @@ interface PlaylistCardProps {
   isOwner: boolean;
 }
 
-const PlaylistCard: React.FC<PlaylistCardProps> = ({
+const PlaylistCard = ({
   title,
   thumbnailUrl,
   userImage,
   isPublic = true,
   isOwner,
-}) => {
+}: PlaylistCardProps) => {
   return (
     <>
       {/* 썸네일 */}
@@ -54,7 +54,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
 
           {/* 좋아요, 구독, 댓글 */}
           <div className="mt-[12px] mb-[6px]">
-            <PlaylistActions playlistId="text-id" />
+            <PlaylistActions />
           </div>
         </div>
       </div>
