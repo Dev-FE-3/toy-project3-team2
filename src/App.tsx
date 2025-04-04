@@ -12,13 +12,13 @@ import MyPage from "./pages/MyPage";
 import EditProfile from "./pages/EditProfile";
 
 import Layout from "./layout/Layout";
+import Guide from "./components/common/Guide";
 
 // interface PlaylistItem {
 //   id: number;
 //   title: string;
 //   info: string;
 // }
-
 
 function App() {
   // const [items, setItems] = useState<PlaylistItem[]>([]);
@@ -55,6 +55,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/playlist/:id" element={<PlaylistDetail />} />
+          <Route path="/guide" element={<Guide />} />
         </Route>
       </Routes>
       {/* <h1>플레이리스트</h1>

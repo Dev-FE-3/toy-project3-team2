@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "./button";
-import { Input } from "./input";
+import { Button } from "./Button";
+import { Input } from "./Input";
 
 const ButtonGuide = () => {
   return (
@@ -33,6 +33,7 @@ const InputGuide = () => {
       {/* delete 버튼 옵션 추가 */}
       <Input type="email" showDelete placeholder="이메일을 입력하세요" />
       <Input
+        type="text"
         placeholder="텍스트를 입력하세요"
         value={inputValue}
         defaultValue="defaultValue"
@@ -41,6 +42,8 @@ const InputGuide = () => {
       />
       {/* inputValue 확인 */}
       <p>{inputValue}</p>
+      {/* textarea 소개글 */}
+      <Input type="textarea" placeholder="소개글을 입력하세요" />
     </div>
   );
 };
