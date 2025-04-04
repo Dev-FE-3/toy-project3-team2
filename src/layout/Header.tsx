@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import ArrowLeft from "../assets/icons/arrow-left.svg";
-import Logo from "../assets/icons/logo.svg";
+import Logo from "../assets/imgs/logo.svg";
 import Search from "../assets/icons/search.svg";
 
 const Header = () => {
