@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import axiosInstance from './services/axios/axiosInstance';
-
+import { useState, useEffect } from "react";
+import axiosInstance from "./services/axios/axiosInstance";
+import Guide from "./components/common/guide";
 interface PlaylistItem {
   id: number;
   title: string;
@@ -25,9 +25,10 @@ function App() {
 
   //   fetchData();
   // }, []);
-  
+
   return (
     <>
+      <Guide></Guide>
       <h1>플레이리스트</h1>
       <ul>
         {items.map((item) => (
@@ -38,7 +39,7 @@ function App() {
         ))}
       </ul>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
