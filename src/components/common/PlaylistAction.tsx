@@ -27,18 +27,22 @@ const PlaylistActions = () => {
 
   return (
     <div className="flex flex-row gap-[16px] text-body2">
-      <div onClick={handleSubscribe} role="button" className="flex flex-row gap-[6px] items-center">
+      <button
+        onClick={handleSubscribe}
+        role="button"
+        className="flex flex-row gap-[6px] items-center"
+      >
         <BookmarkIcon
           className={`w-[14px] h-[14px] ${isSubscribed ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
         <span>{subscriptions}</span>
-      </div>
-      <div onClick={handleLike} role="button" className="flex flex-row gap-[6px] items-center">
+      </button>
+      <button onClick={handleLike} role="button" className="flex flex-row gap-[6px] items-center">
         <HeartIcon
           className={`w-[14px] h-[14px] ${isLiked ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
         <span>{likes}</span>
-      </div>
+      </button>
       <div className="flex flex-row gap-[6px] items-center">
         <CommentIcon className="w-[14px] h-[14px]" />
         <span>{comments}</span>
