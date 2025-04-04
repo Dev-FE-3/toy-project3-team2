@@ -43,7 +43,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     const baseClassName = cn(
-      "flex w-full rounded bg-background-input px-3 py-1 text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+      "flex w-full rounded bg-background-input px-3 py-1 !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
       "border border-transparent focus:border-font-placeholder",
       (type === "password" || (showDelete && hasValue)) && "pr-10",
       className,
