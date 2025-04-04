@@ -12,7 +12,7 @@ const menuItems = [
   { path: "/", icon: [Home, FillHome], label: "홈" },
   { path: "/subscriptions", icon: [BookMark, FillBookMark], label: "구독" },
   { path: "/playlist/create", icon: [Add, ""], label: "생성" },
-  { path: "/mypage", icon: [User, FillUser], label: "마이페이지" },
+  { path: "/mypage", icon: [User, FillUser], label: "MY" },
 ];
 
 const NavBar = () => {
