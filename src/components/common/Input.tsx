@@ -58,7 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="relative">
         {type === "textarea" ? (
           <textarea
-            className={cn("resize-none", baseClassName, className)}
+            className={cn("h-[99px] resize-none", baseClassName, className)}
             rows={4}
             {...(sharedProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
           />
