@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "../../utils/shadcn";
 import IconEye from "../../assets/icons/eye.svg";
 import IconEyeCrossed from "../../assets/icons/eye-crossed.svg";
-import IconEyeCrossedPlaceholder from "../../assets/icons/icon-eye-crossed-placeholder.svg";
+import IconEyeCrossedPlaceholder from "../../assets/icons/eye-crossed-muted.svg";
 import IconDelete from "../../assets/icons/delete.svg";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
