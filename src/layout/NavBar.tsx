@@ -27,7 +27,7 @@ const NavBar = () => {
           <Link
             key={path}
             to={path}
-            className={`flex flex-col items-center justify-center gap-1 ${
+            className={`flex flex-col items-center justify-center gap-1 w-full h-full ${
               isActive ? "text-main text-tab-bold" : "text-primary"
             }`}
           >
@@ -35,7 +35,7 @@ const NavBar = () => {
               {isActive ? <img src={icon[1]} alt={label} /> : <img src={icon[0]} alt={label} />}
             </div>
 
-            <p className="text-center text-tab">{label}</p>
+            <span className="text-tab">{label}</span>
           </Link>
         );
       })}
