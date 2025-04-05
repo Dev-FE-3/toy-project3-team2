@@ -30,7 +30,7 @@ const InputGuide = () => {
     <div>
       <Input type="text" placeholder="이름을 입력하세요" />
       <Input type="password" placeholder="비밀번호를 입력하세요" />
-      {/* delete 버튼 옵션 추가 */}
+      {/* delete 버튼 옵션 */}
       <Input type="email" showDelete placeholder="이메일을 입력하세요" />
       <Input
         type="text"
@@ -44,6 +44,8 @@ const InputGuide = () => {
       <p>{inputValue}</p>
       {/* textarea 소개글 */}
       <Input type="textarea" placeholder="소개글을 입력하세요" />
+      {/* round */}
+      <Input type="round" placeholder="검색어를 입력하세요" />
     </div>
   );
 };
