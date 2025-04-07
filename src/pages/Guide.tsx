@@ -2,25 +2,42 @@ import { useState } from "react";
 import { Button } from "../components/common/Button";
 import { Input } from "../components/common/Input";
 import OverflowMenu from "../components/common/OverflowMenu";
+import PlaylistCard from "../components/common/PlaylistCard";
 
 const ButtonGuide = () => {
   return (
-    <div>
-      <Button variant="full">저장</Button>
-      <br />
-      <Button disabled variant="full">
-        저장
-      </Button>
-      <br />
-      <Button variant="small">중복확인</Button>
-      <br />
-      <Button disabled variant="small">
-        중복확인
-      </Button>
-      <br />
-      <Button variant="secondary">닫기</Button>
-      <br />
-    </div>
+    <>
+      <h3 className="ml-[10px] text-xl font-bold">Button</h3>
+      <div className="p-4 border border-gray-600 rounded-xl my-4">
+        <div className="mb-6">
+          <h4 className="font-semibold">기본 버튼</h4>
+          <p className="mb-2 text-sm font-medium">기본</p>
+          <Button variant="full">저장</Button>
+          <br />
+          <p className="mb-2 text-sm font-medium">비활성화</p>
+          <Button disabled variant="full">
+            저장
+          </Button>
+        </div>
+        <h4 className="font-semibold">작은 버튼</h4>
+        <div className="flex flex-row gap-[20px]">
+          <div>
+            <p className="mb-2 text-sm font-medium">기본</p>
+            <Button variant="small">중복확인</Button>
+          </div>
+          <div>
+            <p className="mb-2 text-sm font-medium">비활성화</p>
+            <Button disabled variant="small">
+              중복확인
+            </Button>
+          </div>
+          <div>
+            <p className="mb-2 text-sm font-medium">닫기</p>
+            <Button variant="secondary">닫기</Button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -28,26 +45,47 @@ const InputGuide = () => {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <div>
-      <Input type="text" placeholder="이름을 입력하세요" />
-      <Input type="password" placeholder="비밀번호를 입력하세요" />
-      {/* delete 버튼 옵션 */}
-      <Input type="email" showDelete placeholder="이메일을 입력하세요" />
-      <Input
-        type="text"
-        placeholder="텍스트를 입력하세요"
-        value={inputValue}
-        defaultValue="defaultValue"
-        onChange={(e) => setInputValue(e.target.value)}
-        showDelete
-      />
-      {/* inputValue 확인 */}
-      <p>{inputValue}</p>
-      {/* textarea 소개글 */}
-      <Input type="textarea" placeholder="소개글을 입력하세요" />
-      {/* round */}
-      <Input type="round" placeholder="검색어를 입력하세요" />
-    </div>
+    <>
+      <h3 className="ml-[10px] text-xl font-bold">Input</h3>
+      <div className="p-4 border border-gray-600 rounded-xl my-4">
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-medium">기본</p>
+          <Input type="text" placeholder="이름을 입력하세요" />
+        </div>
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-medium">비밀번호</p>
+          <Input type="password" placeholder="비밀번호를 입력하세요" />
+        </div>
+        <div className="mb-6">
+          {/* delete 버튼 옵션 */}
+          <p className="mb-2 text-sm font-medium">delete 옵션 추가</p>
+          <Input type="email" showDelete placeholder="이메일을 입력하세요" />
+        </div>
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-medium">실시간 입력 미리보기</p>
+          <Input
+            type="text"
+            placeholder="텍스트를 입력하세요"
+            value={inputValue}
+            defaultValue="defaultValue"
+            onChange={(e) => setInputValue(e.target.value)}
+            showDelete
+          />
+          {/* inputValue 확인 */}
+          <p>{inputValue}</p>
+        </div>
+        <div className="mb-6">
+          {/* textarea 소개글 */}
+          <p className="mb-2 text-sm font-medium">textarea</p>
+          <Input type="textarea" placeholder="소개글을 입력하세요" />
+        </div>
+        <div className="mb-6">
+          {/* round */}
+          <p className="mb-2 text-sm font-medium">둥근 input</p>
+          <Input type="round" placeholder="검색어를 입력하세요" />
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -59,16 +97,49 @@ const OverflowMenuGuide = () => {
 
   return (
     <>
-      {/* basic */}
-      <OverflowMenu options={menuOptions} />
-
-      {/* iconSize */}
-      <OverflowMenu options={menuOptions} iconSize={24} />
+      <h3 className="ml-[10px] text-xl font-bold">OverflowMenu</h3>
+      <div className="p-4 border border-gray-600 rounded-xl my-4 flex flex-row gap-[10px]">
+          {/* basic */}
+          <p className="text-sm font-medium">기본 메뉴</p>
+          <OverflowMenu options={menuOptions} />
+          {/* iconSize */}
+          <p className="ml-[10px] text-sm font-medium">24px 사이즈</p>
+          <OverflowMenu options={menuOptions} iconSize={24} />
+      </div>
     </>
   )
 }
 
+const PlaylistCardGuide = () => {
+  return (
+    <>
+      <h3 className="ml-[10px] text-xl font-bold">PlaylistCard</h3>
+      <div className="p-4 border border-gray-600 rounded-xl my-4">
+        <p className="mb-2 text-sm font-medium">홈 & 구독</p>
+        <PlaylistCard
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
+          userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
+          isOwner={false}
+        />
+        <p className="mb-2 text-sm font-medium">마이페이지 - 공개</p>
+        <PlaylistCard
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
+          isOwner={true}
+        />
+        <p className="mb-2 text-sm font-medium">마이페이지 - 비공개</p>
+        <PlaylistCard
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
+          isPublic={false}
+          isOwner={true}
+        />
 
+      </div>
+    </>
+  )
+}
 
 const Guide = () => {
   return (
@@ -76,6 +147,7 @@ const Guide = () => {
       <ButtonGuide />
       <InputGuide />
       <OverflowMenuGuide />
+      <PlaylistCardGuide />
     </>
   );
 };

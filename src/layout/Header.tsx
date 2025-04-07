@@ -19,6 +19,7 @@ const Header = () => {
     "/mypage": "마이페이지",
     "/user/edit": "정보 수정",
     "/playlist/create": "플레이리스트 생성",
+    "/guide" : "컴포넌트 가이드"
   };
 
   let title = titleMap[location.pathname] || "페이지";
