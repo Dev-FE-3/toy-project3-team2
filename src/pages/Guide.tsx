@@ -8,7 +8,7 @@ const ButtonGuide = () => {
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">Button</h3>
-      <div className="p-4 border border-gray-600 rounded-xl my-4">
+      <div className="my-4 rounded-xl border border-gray-600 p-4">
         <div className="mb-6">
           <h4 className="font-semibold">기본 버튼</h4>
           <h5 className="mb-2 text-sm font-medium">기본</h5>
@@ -42,12 +42,12 @@ const ButtonGuide = () => {
 };
 
 const InputGuide = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("defaultValue");
 
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">Input</h3>
-      <div className="p-4 border border-gray-600 rounded-xl my-4">
+      <div className="my-4 rounded-xl border border-gray-600 p-4">
         <div className="mb-6">
           <h5 className="mb-2 text-sm font-medium">기본</h5>
           <Input type="text" placeholder="이름을 입력하세요" />
@@ -66,8 +66,7 @@ const InputGuide = () => {
           <Input
             type="text"
             placeholder="텍스트를 입력하세요"
-            value={inputValue}
-            defaultValue="defaultValue"
+            defaultValue={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             showDelete
           />
@@ -92,29 +91,29 @@ const InputGuide = () => {
 const OverflowMenuGuide = () => {
   const menuOptions = [
     { label: "수정", action: () => alert("수정 클릭") },
-    { label: "삭제", action: () => alert("삭제 클릭") }
+    { label: "삭제", action: () => alert("삭제 클릭") },
   ];
 
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">OverflowMenu</h3>
-      <div className="p-4 border border-gray-600 rounded-xl my-4 flex flex-row gap-[10px]">
-          {/* basic */}
-          <h5 className="text-sm font-medium">기본 메뉴</h5>
-          <OverflowMenu options={menuOptions} />
-          {/* iconSize */}
-          <h5 className="ml-[10px] text-sm font-medium">24px 사이즈</h5>
-          <OverflowMenu options={menuOptions} iconSize={24} />
+      <div className="my-4 flex flex-row gap-[10px] rounded-xl border border-gray-600 p-4">
+        {/* basic */}
+        <h5 className="text-sm font-medium">기본 메뉴</h5>
+        <OverflowMenu options={menuOptions} />
+        {/* iconSize */}
+        <h5 className="ml-[10px] text-sm font-medium">24px 사이즈</h5>
+        <OverflowMenu options={menuOptions} iconSize={24} />
       </div>
     </>
-  )
-}
+  );
+};
 
 const PlaylistCardGuide = () => {
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">PlaylistCard</h3>
-      <div className="p-4 border border-gray-600 rounded-xl my-4">
+      <div className="my-4 rounded-xl border border-gray-600 p-4">
         <h5 className="mb-2 text-sm font-medium">홈 & 구독</h5>
         <PlaylistCard
           title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
@@ -135,11 +134,10 @@ const PlaylistCardGuide = () => {
           isPublic={false}
           isOwner={true}
         />
-
       </div>
     </>
-  )
-}
+  );
+};
 
 const Guide = () => {
   return (
