@@ -10,10 +10,10 @@ const Login = () => {
       </div>
 
       {/* 이메일 / 비밀번호 */}
-      <p className="mb-2">이메일</p>
+      <p className="mb-2 text-sub2">이메일</p>
       <Input type="email" placeholder="이메일을 입력하세요" className="mb-5" />
-      <p className="mb-2">비밀번호</p>
-      <Input type="password" placeholder="비밀번호를 입력하세요" className="mb-5" />
+      <p className="mb-2 text-sub2">비밀번호</p>
+      <Input type="password" placeholder="비밀번호를 입력하세요" className="mb-6" />
 
       {/* 로그인 버튼 */}
       <Button variant="full" className="mb-10">
@@ -21,9 +21,10 @@ const Login = () => {
       </Button>
 
       {/* 회원가입하러 가기 */}
-      <p className="text-center">
-        아직 회원이 아니신가요? <a>회원가입</a>
-      </p>
+      <div className="text-center">
+        <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
+        <a className="cursor-pointer text-sub-bold text-font-primary hover:underline">회원가입</a>
+      </div>
     </div>
   );
 };
