@@ -24,19 +24,19 @@ const ButtonGuide = () => {
 };
 
 const InputGuide = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("defaultValue");
 
   return (
     <div>
       <Input type="text" placeholder="이름을 입력하세요" />
+      <Input className="flex-grow" type="text" placeholder="이름을 입력하세요" />
       <Input type="password" placeholder="비밀번호를 입력하세요" />
       {/* delete 버튼 옵션 */}
       <Input type="email" showDelete placeholder="이메일을 입력하세요" />
       <Input
         type="text"
         placeholder="텍스트를 입력하세요"
-        value={inputValue}
-        defaultValue="defaultValue"
+        defaultValue={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         showDelete
       />
