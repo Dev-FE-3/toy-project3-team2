@@ -12,21 +12,21 @@ interface OverflowMenuProps {
 }
 
 const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="inline-block relative">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-controls="overflow-menu"
       >
         <IconMenu width={iconSize} height={iconSize} />
       </button>
 
-      {open && (
+      {isOpen && (
         <ul
           id="overflow-menu"
           role="menu"
@@ -43,7 +43,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
                 className="w-full p-[10px] text-font-primary"
                 onClick={() => {
                   option.action();
-                  setOpen(false);
+                  setIsOpen(false);
                 }}
               >
                 {option.label}
