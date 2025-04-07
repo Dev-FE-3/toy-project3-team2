@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../components/common/Button";
 import { Input } from "../components/common/Input";
+import OverflowMenu from "../components/common/OverflowMenu";
 
 const ButtonGuide = () => {
   return (
@@ -50,11 +51,31 @@ const InputGuide = () => {
   );
 };
 
+const OverflowMenuGuide = () => {
+  const menuOptions = [
+    { label: "수정", action: () => alert("수정 클릭") },
+    { label: "삭제", action: () => alert("삭제 클릭") }
+  ];
+
+  return (
+    <>
+      {/* basic */}
+      <OverflowMenu options={menuOptions} />
+
+      {/* iconSize */}
+      <OverflowMenu options={menuOptions} iconSize={24} />
+    </>
+  )
+}
+
+
+
 const Guide = () => {
   return (
     <>
       <ButtonGuide />
       <InputGuide />
+      <OverflowMenuGuide />
     </>
   );
 };
