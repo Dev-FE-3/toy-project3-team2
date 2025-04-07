@@ -97,7 +97,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onClick={hasValue ? () => setShowPassword((prev) => !prev) : undefined}
             className={cn(
               "absolute right-3 top-1/2 -translate-y-1/2",
-              hasValue && "cursor-pointer",
+              !hasValue && "cursor-default",
               showDelete && hasValue && "right-9",
             )}
           >
