@@ -10,20 +10,15 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, value, onChange, defaultValue = "", showDelete, ...props }, ref) => {
+  ({ className, type, onChange, defaultValue, showDelete, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState(defaultValue);
+    const [inputValue, setInputValue] = React.useState(defaultValue || "");
 
     React.useEffect(() => {
-      if (defaultValue) {
+      if (defaultValue !== undefined) {
         setInputValue(defaultValue);
-        if (onChange) {
-          onChange({
-            target: { value: defaultValue },
-          } as React.ChangeEvent<HTMLInputElement>);
-        }
       }
-    }, []);
+    }, [defaultValue]);
 
     const hasValue = !!inputValue;
 
@@ -33,7 +28,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     const handleDelete = () => {
-      // X버튼(delete)
       setInputValue("");
       if (onChange) {
         onChange({
@@ -43,15 +37,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     const baseClassName = cn(
-      "flex w-full rounded bg-background-input px-3 py-1 !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+      "flex w-full rounded bg-background-input px-3 py-[15px] !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
       "border-[1px] border-transparent focus:border-font-placeholder",
       (type === "password" || (showDelete && hasValue)) && "pr-10",
-      className,
     );
     const sharedProps = {
-      value: inputValue,
       onChange: handleChange,
       ref,
+      defaultValue,
       ...props,
     };
 
@@ -60,7 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       case "textarea":
         inputElement = (
           <textarea
-            className={cn(baseClassName, "h-[99px] resize-none")}
+            className={cn(baseClassName, "h-[99px] resize-none py-[12px]")}
             {...(sharedProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
           />
         );
@@ -88,7 +81,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     return (
-      <div className="relative">
+      <div className={cn("relative", className)}>
         {inputElement}
         {showDelete &&
           hasValue && ( // delete옵션 있으면, 값 있을 때 X아이콘
@@ -104,7 +97,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onClick={hasValue ? () => setShowPassword((prev) => !prev) : undefined}
             className={cn(
               "absolute right-3 top-1/2 -translate-y-1/2",
-              hasValue && "cursor-pointer",
+              !hasValue && "cursor-default",
               showDelete && hasValue && "right-9",
             )}
           >
