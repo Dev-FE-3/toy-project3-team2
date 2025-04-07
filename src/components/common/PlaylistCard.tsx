@@ -1,4 +1,5 @@
 import PlaylistActions from "./PlaylistAction";
+import OverflowMenu from "./OverflowMenu";
 
 interface PlaylistCardProps {
   title: string;
@@ -15,6 +16,11 @@ const PlaylistCard = ({
   isPublic = true,
   isOwner,
 }: PlaylistCardProps) => {
+  const menuOptions = [
+    { label: "수정", action: () => alert("수정") },
+    { label: "삭제", action: () => alert("삭제") }
+  ];
+
   return (
     <>
       {/* 썸네일 */}
@@ -42,13 +48,7 @@ const PlaylistCard = ({
 
             {/* 수정, 삭제 메뉴 (본인의 플레이리스트일 때만 표시) */}
             {isOwner && (
-              <div role="button" className="mt-[2px]">
-                <img
-                  src="src/assets/icons/menu-dots-vertical.svg"
-                  alt="메뉴"
-                  className="w-[16px] h-[16px]"
-                />
-              </div>
+              <OverflowMenu options={menuOptions} />
             )}
           </div>
 
