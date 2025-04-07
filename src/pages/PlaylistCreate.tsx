@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
-import Toggle from "../components/toggle";
+import Toggle from "../components/Toggle";
 
 const PlaylistCreate = () => {
   const [isPublic, setIsPublic] = useState(false);
