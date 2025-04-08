@@ -19,7 +19,7 @@ const Header = () => {
     "/mypage": "마이페이지",
     "/user/edit": "정보 수정",
     "/playlist/create": "플레이리스트 생성",
-    "/guide" : "컴포넌트 가이드"
+    "/guide": "컴포넌트 가이드",
   };
 
   let title = titleMap[location.pathname] || "페이지";
@@ -31,7 +31,7 @@ const Header = () => {
   // 홈일 경우 로고 + 검색 아이콘
   if (location.pathname === "/" || location.pathname === "/subscriptions") {
     return (
-      <header className="absolute top-0 w-full max-w-[430px] flex items-center justify-between p-4">
+      <header className="absolute top-0 flex w-full max-w-[430px] items-center justify-between p-4">
         <Link to={"/"}>
           <img src={Logo} alt="logo" className="h-6" />
         </Link>
@@ -44,7 +44,7 @@ const Header = () => {
   }
 
   return (
-    <header className="absolute top-0 w-full max-w-[430px] flex items-center justify-center px-4 py-[10px]">
+    <header className="fixed top-0 z-10 flex w-full max-w-[430px] items-center justify-center bg-background-main px-4 py-[10px]">
       <button onClick={() => navigate(-1)} className="absolute left-4">
         <img src={ArrowLeft} alt="back" />
       </button>
