@@ -20,27 +20,38 @@ interface PlaylistWithVideos extends Playlist {
 }
 
 const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
+  // youtube URL을 embed용 URL로 변환
   const getEmbedUrl = (url: string): string => {
     try {
       const urlObj = new URL(url);
       const hostname = urlObj.hostname;
+      let videoId = "";
 
       if (hostname === "youtu.be") {
-        // 짧은 형식: https://youtu.be/VIDEO_ID
-        return `https://www.youtube.com/embed/${urlObj.pathname.slice(1)}`;
-      }
-
-      if (hostname === "www.youtube.com" || hostname === "youtube.com") {
-        const videoId = urlObj.searchParams.get("v");
-        if (videoId) {
-          return `https://www.youtube.com/embed/${videoId}`;
+        videoId = urlObj.pathname.slice(1);
+      } else if (hostname === "www.youtube.com" || hostname === "youtube.com") {
+        const queryVideoId = urlObj.searchParams.get("v");
+        if (queryVideoId) {
+          videoId = queryVideoId;
         }
       }
 
-      return url; // 이미 embed 형식이거나 다른 예외적인 형식
+      if (!videoId) {
+        return url; // 예외 처리
+      }
+
+      const params = new URLSearchParams({
+        autoplay: "1", // 자동재생
+        mute: "1", // 음소거(자동재생 하려면 필수)
+        controls: "1", // 컨트롤러 숨기려면 0
+        modestbranding: "1", // 유튜브 로고 최소화
+        rel: "0", // 관련 영상 안 보이도록
+      });
+
+      return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
     } catch (error) {
       console.warn("잘못된 URL 형식입니다:", url);
-      return ""; // fallback
+      return "";
     }
   };
 
@@ -106,7 +117,7 @@ const Videos = ({
             return (
               <li
                 key={index}
-                className={`flex w-[150px] shrink-0 cursor-pointer flex-col gap-2 ${index === 0 ? "ml-4" : ""} ${isActive ? "opacity-50" : ""}`}
+                className={`flex w-[150px] shrink-0 cursor-pointer flex-col gap-2 ${index === 0 ? "ml-4" : ""} ${isActive ? "opacity-100" : "opacity-60"}`}
                 onClick={() => onSelect(video)}
               >
                 <div className="h-21 flex w-full items-center justify-center overflow-hidden rounded-[4px] bg-black">
