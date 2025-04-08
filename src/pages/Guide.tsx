@@ -8,7 +8,7 @@ const ButtonGuide = () => {
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">Button</h3>
-      <div className="my-4 rounded-xl border border-gray-600 p-4">
+      <div className="p-4 my-4 border border-gray-600 rounded-xl">
         <div className="mb-6">
           <h4 className="font-semibold">기본 버튼</h4>
           <h5 className="mb-2 text-sm font-medium">기본</h5>
@@ -47,7 +47,7 @@ const InputGuide = () => {
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">Input</h3>
-      <div className="my-4 rounded-xl border border-gray-600 p-4">
+      <div className="p-4 my-4 border border-gray-600 rounded-xl">
         <div className="mb-6">
           <h5 className="mb-2 text-sm font-medium">기본</h5>
           <Input type="text" placeholder="이름을 입력하세요" />
@@ -113,7 +113,7 @@ const PlaylistCardGuide = () => {
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">PlaylistCard</h3>
-      <div className="my-4 rounded-xl border border-gray-600 p-4">
+      <div className="p-4 my-4 border border-gray-600 rounded-xl">
         <h5 className="mb-2 text-sm font-medium">홈 & 구독</h5>
         <PlaylistCard
           id="dummyId-001"
