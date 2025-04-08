@@ -7,9 +7,9 @@ const MyPage = () => {
       {/* user 정보 */}
       <div className="flex flex-wrap items-center gap-[14px] p-[16px]">
         <img
+          className="h-[60px] w-[60px] rounded-full object-cover"
           src="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           alt="User Profile"
-          className="h-[60px] w-[60px] rounded-full object-cover"
         />
         <div className="flex w-[calc(100%-74px)] flex-col gap-[4px]">
           <span>칠걸스</span>

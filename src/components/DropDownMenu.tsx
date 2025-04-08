@@ -28,7 +28,9 @@ const DropDownMenu = () => {
         aria-controls="dropdown-menu"
       >
         {selected}
-        <IconArrowBottom className="ml-[4px]" />
+        <IconArrowBottom
+          className={`ml-[4px] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       <ul
