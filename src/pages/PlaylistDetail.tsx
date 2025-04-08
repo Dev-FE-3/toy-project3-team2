@@ -1,5 +1,10 @@
 import PlaylistActions from "../components/common/PlaylistAction";
 
+interface VideoThumbnail {
+  thumbnail: string;
+  title: string;
+}
+
 const Player = () => {
   return (
     <>
@@ -43,10 +48,42 @@ const Player = () => {
   );
 };
 
+const Playlist = () => {
+  const dummyVideoThumbnail: VideoThumbnail[] = [
+    {
+      thumbnail: "https://i.pinimg.com/736x/bd/be/56/bdbe56b288ca641737df89b143f189a1.jpg",
+      title: "[Playlist] 이웃집 토토로 OST 피아노 연주 1시간 재생",
+    },
+    {
+      thumbnail: "https://i.pinimg.com/736x/9f/d6/a5/9fd6a500d50ca13a85cb66440925e725.jpg",
+      title: "귀를 기울이며 OST",
+    },
+    {
+      thumbnail: "https://i.pinimg.com/736x/cb/a3/8c/cba38c134fde13266f08fa7706e4640a.jpg",
+      title: "[지브리] 마녀배달부 키키 OST",
+    },
+  ];
+
+  return (
+    <div className="border-y border-solid border-[#333] py-4 pl-4">
+      <h3 className="text-body1-bold">재생목록</h3>
+      <ul className="mt-4 flex flex-row gap-3">
+        {dummyVideoThumbnail.map((video, index) => (
+          <li key={index} className="flex flex-col gap-2">
+            <img src={video.thumbnail} alt={video.title} className="rounded-[4px]" />
+            <h4 className="line-clamp-2 text-sub">{video.title}</h4>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
 const PlaylistDetail = () => {
   return (
     <>
       <Player />
+      <Playlist />
     </>
   );
 };
