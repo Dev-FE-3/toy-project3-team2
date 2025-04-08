@@ -14,9 +14,9 @@ const Layout = () => {
   // 네브바는 fixed이므로, 아래 콘텐츠가 가려지지 않도록 pb-[58px] 추가
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       {!hideAll && <Header />}
-      <div className="flex-1 pt-[56px] pb-[58px]">
+      <div className="pt-[56px]">
         <Outlet />
       </div>
 
