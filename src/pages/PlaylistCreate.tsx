@@ -12,7 +12,7 @@ const PlaylistCreate = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const [videoList, setVideoList] = useState([]);
+  const [videoList, setVideoList] = useState<string[]>([]);
 
   const handleAddVideo = () => {
     setVideoList([...videoList, videoUrl]);
@@ -29,7 +29,7 @@ const PlaylistCreate = () => {
   return (
     <main className="relative h-full px-4 pb-24">
       <section className="flex gap-[6px]">
-        <div className="flex justify-end w-full py-4 text-sub">공개하기</div>
+        <div className="flex w-full justify-end py-4 text-sub">공개하기</div>
         <button onClick={() => setIsPublic((prev) => !prev)}>
           <Toggle isPublic={isPublic} />
         </button>
@@ -37,8 +37,11 @@ const PlaylistCreate = () => {
 
       <form className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <label className="text-body2-medium">제목*</label>
+          <label htmlFor="playlist-title" className="text-body2-medium">
+            제목*
+          </label>
           <Input
+            id="playlist-title"
             type="text"
             placeholder="제목을 입력하세요"
             value={title}
@@ -46,8 +49,11 @@ const PlaylistCreate = () => {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-body2-medium">소개*</label>
+          <label htmlFor="playlist-description" className="text-body2-medium">
+            소개*
+          </label>
           <Input
+            id="playlist-description"
             type="textarea"
             placeholder="소개글을 입력해주세요"
             value={description}
@@ -55,9 +61,12 @@ const PlaylistCreate = () => {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-body2-medium">영상 링크 추가*</label>
+          <label htmlFor="video-url" className="text-body2-medium">
+            영상 링크 추가*
+          </label>
           <div className="flex gap-2">
             <Input
+              id="video-url"
               type="url"
               placeholder="영상 링크를 입력해주세요"
               className="flex-grow"
@@ -78,7 +87,7 @@ const PlaylistCreate = () => {
             ))}
           </ul>
         </section>
-        <footer className="absolute left-0 w-full px-4 bottom-4">
+        <footer className="absolute bottom-4 left-0 w-full px-4">
           <Button variant="full" onClick={handleCreate} disabled={!isFormValid}>
             저장
           </Button>
