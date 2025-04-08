@@ -116,20 +116,23 @@ const PlaylistCardGuide = () => {
       <div className="p-4 my-4 border border-gray-600 rounded-xl">
         <h5 className="mb-2 text-sm font-medium">홈 & 구독</h5>
         <PlaylistCard
-          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          id="dummyId-001"
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
           isOwner={false}
         />
         <h5 className="mb-2 text-sm font-medium">마이페이지 - 공개</h5>
         <PlaylistCard
-          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          id="dummyId-002"
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           isOwner={true}
         />
         <h5 className="mb-2 text-sm font-medium">마이페이지 - 비공개</h5>
         <PlaylistCard
-          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          id="dummyId-002"
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           isPublic={false}
           isOwner={true}
