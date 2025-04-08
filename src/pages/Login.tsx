@@ -1,12 +1,30 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/imgs/logo.svg";
 import { Button } from "../components/common/Button";
 import { Input } from "../components/common/Input";
+import { supabase } from "../services/supabase/supabaseClient";
 
 const Login = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 로그인 로직 구현
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      console.error("로그인 에러:", error.message);
+      return;
+    }
+
+    console.log("로그인 성공:", data);
+    navigate("/");
   };
 
   return (
@@ -27,6 +45,8 @@ const Login = () => {
               placeholder="이메일을 입력해주세요"
               className="mb-5"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
@@ -39,6 +59,8 @@ const Login = () => {
               placeholder="비밀번호를 입력해주세요"
               className="mb-6"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
