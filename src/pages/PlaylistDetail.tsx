@@ -1,11 +1,51 @@
+import { useState } from "react";
 import PlaylistActions from "../components/common/PlaylistAction";
 
-interface VideoThumbnail {
-  thumbnail: string;
+interface Video {
+  id: number;
   title: string;
+  url: string;
+  thumbnail: string;
 }
 
-const Player = () => {
+interface Playlist {
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+}
+
+interface PlaylistWithVideos extends Playlist {
+  videos: Video[];
+}
+
+const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
+  const getEmbedUrl = (url: string): string => {
+    try {
+      const urlObj = new URL(url);
+      const hostname = urlObj.hostname;
+
+      if (hostname === "youtu.be") {
+        // 짧은 형식: https://youtu.be/VIDEO_ID
+        return `https://www.youtube.com/embed/${urlObj.pathname.slice(1)}`;
+      }
+
+      if (hostname === "www.youtube.com" || hostname === "youtube.com") {
+        const videoId = urlObj.searchParams.get("v");
+        if (videoId) {
+          return `https://www.youtube.com/embed/${videoId}`;
+        }
+      }
+
+      return url; // 이미 embed 형식이거나 다른 예외적인 형식
+    } catch (error) {
+      console.warn("잘못된 URL 형식입니다:", url);
+      return ""; // fallback
+    }
+  };
+
+  const embedUrl = getEmbedUrl(video.url);
+
   return (
     <>
       {/* 영상 영역 */}
@@ -13,9 +53,8 @@ const Player = () => {
         {/* 16:9 비율 */}
         <iframe
           className="absolute left-0 top-0 h-full w-full"
-          // 샘플 영상
-          src="https://www.youtube.com/embed/sJrJO9ymOBw?si=dPsKJgsaqt6xquin"
-          title="YouTube video player"
+          src={embedUrl}
+          title={video.title}
           allowFullScreen
         />
       </div>
@@ -23,24 +62,24 @@ const Player = () => {
       {/* 콘텐츠 영역 */}
       <div className="px-4 pb-6 pt-3">
         {/* 유저 정보 */}
-        <div className="flex flex-row gap-2.5">
-          <img
-            src="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-            alt="ijisun 프로필 이미지"
-            className="h-6 w-6 rounded-full"
-          />
-          <p>ijisun</p>
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row gap-2.5">
+            <img
+              src="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
+              alt="ijisun 프로필 이미지"
+              className="h-6 w-6 rounded-full"
+            />
+            <p>ijisun</p>
+          </div>
+          <div className="text-sub">
+            <p>등록일 {playlist.created_at}</p>
+          </div>
         </div>
 
         {/* 플레이리스트 정보 */}
         <div className="pt-4">
-          <h3 className="text-body1-bold">
-            [Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집
-          </h3>
-          <p className="mb-4 mt-2 text-sub2">
-            안녕하세요. 오늘의 플레이리스트는 제가 좋아하는 지브리 애니메이션의 OST 연주곡
-            모음입니다. 저의 플레이리스트가 마음에 드신다면 좋아요와 구독 부탁드려요 &#58; &#41;
-          </p>
+          <h3 className="text-body1-bold">{playlist.title}</h3>
+          <p className="mb-4 mt-2 text-sub2">{playlist.description}</p>
           <PlaylistActions />
         </div>
       </div>
@@ -48,42 +87,107 @@ const Player = () => {
   );
 };
 
-const Playlist = () => {
-  const dummyVideoThumbnail: VideoThumbnail[] = [
-    {
-      thumbnail: "https://i.pinimg.com/736x/bd/be/56/bdbe56b288ca641737df89b143f189a1.jpg",
-      title: "[Playlist] 이웃집 토토로 OST 피아노 연주 1시간 재생",
-    },
-    {
-      thumbnail: "https://i.pinimg.com/736x/9f/d6/a5/9fd6a500d50ca13a85cb66440925e725.jpg",
-      title: "귀를 기울이며 OST",
-    },
-    {
-      thumbnail: "https://i.pinimg.com/736x/cb/a3/8c/cba38c134fde13266f08fa7706e4640a.jpg",
-      title: "[지브리] 마녀배달부 키키 OST",
-    },
-  ];
-
+const Videos = ({
+  videos,
+  onSelect,
+  selectedVideoId,
+}: {
+  videos: Video[];
+  onSelect: (video: Video) => void;
+  selectedVideoId: number;
+}) => {
   return (
-    <div className="border-y border-solid border-[#333] py-4 pl-4">
-      <h3 className="text-body1-bold">재생목록</h3>
-      <ul className="mt-4 flex flex-row gap-3">
-        {dummyVideoThumbnail.map((video, index) => (
-          <li key={index} className="flex flex-col gap-2">
-            <img src={video.thumbnail} alt={video.title} className="rounded-[4px]" />
-            <h4 className="line-clamp-2 text-sub">{video.title}</h4>
-          </li>
-        ))}
-      </ul>
+    <div className="border-y border-solid border-[#333] py-4">
+      <h3 className="pl-4 text-body1-bold">재생목록</h3>
+      <div className="scrollbar-hide overflow-x-auto">
+        <ul className="mt-4 flex flex-row gap-3">
+          {videos.map((video, index) => {
+            const isActive = video.id === selectedVideoId;
+            return (
+              <li
+                key={index}
+                className={`flex w-[150px] shrink-0 cursor-pointer flex-col gap-2 ${index === 0 ? "ml-4" : ""} ${isActive ? "opacity-50" : ""}`}
+                onClick={() => onSelect(video)}
+              >
+                <div className="h-21 flex w-full items-center justify-center overflow-hidden rounded-[4px] bg-black">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <h4 className="line-clamp-2 text-sub">{video.title}</h4>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };
 
 const PlaylistDetail = () => {
+  // 퍼블리싱용 더미 데이터
+  const playlist: PlaylistWithVideos = {
+    id: 1,
+    title: "[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집",
+    description:
+      "오늘의 플레이리스트는 제가 좋아하는 지브리 애니메이션의 OST 연주곡 모음입니다. 좋아요와 구독 부탁드려요 :)",
+    created_at: "2025.04.04",
+    videos: [
+      {
+        id: 1,
+        title:
+          "[Playlist] 지브리의 피아노 OST 모음은 제가 공부하면서들을 수있어서 좋았어요 💖 (나우시카에서 아리에 티까지)",
+        url: "https://youtu.be/U34kLXjdw90?si=jfI4WIPgtIw_Ol5I",
+        thumbnail: "https://i.pinimg.com/736x/bd/be/56/bdbe56b288ca641737df89b143f189a1.jpg",
+      },
+      {
+        id: 2,
+        title: "[공연실황] 기쿠지로의 여름 OST SUMMER I 지브리 & 디즈니 OST FESTA",
+        url: "https://youtu.be/47E2E95cON4?si=PvrQR2mzVU698XGU",
+        thumbnail: "https://img.youtube.com/vi/47E2E95cON4/maxresdefault.jpg",
+      },
+      {
+        id: 3,
+        title:
+          "공부할때 듣기 좋은 지브리 ost 모음 ㅣ 센과 치히로 하울의 움직이는 성 마녀 배달부 키키 토토로 ㅣ 수면 공부 카페 음악 ㅣ 중간 광고 없음",
+        url: "https://youtu.be/ASCMw-UCafA?si=beymKHYnPa18COPI",
+        thumbnail: "https://i.pinimg.com/736x/cb/a3/8c/cba38c134fde13266f08fa7706e4640a.jpg",
+      },
+      {
+        id: 4,
+        title:
+          "[Playlist] 지브리의 피아노 OST 모음은 제가 공부하면서들을 수있어서 좋았어요 💖 (나우시카에서 아리에 티까지)",
+        url: "https://youtu.be/U34kLXjdw90?si=jfI4WIPgtIw_Ol5I",
+        thumbnail: "https://i.pinimg.com/736x/bd/be/56/bdbe56b288ca641737df89b143f189a1.jpg",
+      },
+      {
+        id: 5,
+        title: "[공연실황] 기쿠지로의 여름 OST SUMMER I 지브리 & 디즈니 OST FESTA",
+        url: "https://youtu.be/47E2E95cON4?si=PvrQR2mzVU698XGU",
+        thumbnail: "https://img.youtube.com/vi/47E2E95cON4/maxresdefault.jpg",
+      },
+      {
+        id: 6,
+        title:
+          "공부할때 듣기 좋은 지브리 ost 모음 ㅣ 센과 치히로 하울의 움직이는 성 마녀 배달부 키키 토토로 ㅣ 수면 공부 카페 음악 ㅣ 중간 광고 없음",
+        url: "https://youtu.be/ASCMw-UCafA?si=beymKHYnPa18COPI",
+        thumbnail: "https://i.pinimg.com/736x/cb/a3/8c/cba38c134fde13266f08fa7706e4640a.jpg",
+      },
+    ],
+  };
+
+  const [selectedVideo, setSelectedVideo] = useState<Video>(playlist.videos[0]);
+
   return (
     <>
-      <Player />
-      <Playlist />
+      <Player playlist={playlist} video={selectedVideo} />
+      <Videos
+        videos={playlist.videos}
+        onSelect={setSelectedVideo}
+        selectedVideoId={selectedVideo.id}
+      />
     </>
   );
 };
