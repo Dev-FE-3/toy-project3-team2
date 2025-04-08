@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Logo from "../assets/imgs/logo.svg";
 import { Button } from "../components/common/Button";
 import { Input } from "../components/common/Input";
@@ -48,7 +49,9 @@ const Login = () => {
 
         <div className="text-center">
           <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
-          <a className="cursor-pointer text-sub-bold text-font-primary hover:underline">회원가입</a>
+          <Link to="/signup" className="text-sub-bold text-font-primary hover:underline">
+            회원가입
+          </Link>
         </div>
       </div>
     </div>
