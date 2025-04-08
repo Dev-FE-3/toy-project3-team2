@@ -14,6 +14,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [nickname, setNickname] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +27,11 @@ const Signup = () => {
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
+      options: {
+        data: {
+          nickname: nickname || "",
+        }
+      },
     });
 
     if (error) {
@@ -81,6 +87,8 @@ const Signup = () => {
               placeholder="닉네임을 입력해주세요"
               className="flex-grow"
               required
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
             />
             <Button type="button">중복확인</Button>
           </div>
