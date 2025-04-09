@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ArrowLeft from "../assets/icons/arrow-left.svg";
 import Logo from "../assets/imgs/logo.svg";
 import Search from "../assets/icons/search.svg";
-import X from "../assets/icons/cross.svg";
+import cross from "../assets/icons/cross.svg";
 import OverflowMenu from "../components/common/OverflowMenu";
 import { useState } from "react";
 import { Input } from "../components/common/Input";
@@ -48,7 +48,7 @@ const Header = ({ onSearch }: HeaderProps) => {
     return (
       <header className="absolute top-0 flex w-full max-w-[430px] items-center justify-between p-4">
         {!isSearchOpen && (
-          <Link to={"/"}>
+          <Link to={"/"} className="py-[6.5px]">
             <img src={Logo} alt="logo" className="h-6" />
           </Link>
         )}
@@ -72,7 +72,7 @@ const Header = ({ onSearch }: HeaderProps) => {
               className="flex-1"
             />
             <button onClick={() => setIsSearchOpen(false)}>
-              <img src={X} alt="close" className="h-6" />
+              <img src={cross} alt="close" className="h-6" />
             </button>
           </div>
         )}

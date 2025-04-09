@@ -4,11 +4,10 @@ import PlaylistCard from "../components/common/PlaylistCard";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <div className="mb-[16px] ml-[19px] mt-[10px]">
-        <label className="text-body1-bold">추천 플레이리스트</label>
+        <h1 className="text-body1-bold">추천 플레이리스트</h1>
       </div>
-      <section className="border-t border-outline">
         <ul>
           <li>
             <PlaylistCard
@@ -38,8 +37,7 @@ const Home = () => {
             />
           </li>
         </ul>
-      </section>
-    </div>
+    </>
   );
 };
 
