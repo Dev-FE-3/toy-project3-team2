@@ -3,12 +3,20 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ArrowLeft from "../assets/icons/arrow-left.svg";
 import Logo from "../assets/imgs/logo.svg";
 import Search from "../assets/icons/search.svg";
+import X from "../assets/icons/cross.svg";
 import OverflowMenu from "../components/common/OverflowMenu";
+import { useState } from "react";
+import { Input } from "../components/common/Input";
 
-const Header = () => {
+type HeaderProps = {
+  onSearch?: (query: string) => void;
+};
+
+const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const hiddenPaths = ["/login"];
 
   if (hiddenPaths.includes(location.pathname)) {
@@ -29,17 +37,45 @@ const Header = () => {
     title = "플레이리스트 상세";
   }
 
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(searchQuery);
+    }
+  };
+
   // 홈일 경우 로고 + 검색 아이콘
   if (location.pathname === "/" || location.pathname === "/subscriptions") {
     return (
       <header className="absolute top-0 flex w-full max-w-[430px] items-center justify-between p-4">
-        <Link to={"/"}>
-          <img src={Logo} alt="logo" className="h-6" />
-        </Link>
+        {!isSearchOpen && (
+          <Link to={"/"}>
+            <img src={Logo} alt="logo" className="h-6" />
+          </Link>
+        )}
 
-        <button>
-          <img src={Search} alt="search" className="h-6" />
-        </button>
+        {!isSearchOpen ? (
+          <button onClick={() => setIsSearchOpen(true)}>
+            <img src={Search} alt="search" className="h-6" />
+          </button>
+        ) : (
+          <div className="flex w-full items-center gap-3">
+            <Input
+              type="round"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+              placeholder="검색어를 입력해주세요"
+              className="flex-1"
+            />
+            <button onClick={() => setIsSearchOpen(false)}>
+              <img src={X} alt="close" className="h-6" />
+            </button>
+          </div>
+        )}
       </header>
     );
   }
