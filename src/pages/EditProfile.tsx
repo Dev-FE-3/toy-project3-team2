@@ -26,7 +26,7 @@ const EditProfile = () => {
       {/* input */}
       <ul className="flex flex-col gap-[20px]">
         <li>
-          <label htmlFor="user-nickname" className="text-body2">
+          <label htmlFor="user-nickname" className="mb-2 block text-body2">
             닉네임*
           </label>
           <div className="flex gap-[8px]">
@@ -43,26 +43,23 @@ const EditProfile = () => {
           </div>
         </li>
         <li>
-          <label htmlFor="user-password" className="text-body2">
-            비밀번호*
-          </label>
-          <Input id="user-password" type="password" placeholder="비밀번호를 입력하세요" />
+          <Input
+            id="user-password"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+            label="비밀번호*"
+          />
         </li>
         <li>
-          <label htmlFor="user-password-check" className="text-body2">
-            비밀번호 확인*
-          </label>
           <Input
             id="user-password-check"
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
+            label="비밀번호 확인*"
           />
         </li>
         <li>
-          <label htmlFor="user-info" className="text-body2">
-            소개*
-          </label>
-          <Input id="user-info" type="textarea" placeholder="소개글을 입력하세요" />
+          <Input id="user-info" type="textarea" placeholder="소개글을 입력하세요" label="소개*" />
         </li>
       </ul>
 

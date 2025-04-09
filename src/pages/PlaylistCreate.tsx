@@ -36,30 +36,22 @@ const PlaylistCreate = () => {
       </section>
 
       <form className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="playlist-title" className="text-body2-medium">
-            제목*
-          </label>
-          <Input
-            id="playlist-title"
-            type="text"
-            placeholder="제목을 입력하세요"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="playlist-description" className="text-body2-medium">
-            소개*
-          </label>
-          <Input
-            id="playlist-description"
-            type="textarea"
-            placeholder="소개글을 입력해주세요"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
+        <Input
+          id="playlist-title"
+          type="text"
+          placeholder="제목을 입력하세요"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          label="제목*"
+        />
+        <Input
+          id="playlist-description"
+          type="textarea"
+          placeholder="소개글을 입력해주세요"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          label="소개*"
+        />
         <div className="flex flex-col gap-2">
           <label htmlFor="video-url" className="text-body2-medium">
             영상 링크 추가*

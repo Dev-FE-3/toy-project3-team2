@@ -17,7 +17,7 @@ const Signup = () => {
     <div className="px-4">
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div>
-          <label htmlFor="email" className="mb-2 text-sub2">
+          <label htmlFor="email" className="mb-2 block text-body2">
             이메일*
           </label>
           <div className="flex gap-2">
@@ -44,7 +44,7 @@ const Signup = () => {
           )}
         </div>
         <div>
-          <label htmlFor="nickname" className="mb-2 text-sub2">
+          <label htmlFor="nickname" className="mb-2 block text-body2">
             닉네임*
           </label>
           <div className="flex gap-2">
@@ -70,23 +70,20 @@ const Signup = () => {
             </p>
           )}
         </div>
-        <div>
-          <label htmlFor="password" className="mb-2 text-sub2">
-            비밀번호*
-          </label>
-          <Input id="password" type="password" placeholder="비밀번호를 입력해주세요" required />
-        </div>
-        <div>
-          <label htmlFor="passwordConfirm" className="mb-2 text-sub2">
-            비밀번호 확인*
-          </label>
-          <Input
-            id="passwordConfirm"
-            type="password"
-            placeholder="비밀번호를 다시 입력해주세요"
-            required
-          />
-        </div>
+        <Input
+          id="password"
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          required
+          label="비밀번호*"
+        />
+        <Input
+          id="passwordConfirm"
+          type="password"
+          placeholder="비밀번호를 다시 입력해주세요"
+          required
+          label="비밀번호 확인*"
+        />
         <Button type="submit" variant="full">
           회원가입
         </Button>
