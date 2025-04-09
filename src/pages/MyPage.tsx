@@ -5,7 +5,7 @@ const MyPage = () => {
   return (
     <>
       {/* user 정보 */}
-      <div className="flex flex-wrap items-center gap-[14px] p-[16px]">
+      <section className="flex flex-wrap items-center gap-[14px] p-[16px]">
         <img
           className="h-[60px] w-[60px] rounded-full object-cover"
           src="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
@@ -16,10 +16,10 @@ const MyPage = () => {
           <span className="text-sub text-font-muted">구독 365</span>
         </div>
         <p className="my-[2px] w-full text-font-primary">소개글을 작성해주세요</p>
-      </div>
+      </section>
 
       {/* user가 생성한 플레이리스트 */}
-      <div className="border-t border-outline">
+      <section className="border-t border-outline">
         <div className="px-[20px] py-[12px] text-right">
           <DropDownMenu />
         </div>
@@ -51,7 +51,7 @@ const MyPage = () => {
             />
           </li>
         </ul>
-      </div>
+      </section>
     </>
   );
 };
