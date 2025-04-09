@@ -86,6 +86,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {showDelete &&
           hasValue && ( // delete옵션 있으면, 값 있을 때 X아이콘
             <button
+              type="button"
               onClick={handleDelete}
               className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
             >
@@ -94,6 +95,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         {type === "password" && ( // type:password일 때 눈 아이콘
           <button
+            type="button"
             onClick={hasValue ? () => setShowPassword((prev) => !prev) : undefined}
             className={cn(
               "absolute right-3 top-1/2 -translate-y-1/2",

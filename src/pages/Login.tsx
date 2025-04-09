@@ -77,7 +77,7 @@ const Login = () => {
           </Button>
         </form>
 
-        <div className="text-center">
+        <div className="mt-10 text-center">
           <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
           <Link to="/signup" className="text-sub-bold text-font-primary hover:underline">
             회원가입
