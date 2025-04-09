@@ -8,9 +8,9 @@ const Subscriptions = () => {
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <label className="text-body1-bold">구독 플레이리스트</label>
       </div>
-      <div className="border-t border-outline">
+      <section className="border-t border-outline">
         <ul>
-        <li>
+          <li>
             <PlaylistCard
               id="dummyId-001"
               title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
@@ -38,7 +38,7 @@ const Subscriptions = () => {
             />
           </li>
         </ul>
-      </div>
+      </section>
     </div>
   );
 };

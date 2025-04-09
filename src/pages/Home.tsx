@@ -8,7 +8,7 @@ const Home = () => {
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <label className="text-body1-bold">추천 플레이리스트</label>
       </div>
-      <div className="border-t border-outline">
+      <section className="border-t border-outline">
         <ul>
           <li>
             <PlaylistCard
@@ -38,7 +38,7 @@ const Home = () => {
             />
           </li>
         </ul>
-      </div>
+      </section>
     </div>
   );
 };
