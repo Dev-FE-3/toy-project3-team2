@@ -24,6 +24,7 @@ const Signup = () => {
       return;
     }
 
+    //회원가입 시도
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -34,6 +35,7 @@ const Signup = () => {
       },
     });
 
+    //회원가입 에러 처리
     if (error) {
       console.error("회원가입 에러:", error.message);
       return;

@@ -13,16 +13,24 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    //로그인 시도
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
+    //로그인 에러 처리
     if (error) {
       console.error("로그인 에러:", error.message);
       return;
     }
 
+    //로그인 성공 후 유저 정보 저장
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    console.log(user?.id);
     console.log("로그인 성공:", data);
     navigate("/");
   };
