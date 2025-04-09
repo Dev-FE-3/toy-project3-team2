@@ -43,7 +43,7 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
   return (
     <>
       {/* 영상 영역 */}
-      <div className="relative w-full pt-[56.25%]">
+      <section className="relative w-full pt-[56.25%]">
         {/* 16:9 비율 */}
         <iframe
           className="absolute left-0 top-0 h-full w-full"
@@ -51,10 +51,10 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
           title={video.title}
           allowFullScreen
         />
-      </div>
+      </section>
 
       {/* 콘텐츠 영역 */}
-      <div className="px-4 pb-6 pt-3">
+      <section className="px-4 pb-6 pt-3">
         {/* 유저 정보 */}
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row gap-2.5">
@@ -76,7 +76,7 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
           <p className="mb-4 mt-2 text-sub2">{playlist.description}</p>
           <PlaylistActions />
         </div>
-      </div>
+      </section>
     </>
   );
 };

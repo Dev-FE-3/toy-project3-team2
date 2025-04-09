@@ -10,7 +10,7 @@ export const Videos = ({
   selectedVideoId: string;
 }) => {
   return (
-    <div className="border-y border-solid border-[#333] py-4">
+    <section className="border-y border-solid border-[#333] py-4">
       <h3 className="pl-4 text-body1-bold">재생목록</h3>
       <div className="scrollbar-hide overflow-x-auto">
         <ul className="mt-4 flex flex-row gap-3">
@@ -35,6 +35,6 @@ export const Videos = ({
           })}
         </ul>
       </div>
-    </div>
+    </section>
   );
 };
