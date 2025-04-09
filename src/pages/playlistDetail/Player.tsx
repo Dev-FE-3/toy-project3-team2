@@ -24,9 +24,9 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
       }
 
       const params = new URLSearchParams({
-        autoplay: "1", // 자동재생
-        mute: "1", // 음소거(자동재생 하려면 필수)
-        controls: "1", // 컨트롤러 숨기려면 0
+        autoplay: "0", // 자동재생
+        mute: "0", // 음소거(자동재생 하려면 필수)
+        controls: "0", // 컨트롤러 숨기려면 0
         modestbranding: "1", // 유튜브 로고 최소화
         rel: "0", // 관련 영상 안 보이도록
       });
