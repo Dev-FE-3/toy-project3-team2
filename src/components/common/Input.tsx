@@ -11,25 +11,16 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onChange, defaultValue, showDelete, label, ...props }, ref) => {
+  ({ className, type, onChange, value = "", showDelete, label, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState(defaultValue || "");
 
-    React.useEffect(() => {
-      if (defaultValue !== undefined) {
-        setInputValue(defaultValue);
-      }
-    }, [defaultValue]);
-
-    const hasValue = !!inputValue;
+    const hasValue = !!value;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setInputValue(e.target.value);
       onChange?.(e as React.ChangeEvent<HTMLInputElement>);
     };
 
     const handleDelete = () => {
-      setInputValue("");
       if (onChange) {
         onChange({
           target: { value: "" },
@@ -45,7 +36,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const sharedProps = {
       onChange: handleChange,
       ref,
-      defaultValue,
+      value,
       ...props,
     };
 
