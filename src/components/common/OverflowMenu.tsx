@@ -1,5 +1,5 @@
-import { useState } from "react"
-import IconMenu from '../../assets/icons/menu-dots-vertical.svg?react'
+import { useState } from "react";
+import IconMenu from "../../assets/icons/menu-dots-vertical.svg?react";
 
 interface OverflowMenuOption {
   label: string;
@@ -15,9 +15,10 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="inline-block relative">
+    <nav className="relative inline-block align-middle leading-none">
       <button
         type="button"
+        className="align-middle leading-none"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -30,7 +31,8 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
         <ul
           id="overflow-menu"
           role="menu"
-          className="absolute top-full right-0 w-max min-w-[90px] text-center border border-outline rounded-[4px] bg-background-container"
+          className="absolute right-0 w-max min-w-[90px] rounded-[4px] border border-outline bg-background-container text-center"
+          style={{ top: "calc(100% + 7px)" }}
         >
           {options.map((option) => (
             <li
@@ -40,7 +42,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
             >
               <button
                 type="button"
-                className="w-full p-[10px] text-font-primary"
+                className="w-full p-[10px] text-body2 text-font-primary"
                 onClick={() => {
                   option.action();
                   setIsOpen(false);
@@ -53,7 +55,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
         </ul>
       )}
     </nav>
-  )
-}
+  );
+};
 
-export default OverflowMenu
+export default OverflowMenu;
