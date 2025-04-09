@@ -49,7 +49,7 @@ const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
       });
 
       return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
-    } catch (error) {
+    } catch {
       console.warn("잘못된 URL 형식입니다:", url);
       return "";
     }
