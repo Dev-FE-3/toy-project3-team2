@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ArrowLeft from "../assets/icons/arrow-left.svg";
 import Logo from "../assets/imgs/logo.svg";
 import Search from "../assets/icons/search.svg";
+import OverflowMenu from "../components/common/OverflowMenu";
 
 const Header = () => {
   const location = useLocation();
@@ -43,12 +44,23 @@ const Header = () => {
     );
   }
 
+  const MENU_OPTIONS = [
+    { label: "정보수정", action: () => navigate("/user/edit") },
+    { label: "로그아웃", action: () => alert("로그아웃 클릭") },
+  ];
+
   return (
     <header className="fixed top-0 z-10 flex w-full max-w-[430px] items-center justify-center bg-background-main px-4 py-[10px]">
       <button onClick={() => navigate(-1)} className="absolute left-4">
         <img src={ArrowLeft} alt="back" />
       </button>
       <h1 className="w-full text-center text-title">{title}</h1>
+
+      {location.pathname === "/mypage" && (
+        <div className="absolute right-4">
+          <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
+        </div>
+      )}
     </header>
   );
 };
