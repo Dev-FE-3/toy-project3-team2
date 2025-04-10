@@ -18,6 +18,9 @@ const ButtonGuide = () => {
           <Button disabled variant="full">
             저장
           </Button>
+          <Button variant="full" fixed>
+            fixed 버튼
+          </Button>
         </div>
         <h4 className="font-semibold">작은 버튼</h4>
         <div className="flex flex-row gap-[20px]">

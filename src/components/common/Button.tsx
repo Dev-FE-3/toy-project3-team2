@@ -26,11 +26,23 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  fixed?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, asChild = false, ...props }, ref) => {
+  ({ className, variant, fixed, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    if (fixed) {
+      return (
+        <div className="fixed bottom-0 z-10 -mx-4 flex h-[73px] w-full max-w-[430px] items-center justify-center bg-background-main p-0">
+          <Comp
+            className={cn(buttonVariants({ variant, className }), "max-w-[398px] p-4")}
+            ref={ref}
+            {...props}
+          />
+        </div>
+      );
+    }
     return <Comp className={cn(buttonVariants({ variant, className }))} ref={ref} {...props} />;
   },
 );
