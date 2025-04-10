@@ -32,7 +32,7 @@ const Header = () => {
   // 홈일 경우 로고 + 검색 아이콘
   if (location.pathname === "/" || location.pathname === "/subscriptions") {
     return (
-      <header className="absolute top-0 flex w-full max-w-[430px] items-center justify-between p-4">
+      <header className="absolute top-0 flex h-[60px] w-full max-w-[430px] items-center justify-between px-4">
         <Link to={"/"}>
           <img src={Logo} alt="logo" className="h-6" />
         </Link>
@@ -50,7 +50,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 z-10 flex w-full max-w-[430px] items-center justify-center bg-background-main px-4 py-[10px]">
+    <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center justify-center bg-background-main px-4">
       <button onClick={() => navigate(-1)} className="absolute left-4">
         <img src={ArrowLeft} alt="back" />
       </button>
