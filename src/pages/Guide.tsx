@@ -89,7 +89,7 @@ const InputGuide = () => {
 };
 
 const OverflowMenuGuide = () => {
-  const menuOptions = [
+  const MENU_OPTIONS = [
     { label: "수정", action: () => alert("수정 클릭") },
     { label: "삭제", action: () => alert("삭제 클릭") },
   ];
@@ -100,10 +100,10 @@ const OverflowMenuGuide = () => {
       <div className="my-4 flex flex-row gap-[10px] rounded-xl border border-gray-600 p-4">
         {/* basic */}
         <h5 className="text-sm font-medium">기본 메뉴</h5>
-        <OverflowMenu options={menuOptions} />
+        <OverflowMenu options={MENU_OPTIONS} />
         {/* iconSize */}
         <h5 className="ml-[10px] text-sm font-medium">24px 사이즈</h5>
-        <OverflowMenu options={menuOptions} iconSize={24} />
+        <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
       </div>
     </>
   );
@@ -116,20 +116,23 @@ const PlaylistCardGuide = () => {
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         <h5 className="mb-2 text-sm font-medium">홈 & 구독</h5>
         <PlaylistCard
-          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          id="dummyId-001"
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
           isOwner={false}
         />
         <h5 className="mb-2 text-sm font-medium">마이페이지 - 공개</h5>
         <PlaylistCard
-          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          id="dummyId-002"
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           isOwner={true}
         />
         <h5 className="mb-2 text-sm font-medium">마이페이지 - 비공개</h5>
         <PlaylistCard
-          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집"
+          id="dummyId-003"
+          title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           isPublic={false}
           isOwner={true}
