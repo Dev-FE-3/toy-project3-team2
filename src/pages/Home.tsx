@@ -1,42 +1,86 @@
+import { useEffect, useState } from "react";
 import PlaylistCard from "../components/common/PlaylistCard";
+import axiosInstance from "../services/axios/axiosInstance";
 
 /** 플레이리스트 추천 페이지 */
 
+// 플레이리스트 타입 정의
+interface Playlist {
+  id: string;
+  title: string;
+  thumbnail_image: string;
+  creator_id: string;
+  is_owner: boolean;
+  subscribe_count: number;
+  like_count: number;
+  comment_count: number;
+}
+
+interface User {
+  id: string;
+  profile_image: string;
+}
+
 const Home = () => {
+  const [playlists, setPlaylist] = useState<Playlist[]>([]);
+  const [users, setUsers] = useState<{ [key: string]: User }>({});
+
+  // 플레이리스트 데이터 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 플레이리스트 데이터 가져오기
+        const playlistResponse = await axiosInstance.get<Playlist[]>("/playlist?select=*");
+        setPlaylist(playlistResponse.data);
+
+        // creator_id 목록 추출
+        const creatorIds = playlistResponse.data.map((playlist) => playlist.creator_id);
+
+        // 사용자 정보 가져오기
+        const userPromises = creatorIds.map((id) =>
+          axiosInstance.get<User[]>(`/user?id=eq.${id}&select=id,profile_image`),
+        );
+        const userResponses = await Promise.all(userPromises);
+        const userMap = userResponses.reduce(
+          (acc, response) => {
+            if (response.data && response.data.length > 0) {
+              acc[response.data[0].id] = response.data[0];
+            }
+            return acc;
+          },
+          {} as { [key: string]: User },
+        );
+
+        setUsers(userMap);
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">추천 플레이리스트</h1>
       </div>
-        <ul>
-          <li>
+      <ul>
+        {playlists.map((playlist) => (
+          <li key={playlist.id}>
             <PlaylistCard
-              id="dummyId-001"
-              title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-              thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-              userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              isOwner={false}
+              id={playlist.id}
+              title={playlist.title}
+              thumbnailUrl={playlist.thumbnail_image}
+              userImage={users[playlist.creator_id]?.profile_image}
+              isOwner={playlist.is_owner}
+              subscribe_count={playlist.subscribe_count}
+              like_count={playlist.like_count}
+              comment_count={playlist.comment_count}
             />
           </li>
-          <li>
-            <PlaylistCard
-              id="dummyId-002"
-              title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-              thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-              userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              isOwner={false}
-            />
-          </li>
-          <li>
-            <PlaylistCard
-              id="dummyId-002"
-              title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-              thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-              userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              isOwner={false}
-            />
-          </li>
-        </ul>
+        ))}
+      </ul>
     </>
   );
 };
