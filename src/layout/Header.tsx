@@ -48,7 +48,7 @@ const Header = ({ onSearch }: HeaderProps) => {
     return (
       <header className="absolute top-0 flex w-full max-w-[430px] items-center justify-between p-4">
         {!isSearchOpen && (
-          <Link to={"/"} className="py-[6.5px]">
+          <Link to={"/"} className="py-[7px]">
             <img src={Logo} alt="logo" className="h-6" />
           </Link>
         )}
