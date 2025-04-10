@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Player } from "./Player";
-import { Videos } from "./Videos";
-import { Playlist } from "../../types/playlist";
-import { Video } from "../../types/video";
+import { Player } from "../components/playlistDetail/Player";
+import { Videos } from "../components/playlistDetail/Videos";
+import { Playlist } from "../types/playlist";
+import { Video } from "../types/video";
 
 export interface PlaylistWithVideos extends Playlist {
   videos: Video[];

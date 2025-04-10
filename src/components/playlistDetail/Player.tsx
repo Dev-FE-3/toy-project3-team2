@@ -1,6 +1,6 @@
 import { Playlist } from "../../types/playlist";
 import { Video } from "../../types/video";
-import PlaylistActions from "../../components/common/PlaylistAction";
+import PlaylistActions from "../common/PlaylistAction";
 
 export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
   // youtube URL을 embed용 URL로 변환

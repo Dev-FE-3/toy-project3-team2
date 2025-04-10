@@ -7,7 +7,7 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Subscriptions from "./pages/Subscriptions";
 import PlaylistCreate from "./pages/PlaylistCreate";
-import PlaylistDetail from "./pages/playlistDetail/PlaylistDetail";
+import PlaylistDetail from "./pages/PlaylistDetail";
 import MyPage from "./pages/MyPage";
 import EditProfile from "./pages/EditProfile";
 
