@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import IconArrowBottom from "../../assets/icons/arrow-bottom.svg?react";
+import ArrowBottom from "../../assets/icons/arrow-bottom.svg?react";
 
 const MENU_OPTIONS = ["최신 등록순", "오래된 등록순", "업데이트순", "구독순", "좋아요순", "댓글순"];
 
@@ -28,7 +28,7 @@ const DropDownMenu = () => {
         aria-controls="dropdown-menu"
       >
         {selected}
-        <IconArrowBottom
+        <ArrowBottom
           className={`ml-[4px] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>

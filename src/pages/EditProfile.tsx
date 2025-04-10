@@ -6,8 +6,8 @@ import { getCurrentUserId } from "../services/supabase/supabaseClient";
 import { User } from "../types/user";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
-import logo from "../assets/imgs/logo.svg";
-import IconCamera from "../assets/icons/camera.svg?react";
+import Logo from "../assets/imgs/logo.svg";
+import Camera from "../assets/icons/camera.svg?react";
 
 const EditProfile = () => {
   const [inputValue, setInputValue] = useState("");
@@ -75,10 +75,10 @@ const EditProfile = () => {
           <label htmlFor="profile" className="cursor-pointer">
             <img
               className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-50"
-              src={user?.profile_image || logo}
+              src={user?.profile_image || Logo}
               alt="User Profile"
             />
-            <IconCamera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <Camera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
           </label>
           <input
             id="profile"

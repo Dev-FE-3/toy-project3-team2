@@ -5,7 +5,7 @@ import { Playlist } from "../types/playlist";
 import { User } from "../types/user";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
-import logo from "../assets/imgs/logo.svg";
+import Logo from "../assets/imgs/logo.svg";
 
 const MyPage = () => {
   const [items, setItems] = useState<Playlist[]>([]);
@@ -48,7 +48,7 @@ const MyPage = () => {
       <section className="flex flex-wrap items-center gap-[14px] p-[16px]">
         <img
           className="h-[60px] w-[60px] rounded-full object-cover"
-          src={user?.profile_image || logo}
+          src={user?.profile_image || Logo}
           alt="User? Profile"
         />
         <div className="flex flex-grow flex-col gap-[4px]">
