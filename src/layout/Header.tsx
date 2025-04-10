@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import ArrowLeft from "../assets/icons/arrow-left.svg";
-import Logo from "../assets/imgs/logo.svg";
-import Search from "../assets/icons/search.svg";
+import ArrowLeft from "../assets/icons/arrow-left.svg?react";
+import Logo from "../assets/imgs/logo.svg?react";
+import Search from "../assets/icons/search.svg?react";
+
 import OverflowMenu from "../components/common/OverflowMenu";
 
 const Header = () => {
@@ -37,14 +38,14 @@ const Header = () => {
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
       {/* 왼쪽 영역 */}
-      <div className="absolute left-4">
+      <div className="absolute left-4 flex items-center">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <Link to={"/"}>
-            <img src={Logo} alt="logo" className="h-6" />
+            <Logo className="h-[22px] w-[93px]" />
           </Link>
         ) : (
           <button onClick={() => navigate(-1)}>
-            <img src={ArrowLeft} alt="back" />
+            <ArrowLeft />
           </button>
         )}
       </div>
@@ -55,10 +56,10 @@ const Header = () => {
       )}
 
       {/* 오른쪽 영역 */}
-      <div className="absolute right-4">
+      <div className="absolute right-4 flex items-center">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <button>
-            <img src={Search} alt="search" className="h-6" />
+            <Search />
           </button>
         ) : (
           location.pathname === "/mypage" && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
