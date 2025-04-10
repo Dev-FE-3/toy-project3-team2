@@ -50,7 +50,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="absolute top-0 flex w-full max-w-[430px] items-center justify-center px-4 py-[10px]">
+    <header className="fixed top-0 z-10 flex w-full max-w-[430px] items-center justify-center bg-background-main px-4 py-[10px]">
       <button onClick={() => navigate(-1)} className="absolute left-4">
         <img src={ArrowLeft} alt="back" />
       </button>
