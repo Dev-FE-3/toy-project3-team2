@@ -5,11 +5,18 @@ import Logo from "../assets/imgs/logo.svg?react";
 import Search from "../assets/icons/search.svg?react";
 
 import OverflowMenu from "../components/common/OverflowMenu";
+import { useState } from "react";
+import { Input } from "../components/common/Input";
 
-const Header = () => {
+type HeaderProps = {
+  onSearch?: (query: string) => void;
+};
+
+const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const hiddenPaths = ["/login"];
 
   if (hiddenPaths.includes(location.pathname)) {
