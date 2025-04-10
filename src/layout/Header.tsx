@@ -29,38 +29,41 @@ const Header = () => {
     title = "플레이리스트 상세";
   }
 
-  // 홈일 경우 로고 + 검색 아이콘
-  if (location.pathname === "/" || location.pathname === "/subscriptions") {
-    return (
-      <header className="absolute top-0 flex h-[60px] w-full max-w-[430px] items-center justify-between px-4">
-        <Link to={"/"}>
-          <img src={Logo} alt="logo" className="h-6" />
-        </Link>
-
-        <button>
-          <img src={Search} alt="search" className="h-6" />
-        </button>
-      </header>
-    );
-  }
-
   const MENU_OPTIONS = [
     { label: "정보수정", action: () => navigate("/user/edit") },
     { label: "로그아웃", action: () => alert("로그아웃 클릭") },
   ];
 
   return (
-    <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center justify-center bg-background-main px-4">
-      <button onClick={() => navigate(-1)} className="absolute left-4">
-        <img src={ArrowLeft} alt="back" />
-      </button>
-      <h1 className="w-full text-center text-title">{title}</h1>
+    <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
+      {/* 왼쪽 영역 */}
+      <div className="absolute left-4">
+        {location.pathname === "/" || location.pathname === "/subscriptions" ? (
+          <Link to={"/"}>
+            <img src={Logo} alt="logo" className="h-6" />
+          </Link>
+        ) : (
+          <button onClick={() => navigate(-1)}>
+            <img src={ArrowLeft} alt="back" />
+          </button>
+        )}
+      </div>
 
-      {location.pathname === "/mypage" && (
-        <div className="absolute right-4">
-          <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
-        </div>
+      {/* 가운데 영역 */}
+      {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
+        <h1 className="w-full text-center text-title">{title}</h1>
       )}
+
+      {/* 오른쪽 영역 */}
+      <div className="absolute right-4">
+        {location.pathname === "/" || location.pathname === "/subscriptions" ? (
+          <button>
+            <img src={Search} alt="search" className="h-6" />
+          </button>
+        ) : (
+          location.pathname === "/mypage" && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
+        )}
+      </div>
     </header>
   );
 };
