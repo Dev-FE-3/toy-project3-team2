@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { Playlist } from "../../types/playlist";
 import { Video } from "../../types/video";
 import PlaylistActions from "../common/PlaylistAction";
 
 export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const MAX_LENGTH = 60;
+  const isClamped = playlist.description.length > MAX_LENGTH;
+  const visibleText = isExpanded ? playlist.description : playlist.description.slice(0, MAX_LENGTH);
   // youtube URL을 embed용 URL로 변환
   const getEmbedUrl = (url: string): string => {
     try {
@@ -73,7 +79,20 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
         {/* 플레이리스트 정보 */}
         <div className="pt-4">
           <h3 className="text-body1-bold">{playlist.title}</h3>
-          <p className="mb-4 mt-2 text-sub2">{playlist.description}</p>
+          <p className="mb-4 mt-2 text-sub2">
+            {visibleText}
+            {!isExpanded && isClamped && (
+              <>
+                <span className="text-sub2">... </span>
+                <button
+                  onClick={() => setIsExpanded(true)}
+                  className="ml-1 text-sub2 text-font-more hover:underline"
+                >
+                  더보기
+                </button>
+              </>
+            )}
+          </p>
           <PlaylistActions />
         </div>
       </section>
