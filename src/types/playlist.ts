@@ -16,6 +16,10 @@ export interface Playlist {
   updated_at: string;
 }
 
-export interface PlaylistWithVideos extends Playlist {
+export interface PlaylistDetailData extends Playlist {
   videos: Video[];
+  user?: {
+    nickname: string;
+    profile_image: string;
+  };
 }

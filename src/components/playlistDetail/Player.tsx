@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { Playlist } from "../../types/playlist";
+import { PlaylistDetailData } from "../../types/playlist";
 import { Video } from "../../types/video";
 import PlaylistActions from "../common/PlaylistAction";
+import { formatDate } from "../../utils/formatData";
 
-export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
+export const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Video }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const MAX_LENGTH = 60;
   const isClamped = playlist.description.length > MAX_LENGTH;
   const visibleText = isExpanded ? playlist.description : playlist.description.slice(0, MAX_LENGTH);
+
   // youtube URL을 embed용 URL로 변환
   const getEmbedUrl = (url: string): string => {
     try {
@@ -45,6 +47,7 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
   };
 
   const embedUrl = getEmbedUrl(video.url);
+  const creator = playlist.user;
 
   return (
     <>
@@ -64,15 +67,11 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
         {/* 유저 정보 */}
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row gap-2.5">
-            <img
-              src="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              alt="ijisun 프로필 이미지"
-              className="h-6 w-6 rounded-full"
-            />
-            <p>ijisun</p>
+            <img src={creator?.profile_image} className="h-6 w-6 rounded-full" />
+            <p>{creator?.nickname}</p>
           </div>
           <div className="text-sub">
-            <p>등록일 {playlist.created_at}</p>
+            <p>등록일 {formatDate(playlist.created_at)}</p>
           </div>
         </div>
 
