@@ -12,6 +12,7 @@ export const uploadProfileImage = async (file: File, userId: string) => {
   if (error) throw new Error("이미지 업로드 실패: " + error.message);
 
   const { data } = supabase.storage.from("profile-images").getPublicUrl(filePath);
+  const publicUrl = `${data.publicUrl}?t=${Date.now()}`;
 
-  return data.publicUrl;
+  return publicUrl;
 };

@@ -69,6 +69,8 @@ const EditProfile = () => {
       if (selectedImage) {
         try {
           imageUrl = await uploadProfileImage(selectedImage, user.id);
+
+          setPreviewImage(imageUrl);
         } catch (uploadErr) {
           alert("이미지 업로드에 실패했어요.");
           console.error(uploadErr);
