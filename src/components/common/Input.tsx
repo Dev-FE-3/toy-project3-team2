@@ -12,16 +12,24 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onChange, value = "", htmlFor, showDelete, label, ...props }, ref) => {
+  ({ className, type, onChange, defaultValue, htmlFor, showDelete, label, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
+    const [inputValue, setInputValue] = React.useState(defaultValue || "");
 
-    const hasValue = !!value;
+    React.useEffect(() => {
+      if (defaultValue !== undefined) {
+        setInputValue(defaultValue);
+      }
+    }, [defaultValue]);
+    const hasValue = !!inputValue;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      onChange?.(e as React.ChangeEvent<HTMLInputElement>);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value);
+      onChange?.(e);
     };
 
     const handleDelete = () => {
+      setInputValue("");
       if (onChange) {
         onChange({
           target: { value: "" },
@@ -37,21 +45,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const sharedProps = {
       onChange: handleChange,
       ref,
-      value,
-      id: htmlFor || props.id,
+      value: inputValue,
       ...props,
     };
 
     let inputElement;
     switch (type) {
-      case "textarea":
-        inputElement = (
-          <textarea
-            className={cn(baseClassName, "h-[99px] resize-none py-[12px]")}
-            {...(sharedProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
-          />
-        );
-        break;
       case "round":
         inputElement = (
           <input
@@ -86,6 +85,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {showDelete &&
             hasValue && ( // delete옵션 있으면, 값 있을 때 X아이콘
               <button
+                type="button"
                 onClick={handleDelete}
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               >
@@ -94,6 +94,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
           {type === "password" && ( // type:password일 때 눈 아이콘
             <button
+              type="button"
               onClick={hasValue ? () => setShowPassword((prev) => !prev) : undefined}
               className={cn(
                 "absolute right-3 top-1/2 -translate-y-1/2",
