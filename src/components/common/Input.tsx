@@ -8,10 +8,11 @@ import IconDelete from "../../assets/icons/delete.svg";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   showDelete?: boolean;
   label?: string;
+  htmlFor?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onChange, value = "", showDelete, label, ...props }, ref) => {
+  ({ className, type, onChange, value = "", htmlFor, showDelete, label, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
 
     const hasValue = !!value;
@@ -37,6 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onChange: handleChange,
       ref,
       value,
+      id: htmlFor,
       ...props,
     };
 
@@ -74,7 +76,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={cn("relative flex flex-col gap-2", className)}>
-        {label && <label className="text-body2">{label}</label>}
+        {label && (
+          <label htmlFor={htmlFor} className="text-body2">
+            {label}
+          </label>
+        )}
         <div className="relative">
           {inputElement}
           {showDelete &&

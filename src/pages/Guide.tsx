@@ -52,6 +52,8 @@ const InputGuide = () => {
       <h3 className="ml-[10px] text-xl font-bold">Input</h3>
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         <div className="mb-6">
+          {/* 라벨옵션 */}
+          <Input type="text" placeholder="이름을 입력하세요" label="라벨 옵션" htmlFor="label-option" />
           <h5 className="mb-2 text-sm font-medium">기본</h5>
           <Input type="text" placeholder="이름을 입력하세요" />
         </div>
