@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ArrowLeft from "../assets/icons/arrow-left.svg?react";
 import Logo from "../assets/imgs/logo.svg?react";
 import Search from "../assets/icons/search.svg?react";
+import Cross from "../assets/icons/cross.svg?react";
 
 import OverflowMenu from "../components/common/OverflowMenu";
 import { useState } from "react";
@@ -42,14 +43,24 @@ const Header = ({ onSearch }: HeaderProps) => {
     { label: "로그아웃", action: () => alert("로그아웃 클릭") },
   ];
 
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(searchQuery);
+    }
+  };
+
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
       {/* 왼쪽 영역 */}
       <div className="absolute left-4 flex items-center">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
-          <Link to={"/"}>
-            <Logo className="h-[22px] w-[93px]" />
-          </Link>
+          <>
+            {!isSearchOpen && (
+              <Link to={"/"}>
+                <Logo className="h-[22px] w-[93px]" />
+              </Link>
+            )}
+          </>
         ) : (
           <button onClick={() => navigate(-1)}>
             <ArrowLeft />
@@ -62,12 +73,36 @@ const Header = ({ onSearch }: HeaderProps) => {
         <h1 className="w-full text-center text-title">{title}</h1>
       )}
 
+      {isSearchOpen && (
+        <div className="flex w-full items-center gap-3">
+          <Input
+            type="round"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+            placeholder="검색어를 입력해주세요"
+            className="flex-1"
+          />
+          <button onClick={() => setIsSearchOpen(false)}>
+            <Cross />
+          </button>
+        </div>
+      )}
+
       {/* 오른쪽 영역 */}
       <div className="absolute right-4 flex items-center">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
-          <button>
-            <Search />
-          </button>
+          <>
+            {!isSearchOpen && (
+              <button onClick={() => setIsSearchOpen(true)}>
+                <Search />
+              </button>
+            )}
+          </>
         ) : (
           location.pathname === "/mypage" && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
         )}
