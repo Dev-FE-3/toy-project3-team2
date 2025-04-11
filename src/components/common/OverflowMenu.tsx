@@ -1,5 +1,5 @@
 import { useState } from "react";
-import IconMenu from "../../assets/icons/menu-dots-vertical.svg?react";
+import MenuDotsVertical from "../../assets/icons/menu-dots-vertical.svg?react";
 
 interface OverflowMenuOption {
   label: string;
@@ -24,7 +24,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
         aria-expanded={isOpen}
         aria-controls="overflow-menu"
       >
-        <IconMenu width={iconSize} height={iconSize} />
+        <MenuDotsVertical width={iconSize} height={iconSize} />
       </button>
 
       {isOpen && (
