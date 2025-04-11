@@ -26,6 +26,7 @@ const Comments = () => {
       params: {
         playlist_id: `eq.${playlistId}`,
         select: "*,user:author_id(nickname, profile_image)",
+        order: "created_at.desc",
       },
     });
 
