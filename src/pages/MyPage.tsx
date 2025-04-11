@@ -32,6 +32,39 @@ const MyPage = () => {
     fetchData();
   }, [user?.id]);
 
+  // 플레이리스트 삭제
+  const handleDelete = async (id: string) => {
+    if (!user?.id) return;
+
+    try {
+      // 1. 댓글 삭제
+      await axiosInstance.delete("/comment", {
+        params: {
+          playlist_id: `eq.${id}`,
+        },
+      });
+
+      // 2. 플레이리스트-비디오 삭제
+      await axiosInstance.delete("/video", {
+        params: {
+          playlist_id: `eq.${id}`,
+        },
+      });
+
+      // 3. 플레이리스트 삭제
+      await axiosInstance.delete("/playlist", {
+        params: {
+          id: `eq.${id}`,
+        },
+      });
+
+      setItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("삭제 실패", error);
+      alert("삭제에 실패했습니다.");
+    }
+  };
+
   return (
     <>
       {/* user 정보 */}
@@ -65,6 +98,7 @@ const MyPage = () => {
                   thumbnailUrl={item.thumbnail_image}
                   isPublic={item.is_public}
                   isOwner={true}
+                  onDelete={handleDelete}
                 />
               </li>
             ))}

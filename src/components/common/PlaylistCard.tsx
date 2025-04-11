@@ -9,6 +9,7 @@ interface PlaylistCardProps {
   userImage?: string;
   isPublic?: boolean;
   isOwner: boolean;
+  onDelete?: (id: string) => void;
 }
 
 const PlaylistCard = ({
@@ -18,12 +19,20 @@ const PlaylistCard = ({
   userImage,
   isPublic = true,
   isOwner,
+  onDelete,
 }: PlaylistCardProps) => {
   const navigate = useNavigate();
 
   const menuOptions = [
     { label: "수정", action: () => alert("수정") },
-    { label: "삭제", action: () => alert("삭제") },
+    {
+      label: "삭제",
+      action: () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          onDelete?.(id);
+        }
+      },
+    },
   ];
 
   const handleCardClick = () => {
