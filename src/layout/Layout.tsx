@@ -16,7 +16,7 @@ const Layout = () => {
   return (
     <div className="flex min-h-screen flex-col">
       {!hideAll && <Header />}
-      <div className="pt-[60px]">
+      <div className="pb-[73px] pt-[60px]">
         <Outlet />
       </div>
 
