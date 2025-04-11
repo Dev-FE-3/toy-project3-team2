@@ -7,7 +7,7 @@ interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, label, htmlFor, ...props }, ref) => {
+  ({ className, label, htmlFor, value, ...props }, ref) => {
     const baseClassName = cn(
       "flex w-full rounded bg-background-input px-3 py-[15px] !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
       "border-[1px] border-transparent focus:border-font-placeholder",

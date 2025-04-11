@@ -72,7 +72,7 @@ const InputGuide = () => {
           <Input
             type="text"
             placeholder="텍스트를 입력하세요"
-            defaultValue={inputValue}
+            value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             showDelete
           />
@@ -91,7 +91,7 @@ const InputGuide = () => {
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         {/* textarea 소개글 */}
         <h5 className="mb-2 text-sm font-medium">textarea</h5>
-          <TextArea label="소개글" htmlFor="textarea" defaultValue="defaultValue" placeholder="소개글을 입력하세요" />
+          <TextArea label="소개글" htmlFor="textarea" value="defaultValue" placeholder="소개글을 입력하세요" />
         </div>
     </>
   );

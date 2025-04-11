@@ -35,7 +35,7 @@ const EditProfile = () => {
               className="flex-grow"
               type="text"
               placeholder="닉네임을 입력하세요"
-              defaultValue={inputValue}
+              value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               showDelete
             />
