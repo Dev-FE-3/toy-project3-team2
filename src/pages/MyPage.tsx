@@ -15,14 +15,14 @@ const MyPage = () => {
       if (!user?.id) return null;
 
       try {
-        const res = await axiosInstance.get<Playlist[]>("/playlist", {
+        const response = await axiosInstance.get<Playlist[]>("/playlist", {
           params: {
             creator_id: `eq.${user.id}`,
             select: "*",
           },
         });
 
-        setItems(res.data || []);
+        setItems(response.data || []);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
         return null;
