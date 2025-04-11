@@ -47,6 +47,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onChange: handleChange,
       ref,
       value: inputValue,
+      id: htmlFor,
       ...props,
     };
 
