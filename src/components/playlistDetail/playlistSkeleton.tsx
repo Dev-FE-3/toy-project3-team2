@@ -1,4 +1,4 @@
-export const PlaylistSkeleton = () => (
+const PlaylistSkeleton = () => (
   <div className="animate-fadeIn animate-pulse">
     {/* 영상 플레이어 영역 */}
     <section className="relative w-full bg-[#2A2C2C] pt-[56.25%]" />
@@ -45,3 +45,5 @@ export const PlaylistSkeleton = () => (
     </section>
   </div>
 );
+
+export default PlaylistSkeleton;

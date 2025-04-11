@@ -1,6 +1,6 @@
 import { Video } from "../../types/video";
 
-export const Videos = ({
+const Videos = ({
   videos,
   onSelect,
   selectedVideoId,
@@ -38,3 +38,5 @@ export const Videos = ({
     </section>
   );
 };
+
+export default Videos;

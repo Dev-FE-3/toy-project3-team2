@@ -6,7 +6,7 @@ import { formatDate } from "../../utils/formatData";
 
 const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
 
-export const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Video }) => {
+const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Video }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const isClamped = playlist.description.length > MAX_DESCRIPTION_PREVIEW_LENGTH;
@@ -101,3 +101,5 @@ export const Player = ({ playlist, video }: { playlist: PlaylistDetailData; vide
     </>
   );
 };
+
+export default Player;

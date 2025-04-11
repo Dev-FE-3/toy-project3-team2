@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Player } from "../components/playlistDetail/Player";
-import { Videos } from "../components/playlistDetail/Videos";
 import { Video } from "../types/video";
 import { usePlaylistDetail } from "../hooks/usePlaylistDetail";
-import { PlaylistSkeleton } from "../components/playlistDetail/playlistSkeleton";
+import Player from "../components/playlistDetail/Player";
+import Videos from "../components/playlistDetail/Videos";
+import PlaylistSkeleton from "../components/playlistDetail/playlistSkeleton";
 
 const PlaylistDetail = () => {
   const { id: playlistId } = useParams<{ id: string }>();
