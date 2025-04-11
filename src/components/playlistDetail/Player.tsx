@@ -4,12 +4,15 @@ import { Video } from "../../types/video";
 import PlaylistActions from "../common/PlaylistAction";
 import { formatDate } from "../../utils/formatData";
 
+const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
+
 export const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Video }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const MAX_LENGTH = 60;
-  const isClamped = playlist.description.length > MAX_LENGTH;
-  const visibleText = isExpanded ? playlist.description : playlist.description.slice(0, MAX_LENGTH);
+  const isClamped = playlist.description.length > MAX_DESCRIPTION_PREVIEW_LENGTH;
+  const visibleText = isExpanded
+    ? playlist.description
+    : playlist.description.slice(0, MAX_DESCRIPTION_PREVIEW_LENGTH);
 
   // youtube URL을 embed용 URL로 변환
   const getEmbedUrl = (url: string): string => {

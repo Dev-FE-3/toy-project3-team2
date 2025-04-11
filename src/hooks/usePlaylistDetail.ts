@@ -3,17 +3,17 @@ import { PlaylistDetailData } from "../types/playlist";
 import axiosInstance from "../services/axios/axiosInstance";
 
 // 데이터 가져오기
-const fetchPlaylist = async (id: string): Promise<PlaylistDetailData> => {
+const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> => {
   const { data: playlistData } = await axiosInstance.get(`/playlist`, {
     params: {
-      id: `eq.${id}`,
+      id: `eq.${playlistId}`,
       select: "*,user:creator_id(nickname,profile_image)",
     },
   });
 
   const { data: videosData } = await axiosInstance.get(`/video`, {
     params: {
-      playlist_id: `eq.${id}`,
+      playlist_id: `eq.${playlistId}`,
       select: "*",
     },
   });
@@ -28,10 +28,10 @@ const fetchPlaylist = async (id: string): Promise<PlaylistDetailData> => {
   };
 };
 
-export const usePlaylistDetail = (id?: string) => {
+export const usePlaylistDetail = (playlistId?: string) => {
   return useQuery<PlaylistDetailData>({
-    queryKey: ["playlist", id],
-    queryFn: () => fetchPlaylist(id!),
-    enabled: !!id,
+    queryKey: ["playlist", playlistId],
+    queryFn: () => fetchPlaylist(playlistId!),
+    enabled: !!playlistId,
   });
 };
