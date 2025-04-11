@@ -4,6 +4,7 @@ import { Player } from "../components/playlistDetail/Player";
 import { Videos } from "../components/playlistDetail/Videos";
 import { Video } from "../types/video";
 import { usePlaylistDetail } from "../hooks/usePlaylistDetail";
+import { PlaylistSkeleton } from "../components/playlistDetail/playlistSkeleton";
 
 const PlaylistDetail = () => {
   const { id: playlistId } = useParams<{ id: string }>();
@@ -84,7 +85,7 @@ const PlaylistDetail = () => {
     }
   }, [playlist, selectedVideo]);
 
-  if (isLoading) return <div>플레이리스트를 불러오는 중이에요...</div>;
+  if (isLoading) return <PlaylistSkeleton />;
   if (isError) return <div>{error instanceof Error ? error.message : "에러가 발생했어요."}</div>;
   if (!playlist || !selectedVideo) return <div>해당 플레이리스트를 찾을 수 없어요.</div>;
 

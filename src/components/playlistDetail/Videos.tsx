@@ -13,7 +13,7 @@ export const Videos = ({
     <section className="border-y border-solid border-[#333] py-4">
       <h3 className="pl-4 text-body1-bold">재생목록</h3>
       <div className="scrollbar-hide overflow-x-auto">
-        <ul className="mt-4 flex flex-row gap-3">
+        <ul className="mt-4 flex gap-3">
           {videos.map((video, index) => {
             const isActive = video.id === selectedVideoId;
             return (

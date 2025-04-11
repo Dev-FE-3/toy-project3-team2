@@ -66,10 +66,10 @@ export const Player = ({ playlist, video }: { playlist: PlaylistDetailData; vide
       </section>
 
       {/* 콘텐츠 영역 */}
-      <section className="px-4 pb-6 pt-3">
+      <section className="space-y-4 px-4 pb-6 pt-3">
         {/* 유저 정보 */}
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row gap-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2.5">
             <img src={creator?.profile_image} className="h-6 w-6 rounded-full" />
             <p>{creator?.nickname}</p>
           </div>
@@ -79,7 +79,7 @@ export const Player = ({ playlist, video }: { playlist: PlaylistDetailData; vide
         </div>
 
         {/* 플레이리스트 정보 */}
-        <div className="pt-4">
+        <div>
           <h3 className="text-body1-bold">{playlist.title}</h3>
           <p className="mb-4 mt-2 text-sub2">
             {visibleText}
