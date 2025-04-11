@@ -12,12 +12,14 @@ import EditProfile from "../pages/EditProfile";
 import Guide from "../pages/Guide";
 
 import Layout from "../layout/Layout";
+import ErrorPage from "../pages/ErrorPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* 헤더 & 네비게이션 X */}
       <Route path="/login" element={<Login />} />
+      <Route path="*" element={<ErrorPage />} />
 
       {/* Layout이 적용된 페이지들 */}
       <Route element={<Layout />}>
