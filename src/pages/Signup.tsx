@@ -3,14 +3,47 @@ import { Input } from "../components/common/Input";
 import errorIcon from "../assets/icons/error.svg";
 import successIcon from "../assets/icons/success.svg";
 import { useState } from "react";
+import { supabase } from "../services/supabase/supabaseClient";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(false);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(true);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 회원가입 로직 구현
+
+    if (password !== passwordConfirm) {
+      // 비밀번호 확인 로직
+      return;
+    }
+
+    //회원가입 시도
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          nickname: nickname || "",
+        },
+      },
+    });
+
+    //회원가입 에러 처리
+    if (error) {
+      console.error("회원가입 에러:", error.message);
+      return;
+    }
+
+    // 회원가입 성공 처리
+    console.log("회원가입 성공:", data);
+    navigate("/login");
   };
 
   return (
@@ -27,6 +60,8 @@ const Signup = () => {
               placeholder="이메일을 입력해주세요"
               className="flex-grow"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Button type="button">중복확인</Button>
           </div>
@@ -54,6 +89,8 @@ const Signup = () => {
               placeholder="닉네임을 입력해주세요"
               className="flex-grow"
               required
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
             />
             <Button type="button">중복확인</Button>
           </div>
@@ -78,11 +115,13 @@ const Signup = () => {
           label="비밀번호*"
         />
         <Input
-          id="passwordConfirm"
+          htmlFor="passwordConfirm"
           type="password"
           placeholder="비밀번호를 다시 입력해주세요"
           required
           label="비밀번호 확인*"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
         />
         <Button type="submit" variant="full">
           회원가입
