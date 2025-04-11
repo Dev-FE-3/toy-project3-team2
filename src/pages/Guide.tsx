@@ -62,11 +62,7 @@ const InputGuide = () => {
         <div className="mb-6">
           {/* delete 버튼 옵션 */}
           <h5 className="mb-2 text-sm font-medium">delete 옵션 추가</h5>
-          <Input
-            type="email"
-            showDelete
-            placeholder="이메일을 입력하세요"
-          />
+          <Input type="email" showDelete placeholder="이메일을 입력하세요" />
         </div>
         <div className="mb-6">
           <h5 className="mb-2 text-sm font-medium">실시간 입력 미리보기</h5>

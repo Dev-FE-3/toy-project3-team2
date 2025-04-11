@@ -34,9 +34,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     if (fixed) {
       return (
-        <div className="fixed bottom-0 z-10 -mx-4 flex h-[73px] w-full max-w-[430px] items-center justify-center bg-background-main p-0">
+        <div className="fixed bottom-0 left-0 right-0 z-10 mx-auto flex h-[73px] w-full max-w-[430px] items-center justify-center bg-[linear-gradient(180deg,_rgba(26,28,28,0)_0%,_rgba(26,28,28,1)_100%)] p-[16px]">
+          <div className="absolute inset-0 -top-[12px] h-[85px] bg-[linear-gradient(180deg,_rgba(26,28,28,0)_0%,_rgba(26,28,28,1)_24px,_rgba(26,28,28,1)_100%)]" />
           <Comp
-            className={cn(buttonVariants({ variant, className }), "max-w-[398px] p-4")}
+            className={cn(buttonVariants({ variant, className }), "relative max-w-[398px] p-4")}
             ref={ref}
             {...props}
           />
