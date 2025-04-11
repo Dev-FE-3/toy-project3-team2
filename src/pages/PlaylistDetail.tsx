@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Player } from "../components/playlistDetail/Player";
 import { Videos } from "../components/playlistDetail/Videos";
+import Comments from "../components/playlistDetail/Comments";
 import { Video } from "../types/video";
 import { usePlaylistDetail } from "../hooks/usePlaylistDetail";
 
@@ -96,6 +97,7 @@ const PlaylistDetail = () => {
         onSelect={setSelectedVideo}
         selectedVideoId={selectedVideo.id}
       />
+      <Comments />
     </section>
   );
 };
