@@ -6,7 +6,7 @@ import { getCurrentUserId } from "../services/supabase/supabaseClient";
 import { User } from "../types/user";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
-import Logo from "../assets/imgs/logo.svg";
+import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
 import Camera from "../assets/icons/camera.svg?react";
 
 const EditProfile = () => {
@@ -65,7 +65,6 @@ const EditProfile = () => {
   };
 
   const isFormValid = inputValue && passwordValue && passwordCheckValue;
-  // const isFormValid = inputValue;
 
   return (
     <form className="px-[16px]" onSubmit={onSubmit}>
@@ -74,8 +73,8 @@ const EditProfile = () => {
         <div className="relative inline-block">
           <label htmlFor="profile" className="cursor-pointer">
             <img
-              className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-50"
-              src={user?.profile_image || Logo}
+              className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-[0.6]"
+              src={user?.profile_image || ProfileImageDefault}
               alt="User Profile"
             />
             <Camera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
