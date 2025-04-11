@@ -6,8 +6,8 @@ import { Video } from "../types/video";
 import { usePlaylistDetail } from "../hooks/usePlaylistDetail";
 
 const PlaylistDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data: playlist, isLoading, isError, error } = usePlaylistDetail(id);
+  const { id: playlistId } = useParams<{ id: string }>();
+  const { data: playlist, isLoading, isError, error } = usePlaylistDetail(playlistId);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
   /* 퍼블리싱용 더미 데이터
