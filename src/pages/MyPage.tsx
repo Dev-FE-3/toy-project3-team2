@@ -1,46 +1,36 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "./../services/axios/axiosInstance";
-import { getCurrentUserId } from "../services/supabase/supabaseClient";
+import { useUserStore } from "../store/useUserStore";
 import { Playlist } from "../types/playlist";
-import { User } from "../types/user";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
 import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
 
 const MyPage = () => {
+  const user = useUserStore((state) => state.user);
   const [items, setItems] = useState<Playlist[]>([]);
-  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!user?.id) return null;
+
       try {
-        const userId = await getCurrentUserId();
-        if (!userId) return null;
+        const res = await axiosInstance.get<Playlist[]>("/playlist", {
+          params: {
+            creator_id: `eq.${user.id}`,
+            select: "*",
+          },
+        });
 
-        const [playlistRes, userRes] = await Promise.all([
-          axiosInstance.get<Playlist[]>("/playlist", {
-            params: {
-              creator_id: `eq.${userId}`,
-              select: "*",
-            },
-          }),
-          axiosInstance.get<User[]>("/user", {
-            params: {
-              id: `eq.${userId}`,
-              select: "*",
-            },
-          }),
-        ]);
-
-        setItems(playlistRes.data || []);
-        setUser(userRes.data?.[0] ?? null);
+        setItems(res.data || []);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
+        return null;
       }
     };
 
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   return (
     <>

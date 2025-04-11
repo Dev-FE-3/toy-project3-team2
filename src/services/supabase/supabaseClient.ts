@@ -9,14 +9,3 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     autoRefreshToken: true,
   },
 });
-
-export const getCurrentUserId = async (): Promise<string | null> => {
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    console.error("세션 가져오기 실패:", error.message);
-    return null;
-  }
-
-  return data.session?.user?.id ?? null;
-};

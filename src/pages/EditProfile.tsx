@@ -1,43 +1,18 @@
 /** 사용자 정보를 수정하는 페이지 */
 
 import { useState, useEffect } from "react";
-import axiosInstance from "./../services/axios/axiosInstance";
-import { getCurrentUserId } from "../services/supabase/supabaseClient";
-import { User } from "../types/user";
+import { useUserStore } from "../store/useUserStore";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
 import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
 import Camera from "../assets/icons/camera.svg?react";
 
 const EditProfile = () => {
+  const user = useUserStore((state) => state.user);
   const [inputValue, setInputValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordCheckValue, setPasswordCheckValue] = useState("");
   const [textareaValue, setTextareaValue] = useState("");
-  const [user, setUser] = useState<User | null>(null);
-
-  // user 정보 fetch
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = await getCurrentUserId();
-        if (!userId) return null;
-
-        const response = await axiosInstance.get<User[]>("/user", {
-          params: {
-            id: `eq.${userId}`,
-            select: "*",
-          },
-        });
-
-        setUser(response.data?.[0] ?? null);
-      } catch (error) {
-        console.error("데이터 불러오기 실패:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // 초기값 설정
   useEffect(() => {
