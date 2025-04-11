@@ -21,7 +21,7 @@ const EditProfile = () => {
   const [isNickNameValueAvailable, setIsNickNameValueAvailable] = useState<boolean | null>(null);
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordCheckValue, setPasswordCheckValue] = useState("");
-  const [textareaValue, setTextareaValue] = useState("");
+  const [descriptionValue, setDescriptionValue] = useState("");
 
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const EditProfile = () => {
     if (!user) return;
 
     setNickNameValue(user.nickname || "");
-    setTextareaValue(user.description || "");
+    setDescriptionValue(user.description || "");
   }, [user]);
 
   useEffect(() => {
@@ -92,8 +92,8 @@ const EditProfile = () => {
         "/user",
         {
           profile_image: imageUrl,
-          nicknameValue: nickNameValue,
-          description: textareaValue,
+          nickname: nickNameValue,
+          description: descriptionValue,
         },
         {
           params: { id: `eq.${user.id}` },
@@ -236,8 +236,8 @@ const EditProfile = () => {
             id="user-info"
             type="textarea"
             placeholder="소개글을 입력하세요"
-            value={textareaValue}
-            onChange={(e) => setTextareaValue(e.target.value)}
+            value={descriptionValue}
+            onChange={(e) => setDescriptionValue(e.target.value)}
           />
         </li>
       </ul>
