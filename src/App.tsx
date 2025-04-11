@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import AppRoutes from "./routes";
 import { useUserStore } from "./store/useUserStore";
-
 import { supabase } from "./services/supabase/supabaseClient";
 import axiosInstance from "./services/axios/axiosInstance";
 
@@ -33,12 +33,16 @@ const InitUser = () => {
 };
 
 function App() {
+  const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
+
   return (
     <>
-      <InitUser />
-      <Router>
-        <AppRoutes />
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <InitUser />
+        <Router>
+          <AppRoutes />
+        </Router>
+      </QueryClientProvider>
     </>
   );
 }

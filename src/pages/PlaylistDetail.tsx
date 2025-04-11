@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Player } from "../components/playlistDetail/Player";
 import { Videos } from "../components/playlistDetail/Videos";
-import { Playlist } from "../types/playlist";
 import { Video } from "../types/video";
-
-export interface PlaylistWithVideos extends Playlist {
-  videos: Video[];
-}
+import { usePlaylistDetail } from "../hooks/usePlaylistDetail";
 
 const PlaylistDetail = () => {
-  // 퍼블리싱용 더미 데이터
+  const { id: playlistId } = useParams<{ id: string }>();
+  const { data: playlist, isLoading, isError, error } = usePlaylistDetail(playlistId);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+
+  /* 퍼블리싱용 더미 데이터
   const playlist: PlaylistWithVideos = {
     id: "dummy-1",
     title: "[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집",
@@ -74,8 +75,18 @@ const PlaylistDetail = () => {
       },
     ],
   };
+  */
 
-  const [selectedVideo, setSelectedVideo] = useState<Video>(playlist.videos[0]);
+  // 플레이리스트 데이터가 도착하면 첫 번째 비디오로 설정
+  useEffect(() => {
+    if (!selectedVideo && playlist?.videos.length) {
+      setSelectedVideo(playlist.videos[0]);
+    }
+  }, [playlist, selectedVideo]);
+
+  if (isLoading) return <div>플레이리스트를 불러오는 중이에요...</div>;
+  if (isError) return <div>{error instanceof Error ? error.message : "에러가 발생했어요."}</div>;
+  if (!playlist || !selectedVideo) return <div>해당 플레이리스트를 찾을 수 없어요.</div>;
 
   return (
     <section>
