@@ -38,7 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onChange: handleChange,
       ref,
       value,
-      id: htmlFor,
+      id: htmlFor || props.id,
       ...props,
     };
 

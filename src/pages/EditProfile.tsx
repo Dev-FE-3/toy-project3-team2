@@ -44,6 +44,7 @@ const EditProfile = () => {
         </li>
         <li>
           <Input
+            htmlFor="user-password"
             id="user-password"
             type="password"
             placeholder="비밀번호를 입력하세요"
@@ -52,14 +53,20 @@ const EditProfile = () => {
         </li>
         <li>
           <Input
-            id="user-password-check"
+            htmlFor="user-password"
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
             label="비밀번호 확인*"
           />
         </li>
         <li>
-          <Input id="user-info" type="textarea" placeholder="소개글을 입력하세요" label="소개*" />
+          <Input
+            htmlFor="user-info"
+            id="user-info"
+            type="textarea"
+            placeholder="소개글을 입력하세요"
+            label="소개*"
+          />
         </li>
       </ul>
 

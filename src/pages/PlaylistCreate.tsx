@@ -58,7 +58,7 @@ const PlaylistCreate = () => {
       </section>
       <form className="flex flex-col gap-5">
         <Input
-          id="playlist-title"
+          htmlFor="playlist-title"
           type="text"
           placeholder="제목을 입력하세요"
           value={title}
@@ -66,7 +66,7 @@ const PlaylistCreate = () => {
           label="제목*"
         />
         <Input
-          id="playlist-description"
+          htmlFor="playlist-description"
           type="textarea"
           placeholder="소개글을 입력해주세요"
           value={description}
