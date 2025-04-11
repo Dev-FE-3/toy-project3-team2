@@ -10,6 +10,7 @@ import PlaylistDetail from "../pages/PlaylistDetail";
 import MyPage from "../pages/MyPage";
 import EditProfile from "../pages/EditProfile";
 import Guide from "../pages/Guide";
+import ErrorPage from "../pages/ErrorPage";
 
 import Layout from "../layout/Layout";
 
@@ -18,6 +19,7 @@ const AppRoutes = () => {
     <Routes>
       {/* 헤더 & 네비게이션 X */}
       <Route path="/login" element={<Login />} />
+      <Route path="*" element={<ErrorPage />} />
 
       {/* Layout이 적용된 페이지들 */}
       <Route element={<Layout />}>
