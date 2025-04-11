@@ -16,6 +16,9 @@ const Subscriptions = () => {
             thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
             userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
             isOwner={false}
+            subscribe_count={0}
+            like_count={0}
+            comment_count={0}
           />
         </li>
         <li>
@@ -25,6 +28,9 @@ const Subscriptions = () => {
             thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
             userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
             isOwner={false}
+            subscribe_count={0}
+            like_count={0}
+            comment_count={0}
           />
         </li>
         <li>
@@ -34,6 +40,9 @@ const Subscriptions = () => {
             thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
             userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
             isOwner={false}
+            subscribe_count={0}
+            like_count={0}
+            comment_count={0}
           />
         </li>
       </ul>
