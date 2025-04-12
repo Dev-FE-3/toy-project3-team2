@@ -23,6 +23,22 @@ const Signup = () => {
     return regex.test(value);
   };
 
+  // 비밀번호 유효성 검사 함수 추가
+  const validatePassword = (value: string) => {
+    // 최소 8자, 최대 32자
+    if (value.length < 8 || value.length > 32) return false;
+
+    // 영문, 숫자, 특수문자 중 최소 2개 조합
+    const hasLetter = /[a-zA-Z]/.test(value);
+    const hasNumber = /\d/.test(value);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+
+    const conditions = [hasLetter, hasNumber, hasSpecialChar];
+    const metConditions = conditions.filter(Boolean).length;
+
+    return metConditions >= 2;
+  };
+
   // 중복 확인 함수 수정
   const checkDuplicate = async (type: "email" | "nickname", value: string) => {
     try {
@@ -61,6 +77,11 @@ const Signup = () => {
 
     if (!isEmailValid || !isNicknameValid) {
       alert("이메일과 닉네임 중복 확인을 해주세요.");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      alert("비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.");
       return;
     }
 
