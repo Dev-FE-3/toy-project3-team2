@@ -100,14 +100,14 @@ const Comments = () => {
           {isPostError && (
             <p className="text-sub text-red-500">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
           )}
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-[13px] pb-10">
             {comments.map((item) => (
-              <li key={item.id} className="flex items-center gap-[10px]">
-                <img src={item?.user?.profile_image} className="h-6 w-6 rounded-full" />
-                <div>
+              <li key={item.id} className="relative flex flex-col">
+                <div className="flex gap-[10px]">
+                  <img src={item?.user?.profile_image} className="mt-[5px] h-6 w-6 rounded-full" />
                   <p className="text-sub2 text-font-second">{item?.user?.nickname}</p>
-                  <p className="text-body2">{item.content}</p>
                 </div>
+                <p className="absolute left-[34px] top-[18px] text-body2">{item.content}</p>
               </li>
             ))}
           </ul>
