@@ -102,6 +102,9 @@ const Signup = () => {
       });
 
       console.log("회원가입 성공:", data);
+      // // 회원가입 후 로그아웃 처리
+      // await supabase.auth.signOut();
+
       navigate("/login");
     } catch (error) {
       console.error("회원가입 에러:", error);
