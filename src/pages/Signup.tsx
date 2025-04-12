@@ -8,30 +8,74 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [isEmailValid, setIsEmailValid] = useState<boolean | null>(false);
-  const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(true);
+  const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [nickname, setNickname] = useState("");
 
+  // 닉네임 유효성 검사 함수 추가
+  const validateNickname = (value: string) => {
+    // 한글, 영문, 숫자만 사용 가능
+    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,15}$/;
+    return regex.test(value);
+  };
+
+  // 중복 확인 함수 수정
+  const checkDuplicate = async (type: "email" | "nickname", value: string) => {
+    try {
+      // 닉네임일 경우 유효성 먼저 검사
+      if (type === "nickname" && !validateNickname(value)) {
+        setIsNicknameValid(false);
+        return;
+      }
+
+      const { error } = await supabase.from("user").select(type).eq(type, value).single();
+
+      if (error) {
+        // 에러가 발생했지만, 데이터가 없는 경우 (사용 가능)
+        if (error.code === "PGRST116") {
+          type === "email" ? setIsEmailValid(true) : setIsNicknameValid(true);
+          return;
+        }
+        console.error(`${type} 중복 확인 에러:`, error);
+        return;
+      }
+
+      // 데이터가 있으면 이미 사용 중
+      type === "email" ? setIsEmailValid(false) : setIsNicknameValid(false);
+    } catch (error) {
+      console.error(`${type} 중복 확인 중 에러 발생:`, error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (password !== passwordConfirm) {
-      // 비밀번호 확인 로직
+    
+    if (!email || !nickname || !password || !passwordConfirm) {
+      alert("모든 필드를 입력해주세요.");
       return;
     }
+    
+    if (!isEmailValid || !isNicknameValid) {
+      alert("이메일과 닉네임 중복 확인을 해주세요.");
+      return;
+    }
+    
+        if (password !== passwordConfirm) {
+          alert("비밀번호가 일치하지 않습니다.");
+          return;
+        }
 
-    //회원가입 시도
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
       options: {
         data: {
           nickname: nickname || "",
-        }
+        },
       },
     });
 
@@ -59,11 +103,12 @@ const Signup = () => {
               type="email"
               placeholder="이메일을 입력해주세요"
               className="flex-grow"
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Button type="button">중복확인</Button>
+            <Button type="button" onClick={() => checkDuplicate("email", email)}>
+              중복확인
+            </Button>
           </div>
           {isEmailValid === false && (
             <p className="mt-2 text-sub text-red-500">
@@ -88,16 +133,19 @@ const Signup = () => {
               type="text"
               placeholder="닉네임을 입력해주세요"
               className="flex-grow"
-              required
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
-            <Button type="button">중복확인</Button>
+            <Button type="button" onClick={() => checkDuplicate("nickname", nickname)}>
+              중복확인
+            </Button>
           </div>
           {isNicknameValid === false && (
             <p className="mt-2 text-sub text-red-500">
               <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
-              사용 중인 닉네임입니다.
+              {validateNickname(nickname)
+                ? "사용 중인 닉네임입니다."
+                : "2~15자의 한글, 영문, 숫자만 사용 가능합니다."}
             </p>
           )}
           {isNicknameValid === true && (
@@ -111,7 +159,6 @@ const Signup = () => {
           id="password"
           type="password"
           placeholder="비밀번호를 입력해주세요"
-          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           label="비밀번호*"
@@ -120,12 +167,11 @@ const Signup = () => {
           htmlFor="passwordConfirm"
           type="password"
           placeholder="비밀번호를 다시 입력해주세요"
-          required
           label="비밀번호 확인*"
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
         />
-        <Button type="submit" variant="full">
+        <Button type="submit" variant="full" fixed>
           회원가입
         </Button>
       </form>
