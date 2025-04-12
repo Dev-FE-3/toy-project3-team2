@@ -1,25 +1,44 @@
 /** 플레이리스트 생성 페이지 */
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
+import { TextArea } from "../components/common/TextArea";
 import Toggle from "../components/playlistCreate/Toggle";
 import VideoCard from "../components/playlistCreate/VideoCard";
 
 import { Video } from "../types/video";
-
 import { getYoutubeMeta } from "../utils/getYoutubeMeta";
+import axiosInstance from "../services/axios/axiosInstance";
+import { useUserStore } from "../store/useUserStore";
 
 type NewVideoForPlaylist = Pick<Video, "url" | "title" | "thumbnail">;
 
+interface NewVideoPayload extends NewVideoForPlaylist {
+  playlist_id: string;
+}
+
+interface NewPlaylistPayload {
+  title: string;
+  description: string;
+  creator_id: string;
+  thumbnail_image: string;
+  is_public: boolean;
+}
+
 const PlaylistCreate = () => {
   const [isPublic, setIsPublic] = useState(false);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoList, setVideoList] = useState<NewVideoForPlaylist[]>([]);
+
+  const user = useUserStore((state) => state.user);
+
+  const navigate = useNavigate();
 
   const handleAddVideo = async () => {
     const meta = await getYoutubeMeta(videoUrl);
@@ -41,9 +60,51 @@ const PlaylistCreate = () => {
     setVideoList((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // TODO: API 개발 및 연동
-  const handleCreate = () => {
-    alert("생성 완료!");
+  // 플레이리스트 생성 뮤테이션
+  const createPlaylistMutation = useMutation({
+    mutationFn: (payload: NewPlaylistPayload) => axiosInstance.post("/playlist", payload),
+  });
+
+  // 영상 추가 뮤테이션
+  const addVideosMutation = useMutation({
+    mutationFn: (payload: NewVideoPayload[]) =>
+      Promise.all(payload.map((payload) => axiosInstance.post("/video", payload))),
+  });
+
+  const handleCreate = async () => {
+    if (!user) return;
+
+    const playlistPayload: NewPlaylistPayload = {
+      title,
+      description,
+      creator_id: user.id,
+      thumbnail_image: videoList[0].thumbnail,
+      is_public: isPublic,
+    };
+
+    try {
+      // 플레이리스트 생성
+      const { data } = await createPlaylistMutation.mutateAsync(playlistPayload);
+      const newPlaylistId = data[0].id; // 생성된 playlist id를 반환 받음
+
+      // 영상 추가
+      const videoPayloads: NewVideoPayload[] = videoList.map((video) => ({
+        playlist_id: newPlaylistId,
+        ...video,
+      }));
+
+      await addVideosMutation.mutateAsync(videoPayloads);
+
+      // 폼 초기화
+      setTitle("");
+      setDescription("");
+      setVideoList([]);
+      setIsPublic(false);
+
+      navigate("/mypage");
+    } catch (error) {
+      console.error("생성 중 오류:", error);
+    }
   };
 
   const isFormValid = title && description && videoList.length > 0;
@@ -65,9 +126,8 @@ const PlaylistCreate = () => {
           onChange={(e) => setTitle(e.target.value)}
           label="제목*"
         />
-        <Input
+        <TextArea
           htmlFor="playlist-description"
-          type="textarea"
           placeholder="소개글을 입력해주세요"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -99,12 +159,9 @@ const PlaylistCreate = () => {
           ))}
         </ul>
 
-        {/** 버튼 */}
-        <div className="fixed bottom-4 left-0 right-0 z-10 mx-auto w-full max-w-[430px] px-4">
-          <Button variant="full" onClick={handleCreate} disabled={!isFormValid}>
-            저장
-          </Button>
-        </div>
+        <Button type="button" variant="full" onClick={handleCreate} disabled={!isFormValid} fixed>
+          저장
+        </Button>
       </form>
     </main>
   );
