@@ -4,6 +4,7 @@ import { Video } from "../types/video";
 import { usePlaylistDetail } from "../hooks/usePlaylistDetail";
 import Player from "../components/playlistDetail/Player";
 import Videos from "../components/playlistDetail/Videos";
+import Comments from "../components/playlistDetail/Comments";
 import PlaylistSkeleton from "../components/playlistDetail/playlistSkeleton";
 
 const PlaylistDetail = () => {
@@ -30,6 +31,7 @@ const PlaylistDetail = () => {
         onSelect={setSelectedVideo}
         selectedVideoId={selectedVideo.id}
       />
+      <Comments />
     </section>
   );
 };
