@@ -4,7 +4,7 @@ import errorIcon from "../assets/icons/error.svg";
 import successIcon from "../assets/icons/success.svg";
 import { useState } from "react";
 import { supabase } from "../services/supabase/supabaseClient";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -69,25 +69,23 @@ const Signup = () => {
       return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          nickname: nickname || "",
+    try {
+      const { data } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            nickname: nickname || "",
+          },
         },
-      },
-    });
+      });
 
-    //회원가입 에러 처리
-    if (error) {
-      console.error("회원가입 에러:", error.message);
-      return;
+      console.log("회원가입 성공:", data);
+      navigate("/login");
+    } catch (error) {
+      console.error("회원가입 에러:", error);
+      alert("회원가입 중 오류가 발생했습니다.");
     }
-
-    // 회원가입 성공 처리
-    console.log("회원가입 성공:", data);
-    navigate("/login");
   };
 
   // 이메일, 닉네임 중복확인 버튼 활성화 상태 체크
