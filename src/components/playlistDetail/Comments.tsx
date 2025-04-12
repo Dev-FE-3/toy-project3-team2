@@ -7,6 +7,7 @@ import { Comment } from "../../types/comment";
 import axiosInstance from "../../services/axios/axiosInstance";
 import AddIcon from "../../assets/icons/fill-add.svg?react";
 import { useUserStore } from "../../store/useUserStore";
+import CommentSkeleton from "./commonSkeleton";
 
 interface NewCommentPayload {
   playlist_id: string;
@@ -75,9 +76,9 @@ const Comments = () => {
   return (
     <div className="flex flex-col gap-3 p-4">
       {isCommentsLoading ? (
-        <p className="text-sub">Loading...</p>
+        <CommentSkeleton />
       ) : isCommentsError ? (
-        <p className="text-red-500 text-sub">댓글을 불러오는 데 실패했어요.</p>
+        <p className="text-sub text-red-500">댓글을 불러오는 데 실패했어요.</p>
       ) : (
         <>
           <span>댓글 {comments.length}</span>
@@ -97,12 +98,12 @@ const Comments = () => {
             )}
           </form>
           {isPostError && (
-            <p className="text-red-500 text-sub">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
+            <p className="text-sub text-red-500">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
           )}
           <ul className="flex flex-col gap-2">
             {comments.map((item) => (
               <li key={item.id} className="flex items-center gap-[10px]">
-                <img src={item?.user?.profile_image} className="w-6 h-6 rounded-full" />
+                <img src={item?.user?.profile_image} className="h-6 w-6 rounded-full" />
                 <div>
                   <p className="text-sub2 text-font-second">{item?.user?.nickname}</p>
                   <p className="text-body2">{item.content}</p>
