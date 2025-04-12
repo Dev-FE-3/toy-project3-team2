@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
     "apikey": SUPABASE_ANON_KEY,
+    "Prefer": "return=representation",
   },
 });
 
