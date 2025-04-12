@@ -13,22 +13,28 @@ const Subscriptions = () => {
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">구독 플레이리스트</h1>
       </div>
-      <ul>
-        {playlists.map((playlist) => (
-          <li key={playlist.id}>
-            <PlaylistCard
-              id={playlist.id}
-              title={playlist.title}
-              thumbnailUrl={playlist.thumbnail_image}
-              userImage={users[playlist.creator_id]?.profile_image}
-              isOwner={playlist.is_owner}
-              subscribeCount={playlist.subscribe_count}
-              likeCount={playlist.like_count}
-              commentCount={playlist.comment_count}
-            />
-          </li>
-        ))}
-      </ul>
+      {playlists.length > 0 ? (
+        <ul>
+          {playlists.map((playlist) => (
+            <li key={playlist.id}>
+              <PlaylistCard
+                id={playlist.id}
+                title={playlist.title}
+                thumbnailUrl={playlist.thumbnail_image}
+                userImage={users[playlist.creator_id]?.profile_image}
+                isOwner={playlist.is_owner}
+                subscribeCount={playlist.subscribe_count}
+                likeCount={playlist.like_count}
+                commentCount={playlist.comment_count}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-body mt-[100px] flex items-center justify-center text-font-muted">
+          검색 결과가 없습니다
+        </div>
+      )}
     </>
   );
 };
