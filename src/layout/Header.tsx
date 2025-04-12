@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import ArrowLeft from "../assets/icons/arrow-left.svg?react";
 import Logo from "../assets/imgs/logo.svg?react";
@@ -19,6 +19,11 @@ const Header = ({ onSearch }: HeaderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
+
+  useEffect(() => {
+    setSearchQuery("");
+    setIsSearchOpen(false);
+  }, [location.pathname]);
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -51,10 +56,17 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   const handleSearchOpen = () => {
     setIsSearchOpen(true);
-    // 다음 렌더링 사이클에서 input에 포커스
     setTimeout(() => {
       searchInputRef.current?.focus();
     }, 0);
+  };
+
+  const handleSearchClose = () => {
+    setIsSearchOpen(false);
+    setSearchQuery("");
+    if (onSearch) {
+      onSearch("");
+    }
   };
 
   return (
@@ -96,7 +108,7 @@ const Header = ({ onSearch }: HeaderProps) => {
             placeholder="검색어를 입력해주세요"
             className="flex-1"
           />
-          <button onClick={() => setIsSearchOpen(false)}>
+          <button onClick={handleSearchClose}>
             <Cross />
           </button>
         </div>
