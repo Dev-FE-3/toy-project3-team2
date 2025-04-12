@@ -6,6 +6,7 @@ import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
 import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
 import Camera from "../assets/icons/camera.svg?react";
+import { TextArea } from "../components/common/TextArea";
 
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
@@ -68,7 +69,7 @@ const EditProfile = () => {
       {/* input */}
       <ul className="flex flex-col gap-[20px]">
         <li>
-          <label htmlFor="user-nickname" className="text-body2">
+          <label htmlFor="user-nickname" className="mb-2 block text-body2">
             닉네임*
           </label>
           <div className="flex gap-[8px]">
@@ -87,37 +88,28 @@ const EditProfile = () => {
           </div>
         </li>
         <li>
-          <label htmlFor="user-password" className="text-body2">
-            비밀번호*
-          </label>
           <Input
-            id="user-password"
+            htmlFor="user-password"
             type="password"
             placeholder="비밀번호를 입력하세요"
-            value={passwordValue}
-            onChange={(e) => setPasswordValue(e.target.value)}
+            label="비밀번호*"
           />
         </li>
         <li>
-          <label htmlFor="user-password-check" className="text-body2">
-            비밀번호 확인*
-          </label>
           <Input
-            id="user-password-check"
+            htmlFor="user-password"
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
             value={passwordCheckValue}
             onChange={(e) => setPasswordCheckValue(e.target.value)}
+            label="비밀번호 확인*"
           />
         </li>
         <li>
-          <label htmlFor="user-info" className="text-body2">
-            소개
-          </label>
-          <Input
-            id="user-info"
-            type="textarea"
+          <TextArea
+            htmlFor="user-info"
             placeholder="소개글을 입력하세요"
+            label="소개*"
             value={textareaValue}
             onChange={(e) => setTextareaValue(e.target.value)}
           />

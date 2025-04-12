@@ -43,39 +43,26 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label htmlFor="email" className="mb-2 text-sub2">
-              이메일
-            </label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="이메일을 입력해주세요"
-              className="mb-5"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="mb-2 text-sub2">
-              비밀번호
-            </label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              className="mb-6"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <Button type="submit" variant="full" className="mb-10">
-            로그인
-          </Button>
+          <Input
+            id="email"
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            className="mb-5"
+            required
+            label="이메일"
+          />
+          <Input
+            id="password"
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            className="mb-6"
+            required
+            label="비밀번호"
+          />
         </form>
+        <Button type="submit" variant="full" className="mt-5 mb-10">
+          로그인
+        </Button>
 
         <div className="mt-10 text-center">
           <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
