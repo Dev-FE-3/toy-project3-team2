@@ -10,9 +10,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // 로그인 버튼 활성화 상태 체크
+  const isLoginEnabled = email.trim() !== "" && password.trim() !== "";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     //로그인 시도
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -63,7 +66,7 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button type="submit" variant="full" className="mb-10 mt-5">
+          <Button type="submit" variant="full" disabled={!isLoginEnabled}>
             로그인
           </Button>
         </form>

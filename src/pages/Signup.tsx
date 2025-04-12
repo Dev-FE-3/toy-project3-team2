@@ -53,21 +53,21 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !nickname || !password || !passwordConfirm) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
-    
+
     if (!isEmailValid || !isNicknameValid) {
       alert("이메일과 닉네임 중복 확인을 해주세요.");
       return;
     }
-    
-        if (password !== passwordConfirm) {
-          alert("비밀번호가 일치하지 않습니다.");
-          return;
-        }
+
+    if (password !== passwordConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
 
     const { data, error } = await supabase.auth.signUp({
       email: email,
@@ -90,6 +90,17 @@ const Signup = () => {
     navigate("/login");
   };
 
+  // 이메일, 닉네임 중복확인 버튼 활성화 상태 체크
+  const isEmailCheckEnabled = email.trim() !== "";
+  const isNicknameCheckEnabled = nickname.trim() !== "";
+
+  // 회원가입 버튼 활성화 상태 체크
+  const isSignupEnabled =
+    email.trim() !== "" &&
+    nickname.trim() !== "" &&
+    password.trim() !== "" &&
+    passwordConfirm.trim() !== "";
+
   return (
     <div className="px-4">
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
@@ -106,7 +117,11 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Button type="button" onClick={() => checkDuplicate("email", email)}>
+            <Button
+              type="button"
+              onClick={() => checkDuplicate("email", email)}
+              disabled={!isEmailCheckEnabled}
+            >
               중복확인
             </Button>
           </div>
@@ -136,7 +151,11 @@ const Signup = () => {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
-            <Button type="button" onClick={() => checkDuplicate("nickname", nickname)}>
+            <Button
+              type="button"
+              onClick={() => checkDuplicate("nickname", nickname)}
+              disabled={!isNicknameCheckEnabled}
+            >
               중복확인
             </Button>
           </div>
@@ -171,7 +190,7 @@ const Signup = () => {
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
         />
-        <Button type="submit" variant="full" fixed>
+        <Button type="submit" variant="full" fixed disabled={!isSignupEnabled}>
           회원가입
         </Button>
       </form>
