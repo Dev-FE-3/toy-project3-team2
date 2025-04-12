@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/imgs/logo.svg";
 import { Button } from "../components/common/Button";
@@ -11,6 +11,18 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setUser = useUserStore((state) => state.setUser);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        navigate("/");
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   // 로그인 버튼 활성화 상태 체크
   const isLoginEnabled = email.trim() !== "" && password.trim() !== "";
@@ -48,7 +60,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error("로그인 에러:", error);
-      alert("로그인 중 오류가 발생했습니다.");
+      alert("이메일과 비밀번호를 확인해주세요.");
     }
   };
 
