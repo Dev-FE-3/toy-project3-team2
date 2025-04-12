@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     //로그인 시도
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -44,7 +44,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
-            id="email"
+            htmlFor="email"
             type="email"
             placeholder="이메일을 입력해주세요"
             className="mb-5"
@@ -54,7 +54,7 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input
-            id="password"
+            htmlFor="password"
             type="password"
             placeholder="비밀번호를 입력해주세요"
             className="mb-6"
@@ -63,10 +63,10 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Button type="submit" variant="full" className="mb-10 mt-5">
+            로그인
+          </Button>
         </form>
-        <Button type="submit" variant="full" className="mb-10 mt-5">
-          로그인
-        </Button>
 
         <div className="mt-10 text-center">
           <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
