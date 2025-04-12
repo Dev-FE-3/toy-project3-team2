@@ -2,13 +2,40 @@ import { useState, useEffect } from "react";
 import axiosInstance from "./../services/axios/axiosInstance";
 import useUserStore from "../store/useUserStore";
 import { Playlist } from "../types/playlist";
+import { User } from "../types/user";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
 import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
+import { useParams } from "react-router-dom";
 
 const MyPage = () => {
+  const { userId } = useParams<{ userId: string }>();
   const user = useUserStore((state) => state.user);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
   const [items, setItems] = useState<Playlist[]>([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get<User[]>("/user", {
+          params: {
+            id: `eq.${userId}`,
+            select: "*",
+          },
+        });
+
+        if (data.length > 0) {
+          setUserInfo(data[0]);
+        }
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패", error);
+      }
+    };
+
+    if (userId) {
+      fetchUser();
+    }
+  }, [userId]);
 
   useEffect(() => {
     const fetchData = async () => {
