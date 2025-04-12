@@ -45,15 +45,17 @@ const PlaylistCard = ({
         <div className="flex-1">
           {/* 플레이리스트 제목 */}
           <div className="flex items-start justify-between">
-            {/* 비공개 아이콘 */}
-            {!isPublic && (
-              <img
-                src="/src/assets/icons/lock.svg"
-                className="mr-[4px] mt-[2px] inline h-[16px] w-[16px]"
-              />
-            )}
-            {/* 제목 */}
-            <h3 className="line-clamp-2 text-body2 leading-[1.5] text-font-primary">{title}</h3>
+            <div className="flex flex-row gap-1">
+              {/* 비공개 아이콘 */}
+              {!isPublic && (
+                <img
+                  src="/src/assets/icons/lock.svg"
+                  className="mr-[4px] mt-[2px] inline h-[16px] w-[16px]"
+                />
+              )}
+              {/* 제목 */}
+              <h3 className="line-clamp-2 text-body2 leading-[1.5] text-font-primary">{title}</h3>
+            </div>
 
             {/* 수정, 삭제 메뉴 (본인의 플레이리스트일 때만 표시) */}
             {isOwner && (

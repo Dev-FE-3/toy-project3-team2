@@ -4,7 +4,6 @@ import ArrowLeft from "../assets/icons/arrow-left.svg?react";
 import Logo from "../assets/imgs/logo.svg?react";
 import Search from "../assets/icons/search.svg?react";
 import Cross from "../assets/icons/cross.svg?react";
-
 import OverflowMenu from "../components/common/OverflowMenu";
 import { useState } from "react";
 import { Input } from "../components/common/Input";
