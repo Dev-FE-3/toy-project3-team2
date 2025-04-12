@@ -3,24 +3,6 @@ import Header from "../layout/Header";
 import { usePlaylistSearch } from "../hooks/usePlaylistSearch";
 
 /** 플레이리스트 추천 페이지 */
-
-// 플레이리스트 타입 정의
-interface Playlist {
-  id: string;
-  title: string;
-  thumbnail_image: string;
-  creator_id: string;
-  is_owner: boolean;
-  subscribe_count: number;
-  like_count: number;
-  comment_count: number;
-}
-
-interface User {
-  id: string;
-  profile_image: string;
-}
-
 const Home = () => {
   const { playlists, users, handleSearch } = usePlaylistSearch();
 

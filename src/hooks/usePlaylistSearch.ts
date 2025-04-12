@@ -18,8 +18,11 @@ interface User {
 }
 
 export const usePlaylistSearch = () => {
+  // 플레이리스트와 사용자 정보 상태 관리
   const [playlists, setPlaylist] = useState<Playlist[]>([]);
   const [users, setUsers] = useState<{ [key: string]: User }>({});
+
+  // 검색어 상태 관리
   const [searchQuery, setSearchQuery] = useState("");
 
   // 플레이리스트 데이터 가져오기
@@ -66,6 +69,7 @@ export const usePlaylistSearch = () => {
     fetchData();
   }, [searchQuery]);
 
+  // 검색 실행
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
