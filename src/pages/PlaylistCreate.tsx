@@ -4,7 +4,14 @@ import { useState } from "react";
 
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
-import Toggle from "../components/Toggle";
+import Toggle from "../components/playlistCreate/Toggle";
+import VideoCard from "../components/playlistCreate/VideoCard";
+
+import { Video } from "../types/video";
+
+import { getYoutubeMeta } from "../utils/getYoutubeMeta";
+
+type NewVideoForPlaylist = Pick<Video, "url" | "title" | "thumbnail">;
 
 const PlaylistCreate = () => {
   const [isPublic, setIsPublic] = useState(false);
@@ -12,14 +19,29 @@ const PlaylistCreate = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const [videoList, setVideoList] = useState<string[]>([]);
+  const [videoList, setVideoList] = useState<NewVideoForPlaylist[]>([]);
 
-  const handleAddVideo = () => {
-    setVideoList([...videoList, videoUrl]);
-    setVideoUrl("");
+  const handleAddVideo = async () => {
+    const meta = await getYoutubeMeta(videoUrl);
+    if (!meta) return;
+
+    setVideoList([
+      ...videoList,
+      {
+        url: videoUrl,
+        title: meta.title,
+        thumbnail: meta.thumbnailUrl,
+      },
+    ]);
+
+    setVideoUrl(""); // 영상 링크 input 초기화
   };
 
-  // 추후 개발
+  const handleDeleteVideo = (index: number) => {
+    setVideoList((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // TODO: API 개발 및 연동
   const handleCreate = () => {
     alert("생성 완료!");
   };
@@ -27,14 +49,13 @@ const PlaylistCreate = () => {
   const isFormValid = title && description && videoList.length > 0;
 
   return (
-    <main className="relative h-full px-4 pb-24">
+    <main className="flex flex-col px-4 pb-[72px]">
       <section className="flex gap-[6px]">
         <div className="flex w-full justify-end py-4 text-sub">공개하기</div>
         <button onClick={() => setIsPublic((prev) => !prev)}>
           <Toggle isPublic={isPublic} />
         </button>
       </section>
-
       <form className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <label htmlFor="playlist-title" className="text-body2-medium">
@@ -74,24 +95,24 @@ const PlaylistCreate = () => {
               onChange={(e) => setVideoUrl(e.target.value)}
               showDelete={!!videoUrl}
             />
-            <Button variant="small" onClick={handleAddVideo} disabled={!videoUrl}>
+            <Button type="button" variant="small" onClick={handleAddVideo} disabled={!videoUrl}>
               추가
             </Button>
           </div>
         </div>
-        {/** 임시 UI */}
-        <section>
-          <ul>
-            {videoList.map((url, idx) => (
-              <li key={idx}>{url}</li>
-            ))}
-          </ul>
-        </section>
-        <footer className="absolute bottom-4 left-0 w-full px-4">
+
+        <ul className="grid grid-cols-2 gap-4">
+          {videoList.map((video, idx) => (
+            <VideoCard key={idx} index={idx} video={video} onDelete={handleDeleteVideo} />
+          ))}
+        </ul>
+
+        {/** 버튼 */}
+        <div className="fixed bottom-4 left-0 right-0 z-10 mx-auto w-full max-w-[430px] px-4">
           <Button variant="full" onClick={handleCreate} disabled={!isFormValid}>
             저장
           </Button>
-        </footer>
+        </div>
       </form>
     </main>
   );
