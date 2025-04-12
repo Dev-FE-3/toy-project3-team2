@@ -1,52 +1,33 @@
 /** 플레이리스트 구독 페이지 */
 
 import PlaylistCard from "../components/common/PlaylistCard";
-
-import PlaylistCard from "../components/common/PlaylistCard";
+import Header from "../layout/Header";
+import { usePlaylistSearch } from "../hooks/usePlaylistSearch";
 
 const Subscriptions = () => {
+  const { playlists, users, handleSearch } = usePlaylistSearch();
+
   return (
     <>
+      <Header onSearch={handleSearch} />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">구독 플레이리스트</h1>
       </div>
       <ul>
-        <li>
-          <PlaylistCard
-            id="dummyId-001"
-            title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-            thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-            userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-            isOwner={false}
-            subscribe_count={0}
-            like_count={0}
-            comment_count={0}
-          />
-        </li>
-        <li>
-          <PlaylistCard
-            id="dummyId-002"
-            title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-            thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-            userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-            isOwner={false}
-            subscribe_count={0}
-            like_count={0}
-            comment_count={0}
-          />
-        </li>
-        <li>
-          <PlaylistCard
-            id="dummyId-002"
-            title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-            thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-            userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-            isOwner={false}
-            subscribe_count={0}
-            like_count={0}
-            comment_count={0}
-          />
-        </li>
+        {playlists.map((playlist) => (
+          <li key={playlist.id}>
+            <PlaylistCard
+              id={playlist.id}
+              title={playlist.title}
+              thumbnailUrl={playlist.thumbnail_image}
+              userImage={users[playlist.creator_id]?.profile_image}
+              isOwner={playlist.is_owner}
+              subscribeCount={playlist.subscribe_count}
+              likeCount={playlist.like_count}
+              commentCount={playlist.comment_count}
+            />
+          </li>
+        ))}
       </ul>
     </>
   );

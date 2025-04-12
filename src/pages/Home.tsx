@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import PlaylistCard from "../components/common/PlaylistCard";
-import axiosInstance from "../services/axios/axiosInstance";
+import Header from "../layout/Header";
+import { usePlaylistSearch } from "../hooks/usePlaylistSearch";
 
 /** 플레이리스트 추천 페이지 */
 
@@ -22,46 +22,11 @@ interface User {
 }
 
 const Home = () => {
-  const [playlists, setPlaylist] = useState<Playlist[]>([]);
-  const [users, setUsers] = useState<{ [key: string]: User }>({});
-
-  // 플레이리스트 데이터 가져오기
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 플레이리스트 데이터 가져오기
-        const playlistResponse = await axiosInstance.get<Playlist[]>("/playlist?select=*");
-        setPlaylist(playlistResponse.data);
-
-        // creator_id 목록 추출
-        const creatorIds = playlistResponse.data.map((playlist) => playlist.creator_id);
-
-        // 사용자 정보 가져오기
-        const userPromises = creatorIds.map((id) =>
-          axiosInstance.get<User[]>(`/user?id=eq.${id}&select=id,profile_image`),
-        );
-        const userResponses = await Promise.all(userPromises);
-        const userMap = userResponses.reduce(
-          (acc, response) => {
-            if (response.data && response.data.length > 0) {
-              acc[response.data[0].id] = response.data[0];
-            }
-            return acc;
-          },
-          {} as { [key: string]: User },
-        );
-
-        setUsers(userMap);
-      } catch (error) {
-        console.error("데이터 가져오기 실패:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { playlists, users, handleSearch } = usePlaylistSearch();
 
   return (
     <>
+      <Header onSearch={handleSearch} />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">추천 플레이리스트</h1>
       </div>
@@ -74,9 +39,9 @@ const Home = () => {
               thumbnailUrl={playlist.thumbnail_image}
               userImage={users[playlist.creator_id]?.profile_image}
               isOwner={playlist.is_owner}
-              subscribe_count={playlist.subscribe_count}
-              like_count={playlist.like_count}
-              comment_count={playlist.comment_count}
+              subscribeCount={playlist.subscribe_count}
+              likeCount={playlist.like_count}
+              commentCount={playlist.comment_count}
             />
           </li>
         ))}
