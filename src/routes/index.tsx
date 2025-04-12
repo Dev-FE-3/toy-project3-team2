@@ -1,5 +1,6 @@
 // src/routes/index.tsx
 import { Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "../components/auth/ProtectedRoute";
 
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
@@ -24,13 +25,17 @@ const AppRoutes = () => {
       {/* Layout이 적용된 페이지들 */}
       <Route element={<Layout />}>
         <Route path="/signup" element={<Signup />} />
-        <Route path="/user/edit" element={<EditProfile />} />
-        <Route path="/playlist/create" element={<PlaylistCreate />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/subscriptions" element={<Subscriptions />} />
-        <Route path="/playlist/:id" element={<PlaylistDetail />} />
         <Route path="/guide" element={<Guide />} />
+
+        {/* 로그인 필요한 페이지들 */}
+        {/* <Route element={<ProtectedRoute />}> */}
+          <Route path="/user/edit" element={<EditProfile />} />
+          <Route path="/playlist/create" element={<PlaylistCreate />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/playlist/:id" element={<PlaylistDetail />} />
+        {/* </Route> */}
       </Route>
     </Routes>
   );
