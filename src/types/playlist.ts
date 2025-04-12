@@ -1,3 +1,5 @@
+import { Video } from "./video";
+
 export interface Playlist {
   id: string;
   title: string;
@@ -12,4 +14,12 @@ export interface Playlist {
   is_public: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface PlaylistDetailData extends Playlist {
+  videos: Video[];
+  user?: {
+    nickname: string;
+    profile_image: string;
+  };
 }

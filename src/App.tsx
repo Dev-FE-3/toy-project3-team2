@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useUserStore } from "./store/useUserStore";
 import { supabase } from "./services/supabase/supabaseClient";
 import axiosInstance from "./services/axios/axiosInstance";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const InitUser = () => {
   const setUser = useUserStore((state) => state.setUser);
@@ -31,12 +32,16 @@ const InitUser = () => {
 };
 
 function App() {
+  const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
+
   return (
     <>
-      <InitUser />
-      <Router>
-        <AppRoutes />
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <InitUser />
+        <Router>
+          <AppRoutes />
+        </Router>
+      </QueryClientProvider>
     </>
   );
 }
