@@ -1,32 +1,75 @@
 /** 사용자 정보를 수정하는 페이지 */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUserStore } from "../store/useUserStore";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
-import IconCamera from "../assets/icons/camera.svg?react";
+import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
+import Camera from "../assets/icons/camera.svg?react";
+import { TextArea } from "../components/common/TextArea";
 
 const EditProfile = () => {
-  const [inputValue, setInputValue] = useState("칠걸스");
+  const user = useUserStore((state) => state.user);
+  const [inputValue, setInputValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [passwordCheckValue, setPasswordCheckValue] = useState("");
+  const [textareaValue, setTextareaValue] = useState("");
+
+  // 초기값 설정
+  useEffect(() => {
+    if (!user) return;
+
+    setInputValue(user.nickname || "");
+    setTextareaValue(user.description || "");
+  }, [user]);
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // 저장
+    alert("저장 완료!");
+  };
+
+  const onProfileChange = () => {
+    // 프로필 이미지 변경
+    alert("프로필 이미지 변경 완료!");
+  };
+
+  const handleCheck = () => {
+    // 닉네임 중복 확인
+    alert("중복 확인 완료!");
+  };
+
+  const isFormValid = inputValue && passwordValue && passwordCheckValue;
 
   return (
-    <form className="px-[16px]">
+    <form className="px-[16px]" onSubmit={onSubmit}>
       {/* 프로필 이미지 */}
       <div className="mb-[20px] mt-[50px] text-center">
-        <div className="relative">
-          <img
-            className="mx-auto mb-[8px] h-[80px] w-[80px] rounded-full object-cover"
-            src="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-            alt="User Profile"
+        <div className="relative inline-block">
+          <label htmlFor="profile" className="cursor-pointer">
+            <img
+              className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-[0.6]"
+              src={user?.profile_image || ProfileImageDefault}
+              alt="User Profile"
+            />
+            <Camera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+          </label>
+          <input
+            id="profile"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={onProfileChange}
           />
-          <IconCamera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>
-        <span>chill-girls@gmail.com</span>
+        <span className="mt-[8px] block">{user?.email}</span>
       </div>
 
       {/* input */}
       <ul className="flex flex-col gap-[20px]">
         <li>
-          <label htmlFor="user-nickname" className="text-body2">
+          <label htmlFor="user-nickname" className="mb-2 block text-body2">
             닉네임*
           </label>
           <div className="flex gap-[8px]">
@@ -35,39 +78,46 @@ const EditProfile = () => {
               className="flex-grow"
               type="text"
               placeholder="닉네임을 입력하세요"
-              defaultValue={inputValue}
+              value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              showDelete
+              showDelete={!!inputValue}
             />
-            <Button variant="small">중복확인</Button>
+            <Button variant="small" type="button" disabled={!inputValue} onClick={handleCheck}>
+              중복확인
+            </Button>
           </div>
         </li>
         <li>
-          <label htmlFor="user-password" className="text-body2">
-            비밀번호*
-          </label>
-          <Input id="user-password" type="password" placeholder="비밀번호를 입력하세요" />
-        </li>
-        <li>
-          <label htmlFor="user-password-check" className="text-body2">
-            비밀번호 확인*
-          </label>
           <Input
-            id="user-password-check"
+            htmlFor="user-password"
             type="password"
-            placeholder="비밀번호를 다시 입력하세요"
+            placeholder="비밀번호를 입력하세요"
+            label="비밀번호*"
           />
         </li>
         <li>
-          <label htmlFor="user-info" className="text-body2">
-            소개*
-          </label>
-          <Input id="user-info" type="textarea" placeholder="소개글을 입력하세요" />
+          <Input
+            htmlFor="user-password"
+            type="password"
+            placeholder="비밀번호를 다시 입력하세요"
+            value={passwordCheckValue}
+            onChange={(e) => setPasswordCheckValue(e.target.value)}
+            label="비밀번호 확인*"
+          />
+        </li>
+        <li>
+          <TextArea
+            htmlFor="user-info"
+            placeholder="소개글을 입력하세요"
+            label="소개*"
+            value={textareaValue}
+            onChange={(e) => setTextareaValue(e.target.value)}
+          />
         </li>
       </ul>
 
       <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[430px] px-[16px]">
-        <Button variant="full" type="submit">
+        <Button variant="full" type="submit" disabled={!isFormValid}>
           저장
         </Button>
       </div>

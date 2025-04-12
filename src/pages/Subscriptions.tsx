@@ -2,6 +2,8 @@
 
 import PlaylistCard from "../components/common/PlaylistCard";
 
+import PlaylistCard from "../components/common/PlaylistCard";
+
 const Subscriptions = () => {
   return (
     <>

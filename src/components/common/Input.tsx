@@ -7,24 +7,26 @@ import IconDelete from "../../assets/icons/delete.svg";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   showDelete?: boolean;
+  label?: string;
+  htmlFor?: string;
+  value?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onChange, defaultValue, showDelete, ...props }, ref) => {
+  ({ className, type, onChange, value = "", htmlFor, showDelete, label, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState(defaultValue || "");
+    const [inputValue, setInputValue] = React.useState(value);
 
     React.useEffect(() => {
-      if (defaultValue !== undefined) {
-        setInputValue(defaultValue);
+      if (value !== undefined) {
+        setInputValue(value);
       }
-    }, [defaultValue]);
-
+    }, [value]);
     const hasValue = !!inputValue;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value);
-      onChange?.(e as React.ChangeEvent<HTMLInputElement>);
+      onChange?.(e);
     };
 
     const handleDelete = () => {
@@ -44,20 +46,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const sharedProps = {
       onChange: handleChange,
       ref,
-      defaultValue,
+      value: inputValue,
+      id: htmlFor,
       ...props,
     };
 
     let inputElement;
     switch (type) {
-      case "textarea":
-        inputElement = (
-          <textarea
-            className={cn(baseClassName, "h-[99px] resize-none py-[12px]")}
-            {...(sharedProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
-          />
-        );
-        break;
       case "round":
         inputElement = (
           <input
@@ -81,33 +76,44 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     return (
-      <div className={cn("relative", className)}>
-        {inputElement}
-        {showDelete &&
-          hasValue && ( // delete옵션 있으면, 값 있을 때 X아이콘
+      <div className={cn("relative flex flex-col gap-2", className)}>
+        {label && (
+          <label htmlFor={htmlFor} className="text-body2">
+            {label}
+          </label>
+        )}
+        <div className="relative">
+          {inputElement}
+          {showDelete &&
+            hasValue && ( // delete옵션 있으면, 값 있을 때 X아이콘
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+              >
+                <img src={IconDelete} alt="입력값 삭제" className="h-4 w-4" />
+              </button>
+            )}
+          {type === "password" && ( // type:password일 때 눈 아이콘
             <button
-              onClick={handleDelete}
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+              type="button"
+              onClick={hasValue ? () => setShowPassword((prev) => !prev) : undefined}
+              className={cn(
+                "absolute right-3 top-1/2 -translate-y-1/2",
+                !hasValue && "cursor-default",
+                showDelete && hasValue && "right-9",
+              )}
             >
-              <img src={IconDelete} alt="입력값 삭제" className="h-4 w-4" />
+              <img
+                src={
+                  hasValue ? (showPassword ? IconEye : IconEyeCrossed) : IconEyeCrossedPlaceholder
+                }
+                alt="비밀번호 보기"
+                className="h-6 w-6"
+              />
             </button>
           )}
-        {type === "password" && ( // type:password일 때 눈 아이콘
-          <button
-            onClick={hasValue ? () => setShowPassword((prev) => !prev) : undefined}
-            className={cn(
-              "absolute right-3 top-1/2 -translate-y-1/2",
-              !hasValue && "cursor-default",
-              showDelete && hasValue && "right-9",
-            )}
-          >
-            <img
-              src={hasValue ? (showPassword ? IconEye : IconEyeCrossed) : IconEyeCrossedPlaceholder}
-              alt="비밀번호 보기"
-              className="h-6 w-6"
-            />
-          </button>
-        )}
+        </div>
       </div>
     );
   },

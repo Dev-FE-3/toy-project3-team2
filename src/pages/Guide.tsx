@@ -3,6 +3,7 @@ import { Button } from "../components/common/Button";
 import { Input } from "../components/common/Input";
 import OverflowMenu from "../components/common/OverflowMenu";
 import PlaylistCard from "../components/common/PlaylistCard";
+import { TextArea } from "../components/common/TextArea";
 
 const ButtonGuide = () => {
   return (
@@ -17,6 +18,9 @@ const ButtonGuide = () => {
           <h5 className="mb-2 text-sm font-medium">비활성화</h5>
           <Button disabled variant="full">
             저장
+          </Button>
+          <Button variant="full" fixed>
+            fixed 버튼
           </Button>
         </div>
         <h4 className="font-semibold">작은 버튼</h4>
@@ -49,6 +53,8 @@ const InputGuide = () => {
       <h3 className="ml-[10px] text-xl font-bold">Input</h3>
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         <div className="mb-6">
+          {/* 라벨옵션 */}
+          <Input type="text" placeholder="이름을 입력하세요" label="라벨 옵션" htmlFor="label-option" />
           <h5 className="mb-2 text-sm font-medium">기본</h5>
           <Input type="text" placeholder="이름을 입력하세요" />
         </div>
@@ -66,7 +72,7 @@ const InputGuide = () => {
           <Input
             type="text"
             placeholder="텍스트를 입력하세요"
-            defaultValue={inputValue}
+            value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             showDelete
           />
@@ -74,16 +80,19 @@ const InputGuide = () => {
           <p>{inputValue}</p>
         </div>
         <div className="mb-6">
-          {/* textarea 소개글 */}
-          <h5 className="mb-2 text-sm font-medium">textarea</h5>
-          <Input type="textarea" placeholder="소개글을 입력하세요" />
-        </div>
-        <div className="mb-6">
           {/* round */}
           <h5 className="mb-2 text-sm font-medium">둥근 input</h5>
           <Input type="round" placeholder="검색어를 입력하세요" />
         </div>
+        <div className="mb-6">
+        </div>
       </div>
+      <h3 className="ml-[10px] text-xl font-bold">TextArea</h3>
+      <div className="my-4 rounded-xl border border-gray-600 p-4">
+        {/* textarea 소개글 */}
+        <h5 className="mb-2 text-sm font-medium">textarea</h5>
+          <TextArea label="소개글" htmlFor="textarea" value="defaultValue" placeholder="소개글을 입력하세요" />
+        </div>
     </>
   );
 };
