@@ -1,11 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 
 import ArrowLeft from "../assets/icons/arrow-left.svg?react";
 import Logo from "../assets/imgs/logo.svg?react";
 import Search from "../assets/icons/search.svg?react";
 import Cross from "../assets/icons/cross.svg?react";
 import OverflowMenu from "../components/common/OverflowMenu";
-import { useState } from "react";
 import { Input } from "../components/common/Input";
 
 type HeaderProps = {
@@ -17,6 +17,7 @@ const Header = ({ onSearch }: HeaderProps) => {
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
 
   if (hiddenPaths.includes(location.pathname)) {
@@ -48,6 +49,14 @@ const Header = ({ onSearch }: HeaderProps) => {
     }
   };
 
+  const handleSearchOpen = () => {
+    setIsSearchOpen(true);
+    // 다음 렌더링 사이클에서 input에 포커스
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 0);
+  };
+
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
       {/* 왼쪽 영역 */}
@@ -75,6 +84,7 @@ const Header = ({ onSearch }: HeaderProps) => {
       {isSearchOpen && (
         <div className="flex w-full items-center gap-3">
           <Input
+            ref={searchInputRef}
             type="round"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -97,7 +107,7 @@ const Header = ({ onSearch }: HeaderProps) => {
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
-              <button onClick={() => setIsSearchOpen(true)}>
+              <button onClick={handleSearchOpen}>
                 <Search />
               </button>
             )}
