@@ -1,18 +1,17 @@
 // src/routes/index.tsx
 import { Routes, Route } from "react-router-dom";
 
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
-import Home from "../pages/Home";
-import Subscriptions from "../pages/Subscriptions";
-import PlaylistCreate from "../pages/PlaylistCreate";
-import PlaylistDetail from "../pages/PlaylistDetail";
-import MyPage from "../pages/MyPage";
-import EditProfile from "../pages/EditProfile";
-import Guide from "../pages/Guide";
-
-import Layout from "../layout/Layout";
-import ErrorPage from "../pages/ErrorPage";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import Home from "@/pages/Home";
+import Subscriptions from "@/pages/Subscriptions";
+import PlaylistCreate from "@/pages/PlaylistCreate";
+import PlaylistDetail from "@/pages/PlaylistDetail";
+import MyPage from "@/pages/MyPage";
+import EditProfile from "@/pages/EditProfile";
+import Guide from "@/pages/Guide";
+import ErrorPage from "@/pages/ErrorPage";
+import Layout from "@/layout/Layout";
 
 const AppRoutes = () => {
   return (

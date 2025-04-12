@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-import { Input } from "../components/common/Input";
-import { Button } from "../components/common/Button";
-import Toggle from "../components/playlistCreate/Toggle";
-import VideoCard from "../components/playlistCreate/VideoCard";
+import { Input } from "@/components/common/Input";
+import { Button } from "@/components/common/Button";
+import Toggle from "@/components/playlistCreate/Toggle";
+import VideoCard from "@/components/playlistCreate/VideoCard";
 
 import { Video } from "../types/video";
 
