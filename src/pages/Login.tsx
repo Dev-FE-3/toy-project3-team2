@@ -4,11 +4,13 @@ import Logo from "../assets/imgs/logo.svg";
 import { Button } from "../components/common/Button";
 import { Input } from "../components/common/Input";
 import { supabase } from "../services/supabase/supabaseClient";
+import { useUserStore } from "../store/useUserStore";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const setUser = useUserStore((state) => state.setUser);
 
   // 로그인 버튼 활성화 상태 체크
   const isLoginEnabled = email.trim() !== "" && password.trim() !== "";
@@ -18,15 +20,30 @@ const Login = () => {
 
     try {
       const { data } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
-      // 로그인 성공 후 유저 정보 저장
       const {
-        data: { user },
+        data: { user: supabaseUser },
       } = await supabase.auth.getUser();
-      console.log(user?.id);
+
+      if (!supabaseUser) {
+        throw new Error("User not found");
+      }
+
+      const userData = {
+        id: supabaseUser.id,
+        email: supabaseUser.email ?? "",
+        nickname: supabaseUser.user_metadata.nickname,
+        profile_image: supabaseUser.user_metadata.profile_image ?? "",
+        description: supabaseUser.user_metadata.description ?? "",
+        subscribe_count: supabaseUser.user_metadata.subscribe_count ?? 0,
+      };
+
+      setUser(userData);
+      console.log("유저 정보 저장 완료:", userData);
+
       console.log("로그인 성공:", data);
       navigate("/");
     } catch (error) {
