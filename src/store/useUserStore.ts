@@ -8,7 +8,7 @@ interface UserState {
   clearUser: () => void;
 }
 
-export const useUserStore = create<UserState>()(
+const useUserStore = create<UserState>()(
   persist(
     (set) => ({
       user: null,
@@ -20,3 +20,5 @@ export const useUserStore = create<UserState>()(
     },
   ),
 );
+
+export default useUserStore;

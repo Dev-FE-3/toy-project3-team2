@@ -1,8 +1,8 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./routes";
 import { useEffect } from "react";
-import { useUserStore } from "./store/useUserStore";
-import { supabase } from "./services/supabase/supabaseClient";
+import useUserStore from "./store/useUserStore";
+import supabase from "./services/supabase/supabaseClient";
 import axiosInstance from "./services/axios/axiosInstance";
 
 const InitUser = () => {

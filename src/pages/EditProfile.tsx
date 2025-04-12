@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "./../services/axios/axiosInstance";
-import { supabase } from "../services/supabase/supabaseClient";
-import { uploadProfileImage } from "../services/supabase/uploadProfileImage";
-import { useUserStore } from "../store/useUserStore";
+import supabase from "../services/supabase/supabaseClient";
+import uploadProfileImage from "../services/supabase/uploadProfileImage";
+import useUserStore from "../store/useUserStore";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
 import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";

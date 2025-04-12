@@ -1,6 +1,6 @@
-import { supabase } from "./supabaseClient";
+import supabase from "./supabaseClient";
 
-export const uploadProfileImage = async (file: File, userId: string) => {
+const uploadProfileImage = async (file: File, userId: string) => {
   const fileExt = file.name.split(".").pop();
   const filePath = `${userId}/profile.${fileExt}`;
 
@@ -16,3 +16,5 @@ export const uploadProfileImage = async (file: File, userId: string) => {
 
   return publicUrl;
 };
+
+export default uploadProfileImage;

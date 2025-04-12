@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "./../services/axios/axiosInstance";
-import { useUserStore } from "../store/useUserStore";
+import useUserStore from "../store/useUserStore";
 import { Playlist } from "../types/playlist";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
