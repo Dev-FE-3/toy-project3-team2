@@ -77,7 +77,7 @@ const Comments = () => {
       {isCommentsLoading ? (
         <p className="text-sub">Loading...</p>
       ) : isCommentsError ? (
-        <p className="text-sub text-red-500">댓글을 불러오는 데 실패했어요.</p>
+        <p className="text-red-500 text-sub">댓글을 불러오는 데 실패했어요.</p>
       ) : (
         <>
           <span>댓글 {comments.length}</span>
@@ -98,16 +98,21 @@ const Comments = () => {
             )}
           </form>
           {isPostError && (
-            <p className="text-sub text-red-500">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
+            <p className="text-red-500 text-sub">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
           )}
-          <ul className="flex flex-col gap-[13px] pb-10">
+          <ul className="flex flex-col gap-2">
             {comments.map((item) => (
-              <li key={item.id} className="relative flex flex-col">
-                <div className="flex gap-[10px]">
-                  <img src={item?.user?.profile_image} className="mt-[5px] h-6 w-6 rounded-full" />
-                  <p className="text-sub2 text-font-second">{item?.user?.nickname}</p>
+              <li key={item.id} className="flex gap-[10px]">
+                <img
+                  src={item?.user?.profile_image}
+                  className="mt-[5px] h-6 w-6 shrink-0 rounded-full"
+                />
+                <div className="flex flex-col">
+                  <p className="whitespace-nowrap text-sub2 text-font-second">
+                    {item?.user?.nickname}
+                  </p>
+                  <p className="text-body2">{item.content}</p>
                 </div>
-                <p className="absolute left-[34px] top-[18px] text-body2">{item.content}</p>
               </li>
             ))}
           </ul>
