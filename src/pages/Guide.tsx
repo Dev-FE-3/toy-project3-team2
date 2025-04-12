@@ -119,13 +119,14 @@ const OverflowMenuGuide = () => {
 };
 
 const PlaylistCardGuide = () => {
+  // 실제 Supabase에 있는 playlist ID로 상세 페이지 연결 테스트
   return (
     <>
       <h3 className="ml-[10px] text-xl font-bold">PlaylistCard</h3>
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         <h5 className="mb-2 text-sm font-medium">홈 & 구독</h5>
         <PlaylistCard
-          id="dummyId-001"
+          id="721649ae-fbaa-4b9d-a32e-91f9ed511bda"
           title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
@@ -133,14 +134,14 @@ const PlaylistCardGuide = () => {
         />
         <h5 className="mb-2 text-sm font-medium">마이페이지 - 공개</h5>
         <PlaylistCard
-          id="dummyId-002"
+          id="721649ae-fbaa-4b9d-a32e-91f9ed511bda"
           title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           isOwner={true}
         />
         <h5 className="mb-2 text-sm font-medium">마이페이지 - 비공개</h5>
         <PlaylistCard
-          id="dummyId-003"
+          id="721649ae-fbaa-4b9d-a32e-91f9ed511bda"
           title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
           thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
           isPublic={false}
