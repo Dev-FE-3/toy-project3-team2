@@ -7,7 +7,7 @@ import { Comment } from "../../types/comment";
 import axiosInstance from "../../services/axios/axiosInstance";
 import AddIcon from "../../assets/icons/fill-add.svg?react";
 import { useUserStore } from "../../store/useUserStore";
-import CommentSkeleton from "./commonSkeleton";
+import CommentSkeleton from "./CommentSkeleton";
 
 interface NewCommentPayload {
   playlist_id: string;
