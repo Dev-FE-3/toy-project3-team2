@@ -1,13 +1,18 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+
 import { useRef, useState, useEffect, RefObject } from "react";
+
 import supabase from "@/services/supabase/supabaseClient";
+import axiosInstance from "@/services/axios/axiosInstance";
+
 import useUserStore from "@/store/useUserStore";
+
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
 import Logo from "@/assets/imgs/logo.svg?react";
 import Search from "@/assets/icons/search.svg?react";
+
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
-import axiosInstance from "@/services/axios/axiosInstance";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
@@ -23,6 +28,9 @@ const Header = ({ onSearch }: HeaderProps) => {
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
   const { id: playlistId } = useParams();
+
+  const { state } = location;
+  const isOwner = state?.isOwner;
 
   // 페이지 이동 시 검색 상태 초기화
   useEffect(() => {
@@ -97,10 +105,29 @@ const Header = ({ onSearch }: HeaderProps) => {
     navigate("/login");
   };
 
-  const MENU_OPTIONS = [
+  const myPageMenu = [
     { label: "정보수정", action: () => navigate("/user/edit") },
     { label: "로그아웃", action: handleLogout },
   ];
+
+  const playlistMenu = [
+    { label: "수정", action: () => navigate(`/playlist/edit/${playlistId}`) },
+    {
+      label: "삭제",
+      action: () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          alert("삭제 완료");
+        }
+      },
+    },
+  ];
+
+  // 현재 페이지에 따라 메뉴 결정
+  const MENU_OPTIONS = location.pathname.startsWith("/mypage")
+    ? myPageMenu
+    : location.pathname.startsWith("/playlist/") && isOwner
+      ? playlistMenu
+      : [];
 
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
@@ -162,9 +189,7 @@ const Header = ({ onSearch }: HeaderProps) => {
             )}
           </>
         ) : (
-          location.pathname.startsWith("/mypage") && (
-            <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
-          )
+          MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
         )}
       </div>
     </header>
