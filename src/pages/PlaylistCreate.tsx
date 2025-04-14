@@ -228,7 +228,9 @@ const PlaylistCreate = () => {
       description !== initialDescription ||
       !areVideoListsEqual(initialVideoList, videoList);
 
-    setIsFormValid(hasChanges);
+    const isEmpty = title.length === 0 || description.length === 0 || videoList.length === 0;
+
+    setIsFormValid(hasChanges && !isEmpty);
   }, [
     title,
     description,
@@ -243,7 +245,7 @@ const PlaylistCreate = () => {
   return (
     <main className="flex flex-col px-4 pb-[29px]">
       <section className="flex gap-[6px]">
-        <div className="flex w-full justify-end py-4 text-sub">공개하기</div>
+        <div className="flex justify-end w-full py-4 text-sub">공개하기</div>
         <button onClick={() => setIsPublic((prev) => !prev)}>
           <Toggle isPublic={isPublic} />
         </button>
