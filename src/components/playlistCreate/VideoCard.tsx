@@ -11,7 +11,7 @@ type VideoCardProps = {
 };
 
 const VideoCard = ({ index, video, onDelete }: VideoCardProps) => (
-  <li className="relative flex flex-col items-center gap-1">
+  <li className="relative flex flex-col gap-1">
     {index === 0 && (
       <span className="absolute left-2 top-2 rounded-md bg-overlay-primary px-1 py-[2px] text-tab">
         썸네일

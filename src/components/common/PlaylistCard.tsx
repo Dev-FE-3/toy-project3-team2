@@ -24,7 +24,7 @@ const PlaylistCard = ({
   const navigate = useNavigate();
 
   const menuOptions = [
-    { label: "수정", action: () => alert("수정") },
+    { label: "수정", action: () => navigate(`/playlist/edit/${id}`) },
     {
       label: "삭제",
       action: () => {

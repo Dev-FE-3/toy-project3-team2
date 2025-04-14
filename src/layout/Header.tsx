@@ -1,28 +1,49 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRef, useState, useEffect, RefObject } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+
 import supabase from "@/services/supabase/supabaseClient";
+import axiosInstance from "@/services/axios/axiosInstance";
+
 import useUserStore from "@/store/useUserStore";
+
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
 import Logo from "@/assets/imgs/logo.svg?react";
 import Search from "@/assets/icons/search.svg?react";
+
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
-import axiosInstance from "@/services/axios/axiosInstance";
+
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
+  nickname?: string;
 };
 
 const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [nickname, setNickname] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
+
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
-  const { id: playlistId } = useParams();
+
+  const { userId, id: playlistId } = useParams();
+  const user = useUserStore((state) => state.user);
+
+  const playlist = usePlaylistDetail(playlistId);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (playlist.data?.creator_id === user.id) setIsOwner(true);
+    else setIsOwner(false);
+  }, [location, playlist.data?.creator_id, user]);
 
   // 페이지 이동 시 검색 상태 초기화
   useEffect(() => {
@@ -57,6 +78,28 @@ const Header = ({ onSearch }: HeaderProps) => {
     fetchPlaylistTitle();
   }, [playlistId]);
 
+  // 타이틀: 유저 닉네임
+  useEffect(() => {
+    const fetchNickname = async () => {
+      if (userId) {
+        try {
+          const { data } = await axiosInstance.get(`/user`, {
+            params: {
+              id: `eq.${userId}`,
+              select: "nickname",
+            },
+          });
+          setNickname(data[0]?.nickname);
+        } catch (error) {
+          console.error("닉네임 가져오기 실패", error);
+          setNickname("사용자");
+        }
+      }
+    };
+
+    fetchNickname();
+  }, [userId]);
+
   if (hiddenPaths.includes(location.pathname)) {
     return null;
   }
@@ -69,9 +112,14 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   let title = "페이지";
+  const currentUser = useUserStore.getState().user;
 
   if (location.pathname.startsWith("/mypage")) {
-    title = "마이페이지";
+    if (currentUser && userId === currentUser.id) {
+      title = "마이페이지";
+    } else {
+      title = nickname || "작성자";
+    }
   } else if (
     location.pathname.startsWith("/playlist/") &&
     location.pathname !== "/playlist/create"
@@ -97,10 +145,30 @@ const Header = ({ onSearch }: HeaderProps) => {
     navigate("/login");
   };
 
-  const MENU_OPTIONS = [
+  const myPageMenu = [
     { label: "정보수정", action: () => navigate("/user/edit") },
     { label: "로그아웃", action: handleLogout },
   ];
+
+  const playlistMenu = [
+    { label: "수정", action: () => navigate(`/playlist/edit/${playlistId}`) },
+    {
+      label: "삭제",
+      action: () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          alert("삭제 완료");
+        }
+      },
+    },
+  ];
+
+  // 현재 페이지에 따라 메뉴 결정
+  const MENU_OPTIONS =
+    location.pathname.startsWith("/mypage") && currentUser && userId === currentUser.id
+      ? myPageMenu
+      : location.pathname.startsWith("/playlist/") && isOwner
+        ? playlistMenu
+        : [];
 
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
@@ -162,9 +230,7 @@ const Header = ({ onSearch }: HeaderProps) => {
             )}
           </>
         ) : (
-          location.pathname.startsWith("/mypage") && (
-            <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
-          )
+          MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
         )}
       </div>
     </header>
