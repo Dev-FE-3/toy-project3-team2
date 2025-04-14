@@ -1,12 +1,15 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+
+import { useRef, useState, useEffect, RefObject } from "react";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
-import { useRef, useState, useEffect, RefObject } from "react";
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
 import Logo from "@/assets/imgs/logo.svg?react";
 import Search from "@/assets/icons/search.svg?react";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
+
+import axiosInstance from "@/services/axios/axiosInstance";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
@@ -16,9 +19,12 @@ const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
+  const { id: playlistId } = useParams();
 
   const { state } = location;
   const isOwner = state?.isOwner;
@@ -33,6 +39,30 @@ const Header = ({ onSearch }: HeaderProps) => {
       onSearch("");
     }
   }, [location.pathname]);
+
+  // 플레이리스트 상세 제목 fetch
+  useEffect(() => {
+    const fetchPlaylistTitle = async () => {
+      if (playlistId) {
+        try {
+          const { data, status } = await axiosInstance.get(
+            `/playlist?id=eq.${playlistId}&select=title`,
+          );
+          if (status === 200 && data && data.length > 0) {
+            setPlaylistTitle(data[0].title);
+          } else {
+            throw new Error("데이터 없음");
+          }
+        } catch (err) {
+          console.error("플레이리스트 제목 불러오기 실패:", err);
+          setPlaylistTitle("플레이리스트");
+        }
+      }
+      setIsLoading(false);
+    };
+
+    fetchPlaylistTitle();
+  }, [playlistId]);
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -49,8 +79,11 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   if (location.pathname.startsWith("/mypage")) {
     title = "마이페이지";
-  } else if (location.pathname.startsWith("/playlist/edit") && id) {
-    title = "플레이리스트 수정";
+  } else if (
+    location.pathname.startsWith("/playlist/") &&
+    location.pathname !== "/playlist/create"
+  ) {
+    title = playlistTitle ?? "플레이리스트 상세";
   } else if (titleMap[location.pathname]) {
     title = titleMap[location.pathname];
   }
@@ -106,7 +139,7 @@ const Header = ({ onSearch }: HeaderProps) => {
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
       {/* 왼쪽 영역 */}
-      <div className="absolute left-4 flex items-center">
+      <div className="absolute flex items-center left-4">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
@@ -124,7 +157,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
       {/* 가운데 영역 */}
       {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
-        <h1 className="w-full text-center text-title">{title}</h1>
+        <h1 className="w-full px-8 text-center line-clamp-1 text-title">{title}</h1>
       )}
 
       {/* 검색창 */}
@@ -145,7 +178,7 @@ const Header = ({ onSearch }: HeaderProps) => {
       )}
 
       {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center">
+      <div className="absolute flex items-center right-4">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
