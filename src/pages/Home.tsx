@@ -54,9 +54,6 @@ const Home = () => {
                 thumbnailUrl={playlist.thumbnail_image}
                 userImage={playlist.user.profile_image}
                 isOwner={playlist.is_owner}
-                // subscribeCount={playlist.subscribe_count}
-                // likeCount={playlist.like_count}
-                // commentCount={playlist.comment_count}
               />
             </li>
           ))}
