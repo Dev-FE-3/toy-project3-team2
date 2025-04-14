@@ -169,7 +169,7 @@ const PlaylistCreate = () => {
       setVideoList([]);
       setIsPublic(false);
 
-      navigate(`/playlist/${id}`, { state: { isOwner: true } });
+      navigate(`/playlist/${newPlaylistId}`, { state: { isOwner: true } });
     } catch (error) {
       console.error("생성 중 오류:", error);
     }
