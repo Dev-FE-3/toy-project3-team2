@@ -1,12 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useRef, useState, useEffect, RefObject } from "react";
 
 import ArrowLeft from "../assets/icons/arrow-left.svg?react";
 import Logo from "../assets/imgs/logo.svg?react";
 import Search from "../assets/icons/search.svg?react";
-import Cross from "../assets/icons/cross.svg?react";
 import OverflowMenu from "../components/common/OverflowMenu";
-import { useState } from "react";
-import { Input } from "../components/common/Input";
+import SearchBar from "../components/common/SearchBar";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
@@ -17,7 +16,17 @@ const Header = ({ onSearch }: HeaderProps) => {
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
+
+  // 페이지 이동 시 검색 상태 초기화
+  useEffect(() => {
+    setSearchQuery("");
+    setIsSearchOpen(false);
+    if (onSearch) {
+      onSearch("");
+    }
+  }, [location.pathname]);
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -42,10 +51,12 @@ const Header = ({ onSearch }: HeaderProps) => {
     { label: "로그아웃", action: () => alert("로그아웃 클릭") },
   ];
 
-  const handleSearch = () => {
-    if (onSearch) {
-      onSearch(searchQuery);
-    }
+  // 검색창 열기 및 포커스
+  const handleSearchOpen = () => {
+    setIsSearchOpen(true);
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 0);
   };
 
   return (
@@ -72,24 +83,21 @@ const Header = ({ onSearch }: HeaderProps) => {
         <h1 className="w-full text-center text-title">{title}</h1>
       )}
 
+      {/* 검색창 */}
       {isSearchOpen && (
-        <div className="flex w-full items-center gap-3">
-          <Input
-            type="round"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-            placeholder="검색어를 입력해주세요"
-            className="flex-1"
-          />
-          <button onClick={() => setIsSearchOpen(false)}>
-            <Cross />
-          </button>
-        </div>
+        <SearchBar
+          searchQuery={searchQuery}
+          searchInputRef={searchInputRef}
+          onSearchQueryChange={setSearchQuery}
+          onSearch={onSearch || (() => {})}
+          onClose={() => {
+            setSearchQuery("");
+            setIsSearchOpen(false);
+            if (onSearch) {
+              onSearch("");
+            }
+          }}
+        />
       )}
 
       {/* 오른쪽 영역 */}
@@ -97,7 +105,7 @@ const Header = ({ onSearch }: HeaderProps) => {
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
-              <button onClick={() => setIsSearchOpen(true)}>
+              <button onClick={handleSearchOpen}>
                 <Search />
               </button>
             )}
