@@ -14,14 +14,15 @@ const PlaylistDetail = () => {
 
   // 플레이리스트 데이터가 도착하면 첫 번째 비디오로 설정
   useEffect(() => {
-    if (!selectedVideo && playlist?.videos.length) {
+    if (playlist?.videos.length) {
       setSelectedVideo(playlist.videos[0]);
     }
-  }, [playlist, selectedVideo]);
+  }, [playlist]);
 
   if (isLoading) return <PlaylistSkeleton />;
   if (isError) return <div>{error instanceof Error ? error.message : "에러가 발생했어요."}</div>;
-  if (!playlist || !selectedVideo) return <div>해당 플레이리스트를 찾을 수 없어요.</div>;
+  if (!playlist) return <div>해당 플레이리스트를 찾을 수 없어요.</div>;
+  if (!selectedVideo) return null;
 
   return (
     <section>
