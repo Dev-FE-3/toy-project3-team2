@@ -1,21 +1,25 @@
 /** 플레이리스트 생성 페이지 */
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { Input } from "../components/common/Input";
-import { Button } from "../components/common/Button";
-import { TextArea } from "../components/common/TextArea";
-import Toggle from "../components/playlistCreate/Toggle";
-import VideoCard from "../components/playlistCreate/VideoCard";
+import { Input } from "@/components/common/Input";
+import { Button } from "@/components/common/Button";
+import { TextArea } from "@/components/common/TextArea";
+import Toggle from "@/components/playlistCreate/Toggle";
+import VideoCard from "@/components/playlistCreate/VideoCard";
 
 import { Video } from "../types/video";
 import { getYoutubeMeta } from "../utils/getYoutubeMeta";
-import axiosInstance from "../services/axios/axiosInstance";
-import { useUserStore } from "../store/useUserStore";
 
-type NewVideoForPlaylist = Pick<Video, "url" | "title" | "thumbnail">;
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import useUserStore from "@/store/useUserStore";
+import axiosInstance from "@/services/axios/axiosInstance";
+
+type NewVideoForPlaylist = Pick<Video, "url" | "title" | "thumbnail"> & {
+  id?: string;
+};
 
 interface NewVideoPayload extends NewVideoForPlaylist {
   playlist_id: string;
@@ -29,6 +33,14 @@ interface NewPlaylistPayload {
   is_public: boolean;
 }
 
+interface EditPlaylistPayload {
+  title: string;
+  description: string;
+  updated_at: string;
+  thumbnail_image: string;
+  is_public: boolean;
+}
+
 const PlaylistCreate = () => {
   const [isPublic, setIsPublic] = useState(false);
   const [title, setTitle] = useState("");
@@ -36,9 +48,39 @@ const PlaylistCreate = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [videoList, setVideoList] = useState<NewVideoForPlaylist[]>([]);
 
+  const [initialTitle, setInitialTitle] = useState(title);
+  const [initialDescription, setInitialDescription] = useState(description);
+  const [initialVideoList, setInitialVideoList] = useState<NewVideoForPlaylist[]>([]);
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const user = useUserStore((state) => state.user);
 
   const navigate = useNavigate();
+  const { id } = useParams(); // 수정 모드일 경우 id 존재
+
+  const playlist = usePlaylistDetail(id); // playlist id 값을 통해 playlist data 조회
+
+  // 기존 playlist 정보 매핑
+  useEffect(() => {
+    const loadPlaylist = async () => {
+      if (!id || !playlist.data) return;
+
+      try {
+        setTitle(playlist.data.title);
+        setDescription(playlist.data.description);
+        setInitialTitle(playlist.data.title); // 초기값 설정
+        setInitialDescription(playlist.data.description); // 초기값 설정
+        setIsPublic(playlist.data.is_public);
+        setVideoList(playlist.data.videos);
+        setInitialVideoList(playlist.data.videos); // 초기값 설정
+      } catch (error) {
+        console.error("플레이리스트 정보를 불러오지 못했습니다.", error);
+      }
+    };
+
+    loadPlaylist();
+  }, [id, playlist.data]);
 
   const handleAddVideo = async () => {
     const meta = await getYoutubeMeta(videoUrl);
@@ -56,13 +98,33 @@ const PlaylistCreate = () => {
     setVideoUrl(""); // 영상 링크 input 초기화
   };
 
-  const handleDeleteVideo = (index: number) => {
+  const handleDeleteVideo = async (index: number) => {
+    const videoToDelete = videoList[index];
+
+    // UI에서 index 기준으로 삭제
     setVideoList((prev) => prev.filter((_, i) => i !== index));
+
+    // 수정 모드일 때 DB에서 삭제
+    if (id && videoToDelete.id) {
+      try {
+        await deleteVideoMutation.mutateAsync({
+          video_id: String(videoToDelete.id),
+        });
+      } catch (error) {
+        console.error("영상 삭제 실패:", error);
+      }
+    }
   };
 
   // 플레이리스트 생성 뮤테이션
   const createPlaylistMutation = useMutation({
     mutationFn: (payload: NewPlaylistPayload) => axiosInstance.post("/playlist", payload),
+  });
+
+  // 플레이리스트 수정 뮤테이션
+  const editPlaylistMutation = useMutation({
+    mutationFn: (payload: EditPlaylistPayload) =>
+      axiosInstance.patch(`/playlist?id=eq.${id}`, payload),
   });
 
   // 영상 추가 뮤테이션
@@ -71,6 +133,13 @@ const PlaylistCreate = () => {
       Promise.all(payload.map((payload) => axiosInstance.post("/video", payload))),
   });
 
+  // 영상 삭제 뮤테이션
+  const deleteVideoMutation = useMutation({
+    mutationFn: ({ video_id }: { video_id: string }) =>
+      axiosInstance.delete(`/video?playlist_id=eq.${id}&id=eq.${video_id}`),
+  });
+
+  // 플레이리스트 생성하는 함수
   const handleCreate = async () => {
     if (!user) return;
 
@@ -101,13 +170,79 @@ const PlaylistCreate = () => {
       setVideoList([]);
       setIsPublic(false);
 
-      navigate("/mypage");
+      navigate(`/playlist/${id}`, { state: { isOwner: true } });
     } catch (error) {
       console.error("생성 중 오류:", error);
     }
   };
 
-  const isFormValid = title && description && videoList.length > 0;
+  // 플레이리스트 수정하는 함수
+  const handleEdit = async () => {
+    if (!user || !id) return;
+
+    const playlistPayload: EditPlaylistPayload = {
+      title,
+      description,
+      updated_at: new Date().toISOString(),
+      thumbnail_image: videoList[0]?.thumbnail,
+      is_public: isPublic,
+    };
+
+    try {
+      await editPlaylistMutation.mutateAsync(playlistPayload);
+
+      // 영상이 변경된 경우
+      if (!areVideoListsEqual(initialVideoList, videoList)) {
+        const newVideos = videoList.filter((video) => !video.id);
+
+        const videoPayloads: NewVideoPayload[] = newVideos.map((video) => ({
+          playlist_id: id,
+          ...video,
+        }));
+
+        if (videoPayloads.length > 0) {
+          await addVideosMutation.mutateAsync(videoPayloads);
+        }
+      }
+
+      setTitle("");
+      setDescription("");
+      setVideoList([]);
+      setIsPublic(false);
+
+      navigate(`/playlist/${id}`, { state: { isOwner: true } });
+    } catch (error) {
+      console.error("수정 중 오류:", error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!id) {
+      handleCreate();
+    } else handleEdit();
+  };
+
+  const areVideoListsEqual = (list1: NewVideoForPlaylist[], list2: NewVideoForPlaylist[]) => {
+    if (list1.length !== list2.length) return false;
+
+    return list1.every((video, index) => {
+      const other = list2[index];
+      return (
+        video.url === other.url &&
+        video.title === other.title &&
+        video.thumbnail === other.thumbnail
+      );
+    });
+  };
+
+  useEffect(() => {
+    const hasChanges =
+      title !== initialTitle ||
+      description !== initialDescription ||
+      !areVideoListsEqual(initialVideoList, videoList);
+
+    setIsFormValid(hasChanges);
+  }, [title, description, videoList, initialTitle, initialDescription, initialVideoList]);
 
   return (
     <main className="flex flex-col px-4 pb-[29px]">
@@ -159,8 +294,8 @@ const PlaylistCreate = () => {
           ))}
         </ul>
 
-        <Button type="button" variant="full" onClick={handleCreate} disabled={!isFormValid} fixed>
-          저장
+        <Button type="button" variant="full" onClick={handleSubmit} disabled={!isFormValid} fixed>
+          {!id ? "생성" : "저장"}
         </Button>
       </form>
     </main>
