@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 import BookmarkIcon from "@/assets/icons/bookmark.svg?react";
 import HeartIcon from "@/assets/icons/heart.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
 
-// interface PlaylistActionsProps {
-//   playlistId: string; // 실제 API 연동 시 사용할 예정
-// }
+interface PlaylistActionsProps {
+  playlistId: string;
+}
 
-const PlaylistActions = () => {
+const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
   // 기본 값으로 더미 데이터 사용 (API 연결 전까지)
   const [isLiked, setIsLiked] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -17,8 +17,7 @@ const PlaylistActions = () => {
   const [subscriptions, setSubscriptions] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
 
-  const { id } = useParams<{ id: string }>();
-  const playlist = usePlaylistDetail(id);
+  const playlist = usePlaylistDetail(playlistId);
 
   useEffect(() => {
     if (!playlist) return;
