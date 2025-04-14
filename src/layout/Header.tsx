@@ -1,6 +1,5 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-
 import { useRef, useState, useEffect, RefObject } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import supabase from "@/services/supabase/supabaseClient";
 import axiosInstance from "@/services/axios/axiosInstance";
@@ -14,6 +13,8 @@ import Search from "@/assets/icons/search.svg?react";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
 
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+
 type HeaderProps = {
   onSearch?: (query: string) => void;
 };
@@ -25,12 +26,21 @@ const Header = ({ onSearch }: HeaderProps) => {
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
+
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
   const { id: playlistId } = useParams();
+  const user = useUserStore((state) => state.user);
 
-  const { state } = location;
-  const isOwner = state?.isOwner;
+  const playlist = usePlaylistDetail(playlistId);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (playlist.data?.creator_id === user.id) setIsOwner(true);
+    else setIsOwner(false);
+  }, [location, playlist.data?.creator_id, user]);
 
   // 페이지 이동 시 검색 상태 초기화
   useEffect(() => {
