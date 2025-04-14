@@ -13,7 +13,7 @@ import VideoCard from "../components/playlistCreate/VideoCard";
 import { Video } from "../types/video";
 import { getYoutubeMeta } from "../utils/getYoutubeMeta";
 import axiosInstance from "../services/axios/axiosInstance";
-import { useUserStore } from "../store/useUserStore";
+import useUserStore from "../store/useUserStore";
 
 type NewVideoForPlaylist = Pick<Video, "url" | "title" | "thumbnail">;
 
