@@ -19,6 +19,7 @@ export interface Playlist {
 export interface PlaylistDetailData extends Playlist {
   videos: Video[];
   user?: {
+    id: string;
     nickname: string;
     profile_image: string;
   };
