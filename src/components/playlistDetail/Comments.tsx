@@ -7,6 +7,7 @@ import { Comment } from "../../types/comment";
 import axiosInstance from "../../services/axios/axiosInstance";
 import AddIcon from "../../assets/icons/fill-add.svg?react";
 import { useUserStore } from "../../store/useUserStore";
+import CommentSkeleton from "./CommentSkeleton";
 
 interface NewCommentPayload {
   playlist_id: string;
@@ -75,7 +76,7 @@ const Comments = () => {
   return (
     <div className="flex flex-col gap-3 p-4">
       {isCommentsLoading ? (
-        <p className="text-sub">Loading...</p>
+        <CommentSkeleton />
       ) : isCommentsError ? (
         <p className="text-red-500 text-sub">댓글을 불러오는 데 실패했어요.</p>
       ) : (
