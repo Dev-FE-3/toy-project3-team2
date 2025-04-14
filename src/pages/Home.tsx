@@ -19,7 +19,11 @@ const Home = () => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
   }
 
   return (
@@ -45,7 +49,7 @@ const Home = () => {
               />
             </li>
           ))}
-          <div ref={targetRef} className="h-4">
+          <div ref={targetRef} className="flex h-4 items-center justify-center">
             {isFetchingNextPage && <div>Loading more...</div>}
           </div>
         </ul>
