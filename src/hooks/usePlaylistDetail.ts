@@ -15,7 +15,7 @@ const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> =>
     params: {
       playlist_id: `eq.${playlistId}`,
       select: "*",
-      order: "order.asc",
+      order: "created_at.asc",
     },
   });
 
