@@ -10,20 +10,12 @@ import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
 
-import { Video } from "../types/video";
-import { getYoutubeMeta } from "../utils/getYoutubeMeta";
-
+import { NewVideoForPlaylist, Video } from "@/types/video";
+import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
+import { areVideoListsEqual } from "@/utils/video";
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 import useUserStore from "@/store/useUserStore";
 import axiosInstance from "@/services/axios/axiosInstance";
-
-type NewVideoForPlaylist = Pick<Video, "url" | "title" | "thumbnail"> & {
-  id?: string;
-};
-
-interface NewVideoPayload extends NewVideoForPlaylist {
-  playlist_id: string;
-}
 
 interface NewPlaylistPayload {
   title: string;
@@ -48,6 +40,7 @@ const PlaylistCreate = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [videoList, setVideoList] = useState<NewVideoForPlaylist[]>([]);
 
+  const [initialPublic, setInitialPublic] = useState(isPublic);
   const [initialTitle, setInitialTitle] = useState(title);
   const [initialDescription, setInitialDescription] = useState(description);
   const [initialVideoList, setInitialVideoList] = useState<NewVideoForPlaylist[]>([]);
@@ -66,14 +59,18 @@ const PlaylistCreate = () => {
     const loadPlaylist = async () => {
       if (!id || !playlist.data) return;
 
+      const playlistData = playlist.data;
+
       try {
-        setTitle(playlist.data.title);
-        setDescription(playlist.data.description);
-        setInitialTitle(playlist.data.title); // 초기값 설정
-        setInitialDescription(playlist.data.description); // 초기값 설정
-        setIsPublic(playlist.data.is_public);
-        setVideoList(playlist.data.videos);
-        setInitialVideoList(playlist.data.videos); // 초기값 설정
+        setTitle(playlistData.title);
+        setDescription(playlistData.description);
+        setIsPublic(playlistData.is_public);
+        setVideoList(playlistData.videos);
+
+        setInitialTitle(playlistData.title);
+        setInitialDescription(playlistData.description);
+        setInitialVideoList(playlistData.videos);
+        setInitialPublic(playlistData.is_public);
       } catch (error) {
         console.error("플레이리스트 정보를 불러오지 못했습니다.", error);
       }
@@ -99,6 +96,8 @@ const PlaylistCreate = () => {
   };
 
   const handleDeleteVideo = async (index: number) => {
+    if (videoList.length === 1) return alert("영상은 하나 이상 추가해야 합니다.");
+
     const videoToDelete = videoList[index];
 
     // UI에서 index 기준으로 삭제
@@ -129,7 +128,7 @@ const PlaylistCreate = () => {
 
   // 영상 추가 뮤테이션
   const addVideosMutation = useMutation({
-    mutationFn: (payload: NewVideoPayload[]) =>
+    mutationFn: (payload: Video[]) =>
       Promise.all(payload.map((payload) => axiosInstance.post("/video", payload))),
   });
 
@@ -157,7 +156,7 @@ const PlaylistCreate = () => {
       const newPlaylistId = data[0].id; // 생성된 playlist id를 반환 받음
 
       // 영상 추가
-      const videoPayloads: NewVideoPayload[] = videoList.map((video) => ({
+      const videoPayloads: Video[] = videoList.map((video) => ({
         playlist_id: newPlaylistId,
         ...video,
       }));
@@ -195,7 +194,7 @@ const PlaylistCreate = () => {
       if (!areVideoListsEqual(initialVideoList, videoList)) {
         const newVideos = videoList.filter((video) => !video.id);
 
-        const videoPayloads: NewVideoPayload[] = newVideos.map((video) => ({
+        const videoPayloads: Video[] = newVideos.map((video) => ({
           playlist_id: id,
           ...video,
         }));
@@ -222,27 +221,24 @@ const PlaylistCreate = () => {
     } else handleEdit();
   };
 
-  const areVideoListsEqual = (list1: NewVideoForPlaylist[], list2: NewVideoForPlaylist[]) => {
-    if (list1.length !== list2.length) return false;
-
-    return list1.every((video, index) => {
-      const other = list2[index];
-      return (
-        video.url === other.url &&
-        video.title === other.title &&
-        video.thumbnail === other.thumbnail
-      );
-    });
-  };
-
   useEffect(() => {
     const hasChanges =
+      isPublic !== initialPublic ||
       title !== initialTitle ||
       description !== initialDescription ||
       !areVideoListsEqual(initialVideoList, videoList);
 
     setIsFormValid(hasChanges);
-  }, [title, description, videoList, initialTitle, initialDescription, initialVideoList]);
+  }, [
+    title,
+    description,
+    videoList,
+    initialTitle,
+    initialDescription,
+    initialVideoList,
+    isPublic,
+    initialPublic,
+  ]);
 
   return (
     <main className="flex flex-col px-4 pb-[29px]">
