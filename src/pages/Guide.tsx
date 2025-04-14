@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Button } from "../components/common/Button";
-import { Input } from "../components/common/Input";
-import OverflowMenu from "../components/common/OverflowMenu";
-import PlaylistCard from "../components/common/PlaylistCard";
-import { TextArea } from "../components/common/TextArea";
+import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
+import OverflowMenu from "@/components/common/OverflowMenu";
+import PlaylistCard from "@/components/common/PlaylistCard";
+import { TextArea } from "@/components/common/TextArea";
 
 const ButtonGuide = () => {
   return (
@@ -47,6 +47,7 @@ const ButtonGuide = () => {
 
 const InputGuide = () => {
   const [inputValue, setInputValue] = useState("defaultValue");
+  const [textareaValue, setTextareaValue] = useState("defaultValue");
 
   return (
     <>
@@ -91,7 +92,7 @@ const InputGuide = () => {
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         {/* textarea 소개글 */}
         <h5 className="mb-2 text-sm font-medium">textarea</h5>
-          <TextArea label="소개글" htmlFor="textarea" value="defaultValue" placeholder="소개글을 입력하세요" />
+          <TextArea label="소개글" htmlFor="textarea" value={textareaValue} onChange={(e) => setTextareaValue(e.target.value)} placeholder="소개글을 입력하세요" />
         </div>
     </>
   );

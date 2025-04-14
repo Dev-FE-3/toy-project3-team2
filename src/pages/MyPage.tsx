@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import axiosInstance from "./../services/axios/axiosInstance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useUserStore from "../store/useUserStore";
@@ -52,6 +52,7 @@ const MyPage = () => {
   const user = useUserStore((state) => state.user);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const {
     data: userInfo,
@@ -85,6 +86,13 @@ const MyPage = () => {
       console.error("삭제 실패", error);
       alert("삭제에 실패했습니다.");
     },
+  });
+
+  const sortedItems = [...items].sort((a, b) => {
+    const dateA = new Date(a.updated_at ?? a.created_at).getTime();
+    const dateB = new Date(b.updated_at ?? b.created_at).getTime();
+
+    return dateB - dateA;
   });
 
   const handleDelete = (id: string) => {
@@ -122,11 +130,11 @@ const MyPage = () => {
       {/* user가 생성한 플레이리스트 */}
       <section className="border-t border-outline">
         <div className="px-[20px] py-[12px] text-right">
-          <DropDownMenu />
+          <DropDownMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
         </div>
         {items.length ? (
           <ul>
-            {items.map((item) => (
+            {sortedItems.map((item) => (
               <li key={item.id}>
                 <PlaylistCard
                   id={item.id}
@@ -143,6 +151,13 @@ const MyPage = () => {
           <p className="px-[16px]">생성한 플레이리스트가 없습니다.</p>
         )}
       </section>
+
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 z-10 bg-overlay-primary"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
     </>
   );
 };

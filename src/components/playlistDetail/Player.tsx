@@ -3,11 +3,13 @@ import { PlaylistDetailData } from "../../types/playlist";
 import { Video } from "../../types/video";
 import PlaylistActions from "../common/PlaylistAction";
 import { formatDate } from "../../utils/formatData";
+import { useNavigate } from "react-router-dom";
 
 const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
 
 const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Video }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const isClamped = playlist.description.length > MAX_DESCRIPTION_PREVIEW_LENGTH;
   const visibleText = isExpanded
@@ -52,6 +54,13 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
   const embedUrl = getEmbedUrl(video.url);
   const creator = playlist.user;
 
+  // 유저 정보 클릭 시 마이페이지로 이동
+  const handleCreatorClick = () => {
+    if (creator?.id) {
+      navigate(`/mypage/${creator.id}`);
+    }
+  };
+
   return (
     <>
       {/* 영상 영역 */}
@@ -69,7 +78,7 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
       <section className="space-y-4 px-4 pb-6 pt-3">
         {/* 유저 정보 */}
         <div className="flex items-center justify-between">
-          <div className="flex gap-2.5">
+          <div className="flex gap-2.5" onClick={handleCreatorClick}>
             <img src={creator?.profile_image} className="h-6 w-6 rounded-full" />
             <p>{creator?.nickname}</p>
           </div>
