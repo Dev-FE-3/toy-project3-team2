@@ -96,9 +96,6 @@ const Login = () => {
             로그인
           </Button>
         </form>
-        <Button type="submit" variant="full" className="mt-5 mb-10">
-          로그인
-        </Button>
 
         <div className="mt-10 text-center">
           <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
