@@ -96,7 +96,7 @@ const PlaylistCreate = () => {
   };
 
   const handleDeleteVideo = async (index: number) => {
-    if (videoList.length === 1) return alert("영상은 하나 이상 추가해야 합니다.");
+    if (videoList.length === 1) return alert("영상은 하나 이상 존재해야 합니다.");
 
     const videoToDelete = videoList[index];
 
