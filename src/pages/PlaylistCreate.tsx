@@ -286,7 +286,12 @@ const PlaylistCreate = () => {
 
         <ul className="grid grid-cols-2 gap-4">
           {videoList.map((video, idx) => (
-            <VideoCard key={idx} index={idx} video={video} onDelete={handleDeleteVideo} />
+            <VideoCard
+              key={video.id ?? idx}
+              index={idx}
+              video={video}
+              onDelete={handleDeleteVideo}
+            />
           ))}
         </ul>
 
