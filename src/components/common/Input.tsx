@@ -43,10 +43,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     const baseClassName = cn(
-      "flex w-full rounded bg-background-input px-3 py-[15px] !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+      "w-full rounded bg-background-input px-3 !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
       "border-[1px] border-transparent focus:border-font-placeholder",
       (type === "password" || (showDelete && hasValue)) && "pr-10",
-      inputClassName,
     );
     const sharedProps = {
       onChange: handleChange,
@@ -63,7 +62,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             className={cn(
               baseClassName,
-              "h-[37px] rounded-[30px] border-font-placeholder bg-transparent",
+              "rounded-[30px] border-font-placeholder bg-transparent py-[12px]",
+              inputClassName,
             )}
             {...sharedProps}
           />
@@ -73,7 +73,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         inputElement = (
           <input
             type={type === "password" && showPassword ? "text" : type}
-            className={cn(baseClassName, "h-[40px]")}
+            className={cn(baseClassName, "py-[14px]", inputClassName)}
             {...sharedProps}
           />
         );
