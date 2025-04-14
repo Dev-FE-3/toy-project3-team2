@@ -49,19 +49,13 @@ const Header = ({ onSearch }: HeaderProps) => {
         } catch (err) {
           console.error("플레이리스트 제목 불러오기 실패:", err);
           setPlaylistTitle("플레이리스트");
-        } finally {
-          setIsLoading(false); // 로딩 끝
         }
       }
+      setIsLoading(false);
     };
 
     fetchPlaylistTitle();
   }, [playlistId]);
-
-  // 로딩 중에는 아무것도 렌더링하지 않음
-  if (isLoading) {
-    return null; // 또는 로딩 스피너 등 다른 컴포넌트를 보여줄 수 있습니다.
-  }
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
