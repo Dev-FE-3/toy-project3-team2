@@ -43,16 +43,40 @@ const fetchPlaylists = async (creatorId: string, isOwner: boolean) => {
 
 // 플레이리스트 삭제
 const deletePlaylist = async (playlistId: string) => {
+  const user = useUserStore.getState().user;
+
+  if (!user?.id) {
+    throw new Error("로그인된 사용자 정보가 없습니다.");
+  }
+
+  // 댓글 삭제 (author_id까지 조건)
   await axiosInstance.delete("/comment", {
-    params: { playlist_id: `eq.${playlistId}` },
+    params: {
+      playlist_id: `eq.${playlistId}`,
+      author_id: `eq.${user.id}`,
+    },
   });
 
+  // 액션 삭제 (user_id까지 조건)
+  await axiosInstance.delete("/action", {
+    params: {
+      playlist_id: `eq.${playlistId}`,
+      user_id: `eq.${user.id}`,
+    },
+  });
+
+  // 비디오 삭제 (모두)
   await axiosInstance.delete("/video", {
-    params: { playlist_id: `eq.${playlistId}` },
+    params: {
+      playlist_id: `eq.${playlistId}`,
+    },
   });
 
+  // 마지막으로 플레이리스트 삭제
   await axiosInstance.delete("/playlist", {
-    params: { id: `eq.${playlistId}` },
+    params: {
+      id: `eq.${playlistId}`,
+    },
   });
 
   return playlistId;

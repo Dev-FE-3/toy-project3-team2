@@ -78,7 +78,7 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
       <section className="space-y-4 px-4 pb-6 pt-3">
         {/* 유저 정보 */}
         <div className="flex items-center justify-between">
-          <div className="flex gap-2.5" onClick={handleCreatorClick}>
+          <div className="flex cursor-pointer gap-2.5" onClick={handleCreatorClick}>
             <img src={creator?.profile_image} className="h-6 w-6 rounded-full" />
             <p>{creator?.nickname}</p>
           </div>
