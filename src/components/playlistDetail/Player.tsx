@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { PlaylistDetailData } from "../../types/playlist";
-import { Video } from "../../types/video";
-import PlaylistActions from "../common/PlaylistAction";
-import { formatDate } from "../../utils/formatData";
 import { useNavigate } from "react-router-dom";
+
+import { PlaylistDetailData } from "@/types/playlist";
+import { Video } from "@/types/video";
+
+import PlaylistActions from "@/components/common/PlaylistAction";
+import { formatDate } from "@/utils/formatData";
+
+import Lock from "@/assets/icons/lock.svg?react";
 
 const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
 
@@ -61,6 +65,8 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
     }
   };
 
+  console.log("비공개 여부: ", playlist.is_public);
+
   return (
     <>
       {/* 영상 영역 */}
@@ -89,7 +95,10 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
 
         {/* 플레이리스트 정보 */}
         <div>
-          <h3 className="text-body1-bold">{playlist.title}</h3>
+          <h3 className="align-baseline text-body1-bold">
+            {!playlist.is_public && <Lock className="mr-2 mt-[-2px] inline w-4" />}
+            {playlist.title}
+          </h3>
           <p className="mb-4 mt-2 text-sub2">
             {visibleText}
             {!isExpanded && isClamped && (
