@@ -10,10 +10,7 @@ interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, label, htmlFor, value, onChange, ...props }, ref) => {
-    const [inputValue, setInputValue] = React.useState(value);
-
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setInputValue(e.target.value);
       onChange?.(e);
     };
 
@@ -34,7 +31,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
             id={htmlFor}
             className={cn(baseClassName, "h-[99px] resize-none py-[12px]")}
             ref={ref}
-            value={inputValue}
+            value={value}
             onChange={handleChange}
             {...props}
           />
