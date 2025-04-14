@@ -1,10 +1,11 @@
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
-import errorIcon from "@/assets/icons/error.svg";
-import successIcon from "@/assets/icons/success.svg";
+import ErrorIcon from "@/assets/icons/error.svg";
+import SuccessIcon from "@/assets/icons/success.svg";
 import { useState } from "react";
 import supabase from "@/services/supabase/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import DefaultProfileImage from "@/assets/imgs/profile-image-default.svg";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -97,6 +98,7 @@ const Signup = () => {
         options: {
           data: {
             nickname: nickname || "",
+            profile_image: DefaultProfileImage,
           },
         },
       });
@@ -149,13 +151,13 @@ const Signup = () => {
           </div>
           {isEmailValid === false && (
             <p className="mt-2 text-sub text-red-500">
-              <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+              <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               가입된 이메일입니다.
             </p>
           )}
           {isEmailValid === true && (
             <p className="mt-2 text-sub text-green-500">
-              <img src={successIcon} alt="success" className="mr-1 inline-block h-4 w-4" />
+              <img src={SuccessIcon} alt="success" className="mr-1 inline-block h-4 w-4" />
               사용 가능한 이메일입니다.
             </p>
           )}
@@ -183,7 +185,7 @@ const Signup = () => {
           </div>
           {isNicknameValid === false && (
             <p className="mt-2 text-sub text-red-500">
-              <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+              <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               {validateNickname(nickname)
                 ? "사용 중인 닉네임입니다."
                 : "2~15자의 한글, 영문, 숫자만 사용 가능합니다."}
@@ -191,7 +193,7 @@ const Signup = () => {
           )}
           {isNicknameValid === true && (
             <p className="mt-2 text-sub text-green-500">
-              <img src={successIcon} alt="success" className="mr-1 inline-block h-4 w-4" />
+              <img src={SuccessIcon} alt="success" className="mr-1 inline-block h-4 w-4" />
               사용 가능한 닉네임입니다.
             </p>
           )}
