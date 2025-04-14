@@ -34,7 +34,7 @@ interface EditPlaylistPayload {
 }
 
 const PlaylistCreate = () => {
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
