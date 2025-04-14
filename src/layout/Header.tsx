@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import supabase from "../services/supabase/supabaseClient";
+import useUserStore from "../store/useUserStore";
 import { useRef, useState, useEffect, RefObject } from "react";
-
 import ArrowLeft from "../assets/icons/arrow-left.svg?react";
 import Logo from "../assets/imgs/logo.svg?react";
 import Search from "../assets/icons/search.svg?react";
@@ -34,21 +35,43 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   const titleMap: { [key: string]: string } = {
     "/signup": "회원가입",
-    "/mypage": "마이페이지",
     "/user/edit": "정보 수정",
     "/playlist/create": "플레이리스트 생성",
     "/guide": "컴포넌트 가이드",
   };
 
-  let title = titleMap[location.pathname] || "페이지";
+  let title = "페이지";
 
-  if (location.pathname.startsWith("/playlist/") && location.pathname !== "/playlist/create") {
+  if (location.pathname.startsWith("/mypage")) {
+    title = "마이페이지";
+  } else if (
+    location.pathname.startsWith("/playlist/") &&
+    location.pathname !== "/playlist/create"
+  ) {
     title = "플레이리스트 상세";
+  } else if (titleMap[location.pathname]) {
+    title = titleMap[location.pathname];
   }
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("로그아웃 실패", error.message);
+      return;
+    }
+
+    // 상태 초기화
+    useUserStore.getState().clearUser();
+    localStorage.removeItem("user-storage");
+
+    // 로그인 페이지로 이동
+    navigate("/login");
+  };
 
   const MENU_OPTIONS = [
     { label: "정보수정", action: () => navigate("/user/edit") },
-    { label: "로그아웃", action: () => alert("로그아웃 클릭") },
+    { label: "로그아웃", action: handleLogout },
   ];
 
   // 검색창 열기 및 포커스
@@ -111,7 +134,9 @@ const Header = ({ onSearch }: HeaderProps) => {
             )}
           </>
         ) : (
-          location.pathname === "/mypage" && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
+          location.pathname.startsWith("/mypage") && (
+            <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
+          )
         )}
       </div>
     </header>

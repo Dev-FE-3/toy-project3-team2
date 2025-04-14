@@ -1,5 +1,5 @@
 import axios from "axios";
-import { supabase } from "../supabase/supabaseClient";
+import supabase from "../supabase/supabaseClient";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
     "apikey": SUPABASE_ANON_KEY,
+    "Prefer": "return=representation",
   },
 });
 

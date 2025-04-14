@@ -9,6 +9,7 @@ interface PlaylistCardProps {
   userImage?: string;
   isPublic?: boolean;
   isOwner: boolean;
+  onDelete?: (id: string) => void;
 }
 
 const PlaylistCard = ({
@@ -18,12 +19,20 @@ const PlaylistCard = ({
   userImage,
   isPublic = true,
   isOwner,
+  onDelete,
 }: PlaylistCardProps) => {
   const navigate = useNavigate();
 
   const menuOptions = [
     { label: "수정", action: () => alert("수정") },
-    { label: "삭제", action: () => alert("삭제") },
+    {
+      label: "삭제",
+      action: () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          onDelete?.(id);
+        }
+      },
+    },
   ];
 
   const handleCardClick = () => {
@@ -32,8 +41,14 @@ const PlaylistCard = ({
 
   return (
     <div className="cursor-pointer" onClick={handleCardClick}>
-      {/* 썸네일 */}
-      <img src={thumbnailUrl} alt="Playlist Thumbnail" className="w-full object-cover" />
+      {/* 썸네일 영역: 16:9 비율 */}
+      <div className="relative aspect-video w-full">
+        <img
+          src={thumbnailUrl}
+          alt="Playlist Thumbnail"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
 
       {/* 정보 영역 */}
       <div className="flex flex-row px-[16px] py-[12px]">

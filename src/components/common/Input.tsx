@@ -10,10 +10,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   htmlFor?: string;
   value?: string;
+  inputClassName?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onChange, value = "", htmlFor, showDelete, label, ...props }, ref) => {
+  (
+    { className, type, onChange, value = "", htmlFor, showDelete, label, inputClassName, ...props },
+    ref,
+  ) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [inputValue, setInputValue] = React.useState(value);
 
@@ -42,6 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       "flex w-full rounded bg-background-input px-3 py-[15px] !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
       "border-[1px] border-transparent focus:border-font-placeholder",
       (type === "password" || (showDelete && hasValue)) && "pr-10",
+      inputClassName,
     );
     const sharedProps = {
       onChange: handleChange,
