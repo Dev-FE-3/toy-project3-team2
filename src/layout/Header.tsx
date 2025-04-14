@@ -169,7 +169,6 @@ const Header = ({ onSearch }: HeaderProps) => {
       await axiosInstance.delete("/action", {
         params: {
           playlist_id: `eq.${playlistId}`,
-          user_id: `eq.${userId}`,
         },
       });
 

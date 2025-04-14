@@ -53,7 +53,6 @@ const deletePlaylist = async (playlistId: string) => {
   await axiosInstance.delete("/comment", {
     params: {
       playlist_id: `eq.${playlistId}`,
-      author_id: `eq.${user.id}`,
     },
   });
 
