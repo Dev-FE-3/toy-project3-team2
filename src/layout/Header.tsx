@@ -1,12 +1,18 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import supabase from "../services/supabase/supabaseClient";
-import useUserStore from "../store/useUserStore";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+
 import { useRef, useState, useEffect, RefObject } from "react";
-import ArrowLeft from "../assets/icons/arrow-left.svg?react";
-import Logo from "../assets/imgs/logo.svg?react";
-import Search from "../assets/icons/search.svg?react";
-import OverflowMenu from "../components/common/OverflowMenu";
-import SearchBar from "../components/common/SearchBar";
+
+import supabase from "@/services/supabase/supabaseClient";
+import axiosInstance from "@/services/axios/axiosInstance";
+
+import useUserStore from "@/store/useUserStore";
+
+import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
+import Logo from "@/assets/imgs/logo.svg?react";
+import Search from "@/assets/icons/search.svg?react";
+
+import OverflowMenu from "@/components/common/OverflowMenu";
+import SearchBar from "@/components/common/SearchBar";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
@@ -16,9 +22,15 @@ const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
+  const { id: playlistId } = useParams();
+
+  const { state } = location;
+  const isOwner = state?.isOwner;
 
   // 페이지 이동 시 검색 상태 초기화
   useEffect(() => {
@@ -28,6 +40,30 @@ const Header = ({ onSearch }: HeaderProps) => {
       onSearch("");
     }
   }, [location.pathname]);
+
+  // 플레이리스트 상세 제목 fetch
+  useEffect(() => {
+    const fetchPlaylistTitle = async () => {
+      if (playlistId) {
+        try {
+          const { data, status } = await axiosInstance.get(
+            `/playlist?id=eq.${playlistId}&select=title`,
+          );
+          if (status === 200 && data && data.length > 0) {
+            setPlaylistTitle(data[0].title);
+          } else {
+            throw new Error("데이터 없음");
+          }
+        } catch (err) {
+          console.error("플레이리스트 제목 불러오기 실패:", err);
+          setPlaylistTitle("플레이리스트");
+        }
+      }
+      setIsLoading(false);
+    };
+
+    fetchPlaylistTitle();
+  }, [playlistId]);
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -48,7 +84,7 @@ const Header = ({ onSearch }: HeaderProps) => {
     location.pathname.startsWith("/playlist/") &&
     location.pathname !== "/playlist/create"
   ) {
-    title = "플레이리스트 상세";
+    title = playlistTitle ?? "플레이리스트 상세";
   } else if (titleMap[location.pathname]) {
     title = titleMap[location.pathname];
   }
@@ -69,10 +105,29 @@ const Header = ({ onSearch }: HeaderProps) => {
     navigate("/login");
   };
 
-  const MENU_OPTIONS = [
+  const myPageMenu = [
     { label: "정보수정", action: () => navigate("/user/edit") },
     { label: "로그아웃", action: handleLogout },
   ];
+
+  const playlistMenu = [
+    { label: "수정", action: () => navigate(`/playlist/edit/${playlistId}`) },
+    {
+      label: "삭제",
+      action: () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          alert("삭제 완료");
+        }
+      },
+    },
+  ];
+
+  // 현재 페이지에 따라 메뉴 결정
+  const MENU_OPTIONS = location.pathname.startsWith("/mypage")
+    ? myPageMenu
+    : location.pathname.startsWith("/playlist/") && isOwner
+      ? playlistMenu
+      : [];
 
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
@@ -103,7 +158,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
       {/* 가운데 영역 */}
       {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
-        <h1 className="w-full text-center text-title">{title}</h1>
+        <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
       )}
 
       {/* 검색창 */}
@@ -134,9 +189,7 @@ const Header = ({ onSearch }: HeaderProps) => {
             )}
           </>
         ) : (
-          location.pathname.startsWith("/mypage") && (
-            <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
-          )
+          MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
         )}
       </div>
     </header>

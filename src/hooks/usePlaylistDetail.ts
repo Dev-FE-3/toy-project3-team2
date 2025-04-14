@@ -7,7 +7,7 @@ const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> =>
   const { data: playlistData } = await axiosInstance.get(`/playlist`, {
     params: {
       id: `eq.${playlistId}`,
-      select: "*,user:creator_id(nickname,profile_image)",
+      select: "*,user:creator_id(nickname,profile_image, id)",
     },
   });
 
@@ -15,6 +15,7 @@ const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> =>
     params: {
       playlist_id: `eq.${playlistId}`,
       select: "*",
+      order: "created_at.asc",
     },
   });
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "./../services/axios/axiosInstance";
 import supabase from "../services/supabase/supabaseClient";
 import uploadProfileImage from "../services/supabase/uploadProfileImage";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useUserStore from "../store/useUserStore";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
@@ -15,88 +16,86 @@ import { TextArea } from "../components/common/TextArea";
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [nickNameValue, setNickNameValue] = useState("");
-  const [isNickNameValueAvailable, setIsNickNameValueAvailable] = useState<boolean | null>(null);
-  const [passwordValue, setPasswordValue] = useState("");
-  const [passwordCheckValue, setPasswordCheckValue] = useState("");
-  const [descriptionValue, setDescriptionValue] = useState("");
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
 
-  const navigate = useNavigate();
+  const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [description, setDescription] = useState("");
 
-  // 초기값 설정
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [originalNickname, setOriginalNickname] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
+
+  // 초기값 세팅
   useEffect(() => {
     if (!user) return;
 
-    setNickNameValue(user.nickname || "");
-    setDescriptionValue(user.description || "");
+    setNickname(user.nickname || "");
+    setOriginalNickname(user.nickname || "");
+
+    setDescription(user.description || "");
+    setOriginalDescription(user.description || "");
+
+    setPreviewImage(user.profile_image || null);
+    setOriginalImage(user.profile_image || null);
   }, [user]);
 
-  useEffect(() => {
-    if (user?.profile_image && !previewImage) {
-      setPreviewImage(user.profile_image);
-    }
-  }, [user?.profile_image, previewImage]);
+  const nicknameCheckMutation = useMutation({
+    mutationFn: async (nickname: string) => {
+      const { data } = await axiosInstance.get("/user", {
+        params: { nickname: `eq.${nickname}` },
+      });
+      return data;
+    },
+    onSuccess: (data) => {
+      const isDuplicate = data.length > 0 && data[0].id !== user?.id;
+      if (isDuplicate) {
+        alert("이미 사용 중인 닉네임입니다.");
+        setIsNicknameAvailable(false);
+      } else {
+        alert("사용 가능한 닉네임입니다.");
+        setIsNicknameAvailable(true);
+      }
+    },
+    onError: () => {
+      alert("중복 확인 중 문제가 발생했어요.");
+    },
+  });
 
-  // 저장
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCheck = () => {
+    if (!nickname || nickname === originalNickname) return;
 
-    if (!user?.id) return;
+    nicknameCheckMutation.mutate(nickname);
+  };
 
-    // 닉네임 중복 확인
-    if (isNickNameValueAvailable === false) {
-      alert("닉네임이 중복됩니다. 다른 닉네임을 입력해주세요.");
-      return;
-    }
+  const updateProfileMutation = useMutation({
+    mutationFn: async () => {
+      if (!user?.id) throw new Error("유저 정보 없음");
 
-    if (isNickNameValueAvailable === null) {
-      alert("닉네임 중복확인을 해주세요.");
-      return;
-    }
-
-    // 비밀번호 일치 확인
-    if (passwordValue !== passwordCheckValue) {
-      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-      return;
-    }
-
-    try {
-      // Supabase 업데이트
       let imageUrl = user.profile_image;
 
       if (selectedImage) {
-        try {
-          imageUrl = await uploadProfileImage(selectedImage, user.id);
-
-          setPreviewImage(imageUrl);
-        } catch (uploadErr) {
-          alert("이미지 업로드에 실패했어요.");
-          console.error(uploadErr);
-          return null;
-        }
+        imageUrl = await uploadProfileImage(selectedImage, user.id);
+        setPreviewImage(imageUrl);
       }
 
-      if (passwordValue) {
-        const { error: pwError } = await supabase.auth.updateUser({
-          password: passwordValue,
-        });
-
-        if (pwError) {
-          console.error("비밀번호 변경 실패:", pwError);
-          alert("비밀번호 변경에 실패했어요.");
-          return;
-        }
+      if (password) {
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw new Error("비밀번호 변경 실패");
       }
 
-      const response = await axiosInstance.patch(
+      const { data } = await axiosInstance.patch(
         "/user",
         {
           profile_image: imageUrl,
-          nickname: nickNameValue,
-          description: descriptionValue,
+          nickname,
+          description,
         },
         {
           params: { id: `eq.${user.id}` },
@@ -104,27 +103,55 @@ const EditProfile = () => {
         },
       );
 
-      // 전역 상태 업데이트
-      setUser(response.data?.[0]);
-
-      alert("저장 완료!");
-
-      // 저장 후 마이페이지로 이동
-      navigate("/mypage");
-    } catch (error) {
+      return data[0];
+    },
+    onSuccess: (updatedUser) => {
+      setUser(updatedUser);
+      queryClient.invalidateQueries();
+      alert("저장 완료되었습니다.");
+      navigate(`/mypage/${updatedUser.id}`);
+    },
+    onError: (error) => {
       console.error("업데이트 실패:", error);
-      return null;
+      alert("업데이트 중 문제가 발생했어요.");
+    },
+  });
+
+  const validateForm = () => {
+    if (nickname !== originalNickname) {
+      if (isNicknameAvailable === null) {
+        alert("닉네임 중복확인을 해주세요.");
+        return;
+      }
+
+      if (isNicknameAvailable === false) {
+        alert("이미 사용 중인 닉네임입니다.");
+        return;
+      }
     }
+
+    if (password !== passwordCheck) {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    return true;
   };
 
-  // 프로필 이미지 변경
-  const onProfileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.id) return;
+    if (!validateForm()) return;
+
+    updateProfileMutation.mutate();
+  };
+
+  const onProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setSelectedImage(file);
 
-    // 미리보기
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewImage(reader.result as string);
@@ -132,32 +159,11 @@ const EditProfile = () => {
     reader.readAsDataURL(file);
   };
 
-  // 닉네임 중복 확인
-  const handleCheck = async () => {
-    try {
-      const response = await axiosInstance.get("/user", {
-        params: {
-          nickname: `eq.${nickNameValue}`,
-        },
-      });
-
-      const isDuplicate = response.data.length > 0 && response.data[0].id !== user?.id;
-
-      if (isDuplicate) {
-        alert("중복입니다");
-        setIsNickNameValueAvailable(false);
-      } else {
-        alert("사용 가능한 닉네임입니다");
-        setIsNickNameValueAvailable(true);
-      }
-    } catch (error) {
-      console.error("중복확인 실패:", error);
-      alert("중복 확인 중 문제가 발생했어요.");
-    }
-  };
-
-  const isFormValid =
-    !!nickNameValue && !!passwordValue && !!passwordCheckValue && isNickNameValueAvailable === true;
+  const isChanged =
+    nickname !== originalNickname ||
+    description !== originalDescription ||
+    password !== "" ||
+    selectedImage !== null;
 
   return (
     <form className="px-[16px]" onSubmit={onSubmit}>
@@ -167,7 +173,7 @@ const EditProfile = () => {
           <label htmlFor="profile" className="cursor-pointer">
             <img
               className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-[0.6]"
-              src={(previewImage ?? user?.profile_image) || ProfileImageDefault}
+              src={previewImage || ProfileImageDefault}
               alt="User Profile"
             />
             <Camera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
@@ -183,26 +189,30 @@ const EditProfile = () => {
         <span className="mt-[8px] block">{user?.email}</span>
       </div>
 
-      {/* input */}
+      {/* Input Fields */}
       <ul className="flex flex-col gap-[20px]">
         <li>
-          <label htmlFor="user-nickName" className="mb-2 block text-body2">
-            닉네임*
+          <label htmlFor="user-nickname" className="mb-2 block text-body2">
+            닉네임
           </label>
           <div className="flex gap-[8px]">
             <Input
-              id="user-nickName"
+              id="user-nickname"
               className="flex-grow"
               type="text"
               placeholder="닉네임을 입력하세요"
-              value={nickNameValue}
+              value={nickname}
               onChange={(e) => {
-                setNickNameValue(e.target.value);
-                setIsNickNameValueAvailable(null);
+                setNickname(e.target.value);
+                setIsNicknameAvailable(null);
               }}
-              showDelete={!!nickNameValue}
             />
-            <Button variant="small" type="button" disabled={!nickNameValue} onClick={handleCheck}>
+            <Button
+              variant="small"
+              type="button"
+              disabled={!nickname || nickname === originalNickname}
+              onClick={handleCheck}
+            >
               중복확인
             </Button>
           </div>
@@ -212,7 +222,9 @@ const EditProfile = () => {
             htmlFor="user-password"
             type="password"
             placeholder="비밀번호를 입력하세요"
-            label="비밀번호*"
+            label="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </li>
         <li>
@@ -220,27 +232,25 @@ const EditProfile = () => {
             htmlFor="user-passwordCheck"
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
-            value={passwordCheckValue}
-            onChange={(e) => setPasswordCheckValue(e.target.value)}
-            label="비밀번호 확인*"
+            label="비밀번호 확인"
+            value={passwordCheck}
+            onChange={(e) => setPasswordCheck(e.target.value)}
           />
         </li>
         <li>
           <TextArea
             htmlFor="user-description"
             placeholder="소개글을 입력하세요"
-            label="소개*"
-            value={descriptionValue}
-            onChange={(e) => setDescriptionValue(e.target.value)}
+            label="소개"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </li>
       </ul>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[430px] px-[16px]">
-        <Button variant="full" type="submit" disabled={!isFormValid}>
-          저장
-        </Button>
-      </div>
+      <Button variant="full" type="submit" disabled={!isChanged} fixed>
+        저장
+      </Button>
     </form>
   );
 };
