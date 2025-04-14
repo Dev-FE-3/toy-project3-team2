@@ -6,7 +6,7 @@ import { Input } from "../common/Input";
 import { Comment } from "../../types/comment";
 import axiosInstance from "../../services/axios/axiosInstance";
 import AddIcon from "../../assets/icons/fill-add.svg?react";
-import { useUserStore } from "../../store/useUserStore";
+import useUserStore from "../../store/useUserStore";
 import CommentSkeleton from "./CommentSkeleton";
 
 interface NewCommentPayload {
