@@ -49,14 +49,12 @@ const deletePlaylist = async (playlistId: string) => {
     throw new Error("로그인된 사용자 정보가 없습니다.");
   }
 
-  // 댓글 삭제 (author_id까지 조건)
+  // 댓글 삭제
   await axiosInstance.delete("/comment", {
-    params: {
-      playlist_id: `eq.${playlistId}`,
-    },
+    params: { playlist_id: `eq.${playlistId}` },
   });
 
-  // 액션 삭제 (user_id까지 조건)
+  // 액션 삭제 - 내가 한 액션만
   await axiosInstance.delete("/action", {
     params: {
       playlist_id: `eq.${playlistId}`,
@@ -66,16 +64,12 @@ const deletePlaylist = async (playlistId: string) => {
 
   // 비디오 삭제 (모두)
   await axiosInstance.delete("/video", {
-    params: {
-      playlist_id: `eq.${playlistId}`,
-    },
+    params: { playlist_id: `eq.${playlistId}` },
   });
 
   // 마지막으로 플레이리스트 삭제
   await axiosInstance.delete("/playlist", {
-    params: {
-      id: `eq.${playlistId}`,
-    },
+    params: { id: `eq.${playlistId}` },
   });
 
   return playlistId;

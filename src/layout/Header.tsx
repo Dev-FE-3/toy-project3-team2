@@ -157,33 +157,27 @@ const Header = ({ onSearch }: HeaderProps) => {
     try {
       const userId = user.id;
 
-      // 1. 댓글 삭제 - 내가 쓴 것만
+      // 1. 댓글 삭제
       await axiosInstance.delete("/comment", {
-        params: {
-          playlist_id: `eq.${playlistId}`,
-          author_id: `eq.${userId}`,
-        },
+        params: { playlist_id: `eq.${playlistId}` },
       });
 
       // 2. 액션 삭제 - 내가 한 액션만
       await axiosInstance.delete("/action", {
         params: {
           playlist_id: `eq.${playlistId}`,
+          user_id: `eq.${userId}`,
         },
       });
 
-      // 3. 비디오 삭제 - 관련된 전부 삭제 (업로더 필터 필요시 조건 추가)
+      // 3. 비디오 삭제 (모두)
       await axiosInstance.delete("/video", {
-        params: {
-          playlist_id: `eq.${playlistId}`,
-        },
+        params: { playlist_id: `eq.${playlistId}` },
       });
 
       // 4. 플레이리스트 삭제
       await axiosInstance.delete("/playlist", {
-        params: {
-          id: `eq.${playlistId}`,
-        },
+        params: { id: `eq.${playlistId}` },
       });
 
       alert("플레이리스트 삭제 완료!");
