@@ -31,8 +31,6 @@ const Header = ({ onSearch }: HeaderProps) => {
   const { state } = location;
   const isOwner = state?.isOwner;
 
-  const { id } = useParams(); // id가 있으면 가져옴
-
   // 페이지 이동 시 검색 상태 초기화
   useEffect(() => {
     setSearchQuery("");
@@ -118,7 +116,7 @@ const Header = ({ onSearch }: HeaderProps) => {
   ];
 
   const playlistMenu = [
-    { label: "수정", action: () => navigate(`/playlist/edit/${id}`) },
+    { label: "수정", action: () => navigate(`/playlist/edit/${playlistId}`) },
     {
       label: "삭제",
       action: () => {
