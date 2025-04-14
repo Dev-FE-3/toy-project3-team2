@@ -45,6 +45,8 @@ const PlaylistCreate = () => {
   const [initialDescription, setInitialDescription] = useState(description);
   const [initialVideoList, setInitialVideoList] = useState<NewVideoForPlaylist[]>([]);
 
+  const [deletedVideoIds, setDeletedVideoIds] = useState<string[]>([]);
+
   const [isFormValid, setIsFormValid] = useState(false);
 
   const user = useUserStore((state) => state.user);
@@ -98,20 +100,14 @@ const PlaylistCreate = () => {
   const handleDeleteVideo = async (index: number) => {
     if (videoList.length === 1) return alert("영상은 하나 이상 존재해야 합니다.");
 
-    const videoToDelete = videoList[index];
 
-    // UI에서 index 기준으로 삭제
     setVideoList((prev) => prev.filter((_, i) => i !== index));
 
-    // 수정 모드일 때 DB에서 삭제
-    if (id && videoToDelete.id) {
-      try {
-        await deleteVideoMutation.mutateAsync({
-          video_id: String(videoToDelete.id),
-        });
-      } catch (error) {
-        console.error("영상 삭제 실패:", error);
-      }
+    const videoToDelete = videoList[index];
+
+    // 수정 모드이고 id가 있는 경우, 삭제 예정 목록에 추가
+    if (id && typeof videoToDelete.id === "string") {
+      setDeletedVideoIds((prev) => [...prev, videoToDelete.id as string]);
     }
   };
 
@@ -192,6 +188,13 @@ const PlaylistCreate = () => {
 
       // 영상이 변경된 경우
       if (!areVideoListsEqual(initialVideoList, videoList)) {
+        // 기존꺼 삭제
+        if (deletedVideoIds.length > 0) {
+          await Promise.all(
+            deletedVideoIds.map((video_id) => deleteVideoMutation.mutateAsync({ video_id })),
+          );
+        }
+
         const newVideos = videoList.filter((video) => !video.id);
 
         const videoPayloads: Video[] = newVideos.map((video) => ({
