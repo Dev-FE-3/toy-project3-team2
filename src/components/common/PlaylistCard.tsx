@@ -41,8 +41,14 @@ const PlaylistCard = ({
 
   return (
     <div className="cursor-pointer" onClick={handleCardClick}>
-      {/* 썸네일 */}
-      <img src={thumbnailUrl} alt="Playlist Thumbnail" className="w-full object-cover" />
+      {/* 썸네일 영역: 16:9 비율 */}
+      <div className="relative aspect-video w-full">
+        <img
+          src={thumbnailUrl}
+          alt="Playlist Thumbnail"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
 
       {/* 정보 영역 */}
       <div className="flex flex-row px-[16px] py-[12px]">
