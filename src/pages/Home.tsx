@@ -1,3 +1,5 @@
+/** 플레이리스트 추천 페이지 */
+
 import PlaylistCard from "@/components/common/PlaylistCard";
 import Header from "@/layout/Header";
 // import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
@@ -5,7 +7,6 @@ import { usePlaylists } from "@/hooks/usePlaylists";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 // import { useNavigate } from "react-router-dom";
 
-/** 플레이리스트 추천 페이지 */
 const Home = () => {
   // const navigate = useNavigate();
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists();
