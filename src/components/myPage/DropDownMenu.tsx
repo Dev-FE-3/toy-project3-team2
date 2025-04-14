@@ -1,15 +1,19 @@
 import { useState, useRef } from "react";
 import ArrowBottom from "../../assets/icons/arrow-bottom.svg?react";
 
-const MENU_OPTIONS = ["최신 등록순", "오래된 등록순", "업데이트순", "구독순", "좋아요순", "댓글순"];
+const MENU_OPTIONS = ["업데이트순", "구독순", "좋아요순"];
 
-const DropDownMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface DropDownMenuProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+const DropDownMenu = ({ isOpen, setIsOpen }: DropDownMenuProps) => {
   const [selected, setSelected] = useState(MENU_OPTIONS[0]);
   const dropdownRef = useRef<HTMLButtonElement>(null);
 
   const toggleDropDown = () => {
-    setIsOpen((prev) => !prev);
+    setIsOpen(!isOpen);
   };
 
   const selectOption = (option: string) => {
