@@ -17,11 +17,13 @@ import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
+  nickname?: string;
 };
 
 const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [nickname, setNickname] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,14 +32,15 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
-  const { id: playlistId } = useParams();
+
+   const { userId, playlistId } = useParams();
   const user = useUserStore((state) => state.user);
 
   const playlist = usePlaylistDetail(playlistId);
 
   useEffect(() => {
     if (!user) return;
-
+ 
     if (playlist.data?.creator_id === user.id) setIsOwner(true);
     else setIsOwner(false);
   }, [location, playlist.data?.creator_id, user]);
@@ -75,6 +78,28 @@ const Header = ({ onSearch }: HeaderProps) => {
     fetchPlaylistTitle();
   }, [playlistId]);
 
+  // 타이틀: 유저 닉네임
+  useEffect(() => {
+    const fetchNickname = async () => {
+      if (userId) {
+        try {
+          const { data } = await axiosInstance.get(`/user`, {
+            params: {
+              id: `eq.${userId}`,
+              select: "nickname",
+            },
+          });
+          setNickname(data[0]?.nickname);
+        } catch (error) {
+          console.error("닉네임 가져오기 실패", error);
+          setNickname("사용자");
+        }
+      }
+    };
+
+    fetchNickname();
+  }, [userId]);
+
   if (hiddenPaths.includes(location.pathname)) {
     return null;
   }
@@ -87,9 +112,14 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   let title = "페이지";
+  const currentUser = useUserStore.getState().user;
 
   if (location.pathname.startsWith("/mypage")) {
-    title = "마이페이지";
+    if (currentUser && userId === currentUser.id) {
+      title = "마이페이지";
+    } else {
+      title = nickname || "작성자";
+    }
   } else if (
     location.pathname.startsWith("/playlist/") &&
     location.pathname !== "/playlist/create"
@@ -133,11 +163,12 @@ const Header = ({ onSearch }: HeaderProps) => {
   ];
 
   // 현재 페이지에 따라 메뉴 결정
-  const MENU_OPTIONS = location.pathname.startsWith("/mypage")
-    ? myPageMenu
-    : location.pathname.startsWith("/playlist/") && isOwner
-      ? playlistMenu
-      : [];
+  const MENU_OPTIONS =
+    location.pathname.startsWith("/mypage") && currentUser && userId === currentUser.id
+      ? myPageMenu
+      : location.pathname.startsWith("/playlist/") && isOwner
+        ? playlistMenu
+        : [];
 
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
