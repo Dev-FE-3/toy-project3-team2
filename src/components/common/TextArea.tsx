@@ -10,10 +10,6 @@ interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, label, htmlFor, value, onChange, ...props }, ref) => {
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      onChange?.(e);
-    };
-
     const baseClassName = cn(
       "w-full rounded bg-background-input px-3 !text-sub text-font-primary placeholder:text-font-placeholder focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
       "border-[1px] border-transparent focus:border-font-placeholder",
@@ -32,7 +28,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
             className={cn(baseClassName, "h-[99px] resize-none py-[12px]")}
             ref={ref}
             value={value}
-            onChange={handleChange}
+            onChange={onChange}
             {...props}
           />
         </div>
