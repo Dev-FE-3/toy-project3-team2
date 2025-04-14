@@ -9,7 +9,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useUserStore from "../store/useUserStore";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
-import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
 import Camera from "../assets/icons/camera.svg?react";
 import { TextArea } from "../components/common/TextArea";
 
@@ -171,11 +170,13 @@ const EditProfile = () => {
       <div className="mb-[20px] mt-[50px] text-center">
         <div className="relative inline-block">
           <label htmlFor="profile" className="cursor-pointer">
-            <img
-              className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-[0.6]"
-              src={previewImage || ProfileImageDefault}
-              alt="User Profile"
-            />
+            {previewImage && (
+              <img
+                className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-[0.6]"
+                src={previewImage}
+                alt="User Profile"
+              />
+            )}
             <Camera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
           </label>
           <input
