@@ -1,10 +1,15 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import supabase from "@/services/supabase/supabaseClient";
-import useUserStore from "@/store/useUserStore";
 import { useRef, useState, useEffect, RefObject } from "react";
+
+import supabase from "@/services/supabase/supabaseClient";
+import axiosInstance from "@/services/axios/axiosInstance";
+
+import useUserStore from "@/store/useUserStore";
+
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
 import Logo from "@/assets/imgs/logo.svg?react";
 import Search from "@/assets/icons/search.svg?react";
+
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
 
@@ -16,9 +21,12 @@ const Header = ({ onSearch }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
+  const { id: playlistId } = useParams();
 
   const { state } = location;
   const isOwner = state?.isOwner;
@@ -33,6 +41,36 @@ const Header = ({ onSearch }: HeaderProps) => {
       onSearch("");
     }
   }, [location.pathname]);
+
+  // 플레이리스트 상세 제목 fetch
+  useEffect(() => {
+    const fetchPlaylistTitle = async () => {
+      if (playlistId) {
+        try {
+          const { data, status } = await axiosInstance.get(
+            `/playlist?id=eq.${playlistId}&select=title`,
+          );
+          if (status === 200 && data && data.length > 0) {
+            setPlaylistTitle(data[0].title);
+          } else {
+            throw new Error("데이터 없음");
+          }
+        } catch (err) {
+          console.error("플레이리스트 제목 불러오기 실패:", err);
+          setPlaylistTitle("플레이리스트");
+        } finally {
+          setIsLoading(false); // 로딩 끝
+        }
+      }
+    };
+
+    fetchPlaylistTitle();
+  }, [playlistId]);
+
+  // 로딩 중에는 아무것도 렌더링하지 않음
+  if (isLoading) {
+    return null; // 또는 로딩 스피너 등 다른 컴포넌트를 보여줄 수 있습니다.
+  }
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -49,8 +87,11 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   if (location.pathname.startsWith("/mypage")) {
     title = "마이페이지";
-  } else if (location.pathname.startsWith("/playlist/edit") && id) {
-    title = "플레이리스트 수정";
+  } else if (
+    location.pathname.startsWith("/playlist/") &&
+    location.pathname !== "/playlist/create"
+  ) {
+    title = playlistTitle ?? "플레이리스트 상세";
   } else if (titleMap[location.pathname]) {
     title = titleMap[location.pathname];
   }
@@ -124,7 +165,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
       {/* 가운데 영역 */}
       {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
-        <h1 className="w-full text-center text-title">{title}</h1>
+        <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
       )}
 
       {/* 검색창 */}
