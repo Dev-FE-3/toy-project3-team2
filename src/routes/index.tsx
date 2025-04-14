@@ -31,7 +31,7 @@ const AppRoutes = () => {
         <Route path="/user/edit" element={<EditProfile />} />
         <Route path="/playlist/create" element={<PlaylistCreate />} />
         <Route path="/" element={<Home />} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/:userId" element={<MyPage />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/playlist/:id" element={<PlaylistDetail />} />
         {/* </Route> */}
