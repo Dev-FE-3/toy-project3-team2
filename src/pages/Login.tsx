@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/imgs/logo.svg";
-import { Button } from "../components/common/Button";
-import { Input } from "../components/common/Input";
-import supabase from "../services/supabase/supabaseClient";
-import useUserStore from "../store/useUserStore";
+import Logo from "@/assets/imgs/logo.svg";
+import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
+import supabase from "@/services/supabase/supabaseClient";
+import useUserStore from "@/store/useUserStore";
 
 const Login = () => {
   const navigate = useNavigate();
