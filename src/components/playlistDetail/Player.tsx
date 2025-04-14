@@ -1,8 +1,19 @@
-import { Playlist } from "../../types/playlist";
+import { useState } from "react";
+import { PlaylistDetailData } from "../../types/playlist";
 import { Video } from "../../types/video";
 import PlaylistActions from "../common/PlaylistAction";
+import { formatDate } from "../../utils/formatData";
 
-export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }) => {
+const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
+
+const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Video }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const isClamped = playlist.description.length > MAX_DESCRIPTION_PREVIEW_LENGTH;
+  const visibleText = isExpanded
+    ? playlist.description
+    : playlist.description.slice(0, MAX_DESCRIPTION_PREVIEW_LENGTH);
+
   // youtube URL을 embed용 URL로 변환
   const getEmbedUrl = (url: string): string => {
     try {
@@ -39,6 +50,7 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
   };
 
   const embedUrl = getEmbedUrl(video.url);
+  const creator = playlist.user;
 
   return (
     <>
@@ -54,29 +66,40 @@ export const Player = ({ playlist, video }: { playlist: Playlist; video: Video }
       </section>
 
       {/* 콘텐츠 영역 */}
-      <section className="px-4 pb-6 pt-3">
+      <section className="space-y-4 px-4 pb-6 pt-3">
         {/* 유저 정보 */}
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row gap-2.5">
-            <img
-              src="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              alt="ijisun 프로필 이미지"
-              className="h-6 w-6 rounded-full"
-            />
-            <p>ijisun</p>
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2.5">
+            <img src={creator?.profile_image} className="h-6 w-6 rounded-full" />
+            <p>{creator?.nickname}</p>
           </div>
           <div className="text-sub">
-            <p>등록일 {playlist.created_at}</p>
+            <p>등록일 {formatDate(playlist.created_at)}</p>
           </div>
         </div>
 
         {/* 플레이리스트 정보 */}
-        <div className="pt-4">
+        <div>
           <h3 className="text-body1-bold">{playlist.title}</h3>
-          <p className="mb-4 mt-2 text-sub2">{playlist.description}</p>
+          <p className="mb-4 mt-2 text-sub2">
+            {visibleText}
+            {!isExpanded && isClamped && (
+              <>
+                <span className="text-sub2">... </span>
+                <button
+                  onClick={() => setIsExpanded(true)}
+                  className="ml-1 text-sub2 text-font-more hover:underline"
+                >
+                  더보기
+                </button>
+              </>
+            )}
+          </p>
           <PlaylistActions />
         </div>
       </section>
     </>
   );
 };
+
+export default Player;

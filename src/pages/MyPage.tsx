@@ -1,28 +1,55 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "./../services/axios/axiosInstance";
-import { useUserStore } from "../store/useUserStore";
+import useUserStore from "../store/useUserStore";
 import { Playlist } from "../types/playlist";
+import { User } from "../types/user";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
 import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
+import { useParams } from "react-router-dom";
 
 const MyPage = () => {
+  const { userId } = useParams<{ userId: string }>();
   const user = useUserStore((state) => state.user);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
   const [items, setItems] = useState<Playlist[]>([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get<User[]>("/user", {
+          params: {
+            id: `eq.${userId}`,
+            select: "*",
+          },
+        });
+
+        if (data.length > 0) {
+          setUserInfo(data[0]);
+        }
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패", error);
+      }
+    };
+
+    if (userId) {
+      fetchUser();
+    }
+  }, [userId]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.id) return null;
 
       try {
-        const res = await axiosInstance.get<Playlist[]>("/playlist", {
+        const response = await axiosInstance.get<Playlist[]>("/playlist", {
           params: {
             creator_id: `eq.${user.id}`,
             select: "*",
           },
         });
 
-        setItems(res.data || []);
+        setItems(response.data || []);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
         return null;
@@ -31,6 +58,39 @@ const MyPage = () => {
 
     fetchData();
   }, [user?.id]);
+
+  // 플레이리스트 삭제
+  const handleDelete = async (id: string) => {
+    if (!user?.id) return;
+
+    try {
+      // 1. 댓글 삭제
+      await axiosInstance.delete("/comment", {
+        params: {
+          playlist_id: `eq.${id}`,
+        },
+      });
+
+      // 2. 플레이리스트-비디오 삭제
+      await axiosInstance.delete("/video", {
+        params: {
+          playlist_id: `eq.${id}`,
+        },
+      });
+
+      // 3. 플레이리스트 삭제
+      await axiosInstance.delete("/playlist", {
+        params: {
+          id: `eq.${id}`,
+        },
+      });
+
+      setItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("삭제 실패", error);
+      alert("삭제에 실패했습니다.");
+    }
+  };
 
   return (
     <>
@@ -65,6 +125,7 @@ const MyPage = () => {
                   thumbnailUrl={item.thumbnail_image}
                   isPublic={item.is_public}
                   isOwner={true}
+                  onDelete={handleDelete}
                 />
               </li>
             ))}

@@ -1,42 +1,39 @@
 import PlaylistCard from "../components/common/PlaylistCard";
+import Header from "../layout/Header";
+import { usePlaylistSearch } from "../hooks/usePlaylistSearch";
 
 /** 플레이리스트 추천 페이지 */
-
 const Home = () => {
+  const { playlists, users, handleSearch } = usePlaylistSearch();
+
   return (
     <>
+      <Header onSearch={handleSearch} />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">추천 플레이리스트</h1>
       </div>
+      {playlists.length > 0 ? (
         <ul>
-          <li>
-            <PlaylistCard
-              id="dummyId-001"
-              title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-              thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-              userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              isOwner={false}
-            />
-          </li>
-          <li>
-            <PlaylistCard
-              id="dummyId-002"
-              title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-              thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-              userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              isOwner={false}
-            />
-          </li>
-          <li>
-            <PlaylistCard
-              id="dummyId-002"
-              title="[Ghibli OST Playlist] 감성 충만 지브리 OST 연주곡 모음집 | 마녀배달부 키키, 이웃집 토토로, 센과 치히로의 행방불명 등"
-              thumbnailUrl="https://i.pinimg.com/736x/60/0c/b6/600cb65bd5f67e70a8fac0909e4c1ee6.jpg"
-              userImage="https://i.pinimg.com/736x/17/c1/d9/17c1d903910937ecfd18943ee06279c2.jpg"
-              isOwner={false}
-            />
-          </li>
+          {playlists.map((playlist) => (
+            <li key={playlist.id}>
+              <PlaylistCard
+                id={playlist.id}
+                title={playlist.title}
+                thumbnailUrl={playlist.thumbnail_image}
+                userImage={users[playlist.creator_id]?.profile_image}
+                isOwner={playlist.is_owner}
+                subscribeCount={playlist.subscribe_count}
+                likeCount={playlist.like_count}
+                commentCount={playlist.comment_count}
+              />
+            </li>
+          ))}
         </ul>
+      ) : (
+        <div className="text-body mt-[100px] flex items-center justify-center text-font-muted">
+          검색 결과가 없습니다
+        </div>
+      )}
     </>
   );
 };
