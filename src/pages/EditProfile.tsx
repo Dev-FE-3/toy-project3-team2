@@ -21,19 +21,29 @@ const EditProfile = () => {
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [nickname, setNickname] = useState("");
   const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean | null>(null);
+
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [description, setDescription] = useState("");
+
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [originalNickname, setOriginalNickname] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
 
   // 초기값 세팅
   useEffect(() => {
     if (!user) return;
 
     setNickname(user.nickname || "");
+    setOriginalNickname(user.nickname || "");
+
     setDescription(user.description || "");
+    setOriginalDescription(user.description || "");
+
     setPreviewImage(user.profile_image || null);
+    setOriginalImage(user.profile_image || null);
   }, [user]);
 
   const nicknameCheckMutation = useMutation({
@@ -46,10 +56,10 @@ const EditProfile = () => {
     onSuccess: (data) => {
       const isDuplicate = data.length > 0 && data[0].id !== user?.id;
       if (isDuplicate) {
-        alert("중복입니다");
+        alert("이미 사용 중인 닉네임입니다.");
         setIsNicknameAvailable(false);
       } else {
-        alert("사용 가능한 닉네임입니다");
+        alert("사용 가능한 닉네임입니다.");
         setIsNicknameAvailable(true);
       }
     },
@@ -59,9 +69,9 @@ const EditProfile = () => {
   });
 
   const handleCheck = () => {
-    if (nickname) {
-      nicknameCheckMutation.mutate(nickname);
-    }
+    if (!nickname || nickname === originalNickname) return;
+
+    nicknameCheckMutation.mutate(nickname);
   };
 
   const updateProfileMutation = useMutation({
@@ -98,7 +108,7 @@ const EditProfile = () => {
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
       queryClient.invalidateQueries();
-      alert("저장 완료!");
+      alert("저장 완료되었습니다.");
       navigate(`/mypage/${updatedUser.id}`);
     },
     onError: (error) => {
@@ -107,28 +117,31 @@ const EditProfile = () => {
     },
   });
 
-  const isValidForm = () => {
-    return isNicknameAvailable === true && (password ? password === passwordCheck : true);
-  };
+  const validateForm = () => {
+    if (nickname !== originalNickname) {
+      if (isNicknameAvailable === null) {
+        alert("닉네임 중복확인을 해주세요.");
+        return;
+      }
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user?.id) return;
-
-    if (isNicknameAvailable === null) {
-      alert("닉네임 중복확인을 해주세요.");
-      return;
-    }
-
-    if (isNicknameAvailable === false) {
-      alert("닉네임이 중복됩니다. 다른 닉네임을 입력해주세요.");
-      return;
+      if (isNicknameAvailable === false) {
+        alert("이미 사용 중인 닉네임입니다.");
+        return;
+      }
     }
 
     if (password !== passwordCheck) {
       alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
       return;
     }
+
+    return true;
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.id) return;
+    if (!validateForm()) return;
 
     updateProfileMutation.mutate();
   };
@@ -145,6 +158,12 @@ const EditProfile = () => {
     };
     reader.readAsDataURL(file);
   };
+
+  const isChanged =
+    nickname !== originalNickname ||
+    description !== originalDescription ||
+    password !== "" ||
+    selectedImage !== null;
 
   return (
     <form className="px-[16px]" onSubmit={onSubmit}>
@@ -174,7 +193,7 @@ const EditProfile = () => {
       <ul className="flex flex-col gap-[20px]">
         <li>
           <label htmlFor="user-nickname" className="mb-2 block text-body2">
-            닉네임*
+            닉네임
           </label>
           <div className="flex gap-[8px]">
             <Input
@@ -187,9 +206,13 @@ const EditProfile = () => {
                 setNickname(e.target.value);
                 setIsNicknameAvailable(null);
               }}
-              showDelete={!!nickname}
             />
-            <Button variant="small" type="button" disabled={!nickname} onClick={handleCheck}>
+            <Button
+              variant="small"
+              type="button"
+              disabled={!nickname || nickname === originalNickname}
+              onClick={handleCheck}
+            >
               중복확인
             </Button>
           </div>
@@ -199,7 +222,7 @@ const EditProfile = () => {
             htmlFor="user-password"
             type="password"
             placeholder="비밀번호를 입력하세요"
-            label="비밀번호*"
+            label="비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -209,7 +232,7 @@ const EditProfile = () => {
             htmlFor="user-passwordCheck"
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
-            label="비밀번호 확인*"
+            label="비밀번호 확인"
             value={passwordCheck}
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
@@ -218,18 +241,16 @@ const EditProfile = () => {
           <TextArea
             htmlFor="user-description"
             placeholder="소개글을 입력하세요"
-            label="소개*"
+            label="소개"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </li>
       </ul>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[430px] px-[16px]">
-        <Button variant="full" type="submit" disabled={!isValidForm()}>
-          저장
-        </Button>
-      </div>
+      <Button variant="full" type="submit" disabled={!isChanged} fixed>
+        저장
+      </Button>
     </form>
   );
 };
