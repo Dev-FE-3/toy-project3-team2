@@ -65,8 +65,6 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
     }
   };
 
-  console.log("비공개 여부: ", playlist.is_public);
-
   return (
     <>
       {/* 영상 영역 */}
