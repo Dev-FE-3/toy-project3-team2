@@ -88,6 +88,7 @@ const fetchPlaylistPage = async (
     return {
       data,
       nextPage: data.length === LIMIT ? pageParam + 1 : undefined,
+      nextPage: data.length === LIMIT ? pageParam + 1 : undefined,
     };
   } catch (error) {
     console.error("Error in fetchPlaylistPage:", error);
@@ -99,6 +100,7 @@ export const usePlaylists = (options?: UsePlaylistsOptions) => {
   const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["playlists", options],
     queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam }, options),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { PlaylistDetailData } from "../../types/playlist";
-import { Video } from "../../types/video";
-import PlaylistActions from "../common/PlaylistAction";
-import { formatDate } from "../../utils/formatData";
+import { PlaylistDetailData } from "@/types/playlist";
+import { Video } from "@/types/video";
+import PlaylistActions from "@/components/common/PlaylistAction";
+import { formatDate } from "@/utils/formatData";
 import { useNavigate } from "react-router-dom";
 
 const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
@@ -104,7 +104,7 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
               </>
             )}
           </p>
-          <PlaylistActions />
+          <PlaylistActions playlistId={playlist.id} />
         </div>
       </section>
     </>
