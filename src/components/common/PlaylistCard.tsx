@@ -36,7 +36,7 @@ const PlaylistCard = ({
   ];
 
   const handleCardClick = () => {
-    navigate(`/playlist/${id}`);
+    navigate(`/playlist/${id}`, { state: { isOwner } });
   };
 
   return (
