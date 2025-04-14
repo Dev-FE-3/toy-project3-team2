@@ -33,14 +33,14 @@ const Header = ({ onSearch }: HeaderProps) => {
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
 
-   const { userId, playlistId } = useParams();
+  const { userId, id: playlistId } = useParams();
   const user = useUserStore((state) => state.user);
 
   const playlist = usePlaylistDetail(playlistId);
 
   useEffect(() => {
     if (!user) return;
- 
+
     if (playlist.data?.creator_id === user.id) setIsOwner(true);
     else setIsOwner(false);
   }, [location, playlist.data?.creator_id, user]);
