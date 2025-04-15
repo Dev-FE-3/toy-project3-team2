@@ -84,6 +84,9 @@ const fetchPlaylistPage = async (
     if (!data) {
       throw new Error("플레이리스트를 가져오는데 실패했습니다.");
     }
+    if (!data) {
+      throw new Error("플레이리스트를 가져오는데 실패했습니다.");
+    }
 
     return {
       data,
@@ -104,6 +107,16 @@ export const usePlaylists = (options?: UsePlaylistsOptions) => {
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });
+
+  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
+
+  return {
+    playlists,
+    isLoading,
+    hasMore: hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  };
 
   const playlists = data?.pages.flatMap((page) => page.data) ?? [];
 

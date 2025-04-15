@@ -60,6 +60,7 @@ const Comments = () => {
     onSuccess: () => {
       setContent("");
       queryClient.invalidateQueries({ queryKey: ["comments", playlistId] });
+      queryClient.invalidateQueries({ queryKey: ["playlist", playlistId] }); // 댓글 등록 시 comment_count update 되도록
     },
   });
 
@@ -78,7 +79,7 @@ const Comments = () => {
       {isCommentsLoading ? (
         <CommentSkeleton />
       ) : isCommentsError ? (
-        <p className="text-red-500 text-sub">댓글을 불러오는 데 실패했어요.</p>
+        <p className="text-sub text-red-500">댓글을 불러오는 데 실패했어요.</p>
       ) : (
         <>
           <span>댓글 {comments.length}</span>
@@ -99,7 +100,7 @@ const Comments = () => {
             )}
           </form>
           {isPostError && (
-            <p className="text-red-500 text-sub">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
+            <p className="text-sub text-red-500">댓글 등록에 실패했어요. 다시 시도해 주세요.</p>
           )}
           <ul className="flex flex-col gap-2">
             {comments.map((item) => (
