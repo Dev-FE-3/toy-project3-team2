@@ -100,7 +100,6 @@ const PlaylistCreate = () => {
   const handleDeleteVideo = async (index: number) => {
     if (videoList.length === 1) return alert("영상은 하나 이상 존재해야 합니다.");
 
-
     setVideoList((prev) => prev.filter((_, i) => i !== index));
 
     const videoToDelete = videoList[index];
@@ -166,7 +165,6 @@ const PlaylistCreate = () => {
       setIsPublic(false);
 
       navigate(`/playlist/${newPlaylistId}`);
-
     } catch (error) {
       console.error("생성 중 오류:", error);
     }
@@ -262,6 +260,7 @@ const PlaylistCreate = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           label="제목*"
+          maxLength={50}
         />
         <TextArea
           htmlFor="playlist-description"
@@ -269,6 +268,7 @@ const PlaylistCreate = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           label="소개*"
+          maxLength={500}
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="video-url" className="text-body2-medium">
