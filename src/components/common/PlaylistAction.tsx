@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useUserStore from "@/store/useUserStore";
 import axiosInstance from "@/services/axios/axiosInstance";
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 
 import BookmarkIcon from "@/assets/icons/bookmark.svg?react";
 import HeartIcon from "@/assets/icons/heart.svg?react";
@@ -28,11 +29,6 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
 
     setCommentCount(playlist?.data?.comment_count ?? 0);
   }, [playlist]);
-
-  const handleLike = () => {
-    setIsLiked((prev) => !prev);
-    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-  // const [comments, setComments] = useState(0);
 
   // 유저와 플레이리스트에 대한 기존 액션 정보 불러오기
   useEffect(() => {
