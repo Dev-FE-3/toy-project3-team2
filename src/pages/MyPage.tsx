@@ -56,6 +56,7 @@ const MyPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [sortOption, setSortOption] = useState("updated");
 
   const {
     data: userInfo,
@@ -76,7 +77,7 @@ const MyPage = () => {
     isFetchingNextPage,
     isLoading: isPlaylistLoading,
     error: playlistError,
-  } = useUserPlaylists(userId!, isOwner);
+  } = useUserPlaylists(userId!, isOwner, sortOption);
 
   const playlists = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -109,14 +110,6 @@ const MyPage = () => {
         fetchNextPage();
       }
     },
-  });
-
-  // 정렬
-  const sortedItems = [...playlists].sort((a, b) => {
-    const dateA = new Date(a.updated_at ?? a.created_at).getTime();
-    const dateB = new Date(b.updated_at ?? b.created_at).getTime();
-
-    return dateB - dateA;
   });
 
   const handleDelete = (id: string) => {
@@ -154,11 +147,15 @@ const MyPage = () => {
       {/* user가 생성한 플레이리스트 */}
       <section className="border-t border-outline">
         <div className="px-[20px] py-[12px] text-right">
-          <DropDownMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+          <DropDownMenu
+            isOpen={isMenuOpen}
+            setIsOpen={setIsMenuOpen}
+            setSortOption={setSortOption}
+          />
         </div>
         {playlists.length > 0 ? (
           <ul>
-            {sortedItems.map((item) => (
+            {playlists.map((item) => (
               <li key={item.id}>
                 <PlaylistCard
                   id={item.id}
