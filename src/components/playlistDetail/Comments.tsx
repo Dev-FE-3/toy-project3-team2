@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import CommentSkeleton from "./CommentSkeleton";
-import AddIcon from "../../assets/icons/fill-add.svg?react";
-import axiosInstance from "../../services/axios/axiosInstance";
-import useUserStore from "../../store/useUserStore";
-import { Comment } from "../../types/comment";
-import { Input } from "../common/Input";
+import AddIcon from "@/assets/icons/fill-add.svg?react";
+import axiosInstance from "@/services/axios/axiosInstance";
+import useUserStore from "@/store/useUserStore";
+import { Comment } from "@/types/comment";
+import { Input } from "@/components/common/Input";
 
 interface NewCommentPayload {
   playlist_id: string;

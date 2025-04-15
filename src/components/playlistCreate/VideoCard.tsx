@@ -1,5 +1,4 @@
-// components/VideoCard.tsx
-import DeleteIcon from "../../assets/icons/video_delete.svg?react";
+import DeleteIcon from "@/assets/icons/video_delete.svg?react";
 
 type VideoCardProps = {
   index: number;

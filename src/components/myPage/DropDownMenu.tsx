@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-import ArrowBottom from "../../assets/icons/arrow-bottom.svg?react";
+import ArrowBottom from "@/assets/icons/arrow-bottom.svg?react";
 
 const MENU_OPTIONS = [
   { label: "업데이트순", value: "updated" },
