@@ -56,7 +56,12 @@ const InputGuide = () => {
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         <div className="mb-6">
           {/* 라벨옵션 */}
-          <Input type="text" placeholder="이름을 입력하세요" label="라벨 옵션" htmlFor="label-option" />
+          <Input
+            type="text"
+            placeholder="이름을 입력하세요"
+            label="라벨 옵션"
+            htmlFor="label-option"
+          />
           <h5 className="mb-2 text-sm font-medium">기본</h5>
           <Input type="text" placeholder="이름을 입력하세요" />
         </div>
@@ -86,15 +91,20 @@ const InputGuide = () => {
           <h5 className="mb-2 text-sm font-medium">둥근 input</h5>
           <Input type="round" placeholder="검색어를 입력하세요" />
         </div>
-        <div className="mb-6">
-        </div>
+        <div className="mb-6"></div>
       </div>
       <h3 className="ml-[10px] text-xl font-bold">TextArea</h3>
       <div className="my-4 rounded-xl border border-gray-600 p-4">
         {/* textarea 소개글 */}
         <h5 className="mb-2 text-sm font-medium">textarea</h5>
-          <TextArea label="소개글" htmlFor="textarea" value={textareaValue} onChange={(e) => setTextareaValue(e.target.value)} placeholder="소개글을 입력하세요" />
-        </div>
+        <TextArea
+          label="소개글"
+          htmlFor="textarea"
+          value={textareaValue}
+          onChange={(e) => setTextareaValue(e.target.value)}
+          placeholder="소개글을 입력하세요"
+        />
+      </div>
     </>
   );
 };

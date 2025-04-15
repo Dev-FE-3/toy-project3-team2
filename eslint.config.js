@@ -9,6 +9,7 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig([
   {
+
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
@@ -39,12 +40,11 @@ export default defineConfig([
     rules: {
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
-      ...react.configs['jsx-runtime'].rules,
+      ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "react/prop-types": "off",
-
       // import 순서 정렬 룰 추가
       "import/order": [
         "warn",
@@ -76,7 +76,7 @@ export default defineConfig([
       },
     },
     settings: {
-      react: { version: '18.3' },
+      react: { version: "18.3" },
     },
     plugins: {
       react,
@@ -88,7 +88,6 @@ export default defineConfig([
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "react/prop-types": "off",
-
       "import/order": [
         "warn",
         {
