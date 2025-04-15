@@ -20,6 +20,16 @@ interface UsePlaylistsOptions {
   title?: string;
 }
 
+interface PlaylistParams {
+  select: string;
+  is_public: string;
+  offset: number;
+  limit: number;
+  title?: string;
+  order?: string;
+  creator_id?: string;
+}
+
 const LIMIT = 5; // 한 번에 5개씩 가져오기
 
 const fetchPlaylistPage = async (
@@ -50,7 +60,7 @@ const fetchPlaylistPage = async (
       }
 
       // playlist_id만 추출
-      const playlistIds = actions.map((action: any) => action.playlist_id);
+      const playlistIds = actions.map((action: { playlist_id: string }) => action.playlist_id);
       console.log("추출된 playlist_id 목록:", playlistIds);
 
       // 2. 구독한 플레이리스트 ID로 플레이리스트를 조회
@@ -72,7 +82,7 @@ const fetchPlaylistPage = async (
     }
 
     // 일반 플레이리스트 조회
-    const params: Record<string, any> = {
+    const params: PlaylistParams = {
       select: "*,user:creator_id(profile_image)",
       is_public: "eq.true",
       offset: start,
