@@ -12,6 +12,8 @@ const Signup = () => {
   const navigate = useNavigate();
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
+  const [showPasswordError, setShowPasswordError] = useState(false);
+  const [showPasswordConfirmError, setShowPasswordConfirmError] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -82,13 +84,14 @@ const Signup = () => {
       return;
     }
 
+    setShowPasswordError(true);
+    setShowPasswordConfirmError(true);
+
     if (!validatePassword(password)) {
-      alert("비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.");
       return;
     }
 
     if (password !== passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -207,6 +210,7 @@ const Signup = () => {
           onChange={(e) => setPassword(e.target.value)}
           label="비밀번호*"
         />
+        <div>
         <Input
           htmlFor="passwordConfirm"
           type="password"
@@ -215,6 +219,19 @@ const Signup = () => {
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
         />
+        {showPasswordError && !validatePassword(password) && (
+          <p className="mt-2 text-sub text-red-500">
+            <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+            비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.
+          </p>
+        )}
+          {showPasswordConfirmError && validatePassword(password) && password !== passwordConfirm && (
+            <p className="mt-2 text-sub text-red-500">
+              <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+              비밀번호가 일치하지 않습니다.
+            </p>
+          )}
+        </div>
         <Button type="submit" variant="full" fixed disabled={!isSignupEnabled}>
           회원가입
         </Button>
