@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
-import axiosInstance from "./../services/axios/axiosInstance";
 import { useQuery, useMutation, useQueryClient, InfiniteData } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+import PlaylistCard from "../components/common/PlaylistCard";
+import DropDownMenu from "../components/myPage/DropDownMenu";
 import useUserStore from "../store/useUserStore";
 import { useUserPlaylists } from "@/hooks/useUserPlaylists";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Playlist } from "../types/playlist";
 import { User } from "../types/user";
-import { useParams, useNavigate } from "react-router-dom";
-import PlaylistCard from "../components/common/PlaylistCard";
-import DropDownMenu from "../components/myPage/DropDownMenu";
+import axiosInstance from "./../services/axios/axiosInstance";
 
 // fetch
 const fetchUser = async (userId: string) => {

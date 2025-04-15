@@ -1,11 +1,12 @@
-import { Button } from "@/components/common/Button";
-import { Input } from "@/components/common/Input";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import ErrorIcon from "@/assets/icons/error.svg";
 import SuccessIcon from "@/assets/icons/success.svg";
-import { useState } from "react";
-import supabase from "@/services/supabase/supabaseClient";
-import { useNavigate } from "react-router-dom";
 import DefaultProfileImage from "@/assets/imgs/profile-image-default.svg";
+import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
+import supabase from "@/services/supabase/supabaseClient";
 
 const Signup = () => {
   const navigate = useNavigate();

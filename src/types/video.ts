@@ -1,5 +1,5 @@
 export interface Video {
-  id: string;
+  id?: string;
   playlist_id: string;
   title: string;
   url: string;

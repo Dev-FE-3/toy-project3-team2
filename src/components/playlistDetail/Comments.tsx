@@ -1,13 +1,13 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Input } from "../common/Input";
-import { Comment } from "../../types/comment";
-import axiosInstance from "../../services/axios/axiosInstance";
-import AddIcon from "../../assets/icons/fill-add.svg?react";
-import useUserStore from "../../store/useUserStore";
 import CommentSkeleton from "./CommentSkeleton";
+import AddIcon from "../../assets/icons/fill-add.svg?react";
+import axiosInstance from "../../services/axios/axiosInstance";
+import useUserStore from "../../store/useUserStore";
+import { Comment } from "../../types/comment";
+import { Input } from "../common/Input";
 
 interface NewCommentPayload {
   playlist_id: string;
@@ -64,7 +64,8 @@ const Comments = () => {
     },
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 폼 제출 시 새로고침 방지
     if (!user || !content || !playlistId) return;
 
     mutate({
@@ -83,7 +84,7 @@ const Comments = () => {
       ) : (
         <>
           <span>댓글 {comments.length}</span>
-          <form className="relative flex items-center">
+          <form className="relative flex items-center" onSubmit={handleSubmit}>
             <Input
               placeholder="댓글을 입력해 주세요"
               type="round"
@@ -94,7 +95,7 @@ const Comments = () => {
               disabled={isPosting}
             />
             {content.length > 0 && (
-              <button type="button" onClick={handleSubmit} className="absolute right-[6px]">
+              <button type="submit" onClick={handleSubmit} className="absolute right-[6px]">
                 <AddIcon />
               </button>
             )}
