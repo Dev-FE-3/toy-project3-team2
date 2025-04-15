@@ -111,7 +111,7 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
               </>
             )}
           </p>
-          <PlaylistActions />
+          <PlaylistActions playlistId={playlist.id} />
         </div>
       </section>
     </>

@@ -82,7 +82,7 @@ const PlaylistCard = ({
             className="mb-[6px] mt-3"
             onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
           >
-            <PlaylistActions />
+            <PlaylistActions playlistId={id} />
           </div>
         </div>
       </div>

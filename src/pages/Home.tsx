@@ -1,22 +1,42 @@
+/** 플레이리스트 추천 페이지 */
+
 import PlaylistCard from "@/components/common/PlaylistCard";
 import Header from "@/layout/Header";
-import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
+// import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+// import { useNavigate } from "react-router-dom";
 
-/** 플레이리스트 추천 페이지 */
 const Home = () => {
-  const { data: playlists = [] } = usePlaylists();
-  const { filteredPlaylists, setSearchKeyword } = usePlaylistSearch(playlists);
+  // const navigate = useNavigate();
+  const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists();
+
+  const { targetRef } = useInfiniteScroll({
+    onIntersect: () => {
+      if (hasMore && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <>
-      <Header onSearch={setSearchKeyword} />
+      {/* <Header onSearch={setSearchKeyword} /> */}
+      <Header />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">추천 플레이리스트</h1>
       </div>
-      {filteredPlaylists.length > 0 ? (
+      {playlists.length > 0 ? (
         <ul>
-          {filteredPlaylists.map((playlist) => (
+          {playlists.map((playlist) => (
             <li key={playlist.id}>
               <PlaylistCard
                 id={playlist.id}
@@ -30,6 +50,9 @@ const Home = () => {
               />
             </li>
           ))}
+          <div ref={targetRef} className="flex h-4 items-center justify-center">
+            {isFetchingNextPage && <div>Loading more...</div>}
+          </div>
         </ul>
       ) : (
         <div className="text-body mt-[100px] flex items-center justify-center text-font-muted">
