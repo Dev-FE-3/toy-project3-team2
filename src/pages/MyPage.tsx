@@ -42,18 +42,29 @@ const fetchPlaylists = async (creatorId: string, isOwner: boolean) => {
 
 // 플레이리스트 삭제
 const deletePlaylist = async (playlistId: string) => {
+  if (!confirm("정말 삭제하시겠습니까?")) return;
+
+  // 댓글 삭제
   await axiosInstance.delete("/comment", {
     params: { playlist_id: `eq.${playlistId}` },
   });
 
+  // 액션 삭제
+  await axiosInstance.delete("/action", {
+    params: { playlist_id: `eq.${playlistId}` },
+  });
+
+  // 비디오 삭제 (모두)
   await axiosInstance.delete("/video", {
     params: { playlist_id: `eq.${playlistId}` },
   });
 
+  // 마지막으로 플레이리스트 삭제
   await axiosInstance.delete("/playlist", {
     params: { id: `eq.${playlistId}` },
   });
 
+  alert("플레이리스트 삭제 완료!");
   return playlistId;
 };
 
