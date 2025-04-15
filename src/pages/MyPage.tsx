@@ -2,14 +2,14 @@ import { useQuery, useMutation, useQueryClient, InfiniteData } from "@tanstack/r
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import PlaylistCard from "../components/common/PlaylistCard";
-import DropDownMenu from "../components/myPage/DropDownMenu";
-import useUserStore from "../store/useUserStore";
+import PlaylistCard from "@/components/common/PlaylistCard";
+import DropDownMenu from "@/components/myPage/DropDownMenu";
+import useUserStore from "@/store/useUserStore";
 import { useUserPlaylists } from "@/hooks/useUserPlaylists";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Playlist } from "../types/playlist";
-import { User } from "../types/user";
-import axiosInstance from "./../services/axios/axiosInstance";
+import { Playlist } from "@/types/playlist";
+import { User } from "@/types/user";
+import axiosInstance from "@/services/axios/axiosInstance";
 
 // fetch
 const fetchUser = async (userId: string) => {
@@ -24,8 +24,6 @@ const fetchUser = async (userId: string) => {
 
 // 플레이리스트 삭제
 const deletePlaylist = async (playlistId: string) => {
-  if (!confirm("정말 삭제하시겠습니까?")) return;
-
   // 댓글 삭제
   await axiosInstance.delete("/comment", {
     params: { playlist_id: `eq.${playlistId}` },
@@ -56,6 +54,7 @@ const MyPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [sortOption, setSortOption] = useState("updated");
 
   const {
     data: userInfo,
@@ -76,7 +75,7 @@ const MyPage = () => {
     isFetchingNextPage,
     isLoading: isPlaylistLoading,
     error: playlistError,
-  } = useUserPlaylists(userId!, isOwner);
+  } = useUserPlaylists(userId!, isOwner, sortOption);
 
   const playlists = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -111,14 +110,6 @@ const MyPage = () => {
     },
   });
 
-  // 정렬
-  const sortedItems = [...playlists].sort((a, b) => {
-    const dateA = new Date(a.updated_at ?? a.created_at).getTime();
-    const dateB = new Date(b.updated_at ?? b.created_at).getTime();
-
-    return dateB - dateA;
-  });
-
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
   };
@@ -146,7 +137,7 @@ const MyPage = () => {
           <span>{userInfo?.nickname}</span>
           <span className="text-sub text-font-muted">구독 {userInfo?.subscribe_count ?? 0}</span>
         </div>
-        <p className="my-[2px] w-full text-font-primary">
+        <p className="my-[2px] w-full text-body2">
           {userInfo?.description || "소개글을 작성해주세요."}
         </p>
       </section>
@@ -154,11 +145,15 @@ const MyPage = () => {
       {/* user가 생성한 플레이리스트 */}
       <section className="border-t border-outline">
         <div className="px-[20px] py-[12px] text-right">
-          <DropDownMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+          <DropDownMenu
+            isOpen={isMenuOpen}
+            setIsOpen={setIsMenuOpen}
+            setSortOption={setSortOption}
+          />
         </div>
         {playlists.length > 0 ? (
           <ul>
-            {sortedItems.map((item) => (
+            {playlists.map((item) => (
               <li key={item.id}>
                 <PlaylistCard
                   id={item.id}

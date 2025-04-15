@@ -1,15 +1,20 @@
 import { useState, useRef } from "react";
 
-import ArrowBottom from "../../assets/icons/arrow-bottom.svg?react";
+import ArrowBottom from "@/assets/icons/arrow-bottom.svg?react";
 
-const MENU_OPTIONS = ["업데이트순", "구독순", "좋아요순"];
+const MENU_OPTIONS = [
+  { label: "업데이트순", value: "updated" },
+  { label: "구독순", value: "subscribe" },
+  { label: "좋아요순", value: "like" },
+];
 
 interface DropDownMenuProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  setSortOption: (option: string) => void;
 }
 
-const DropDownMenu = ({ isOpen, setIsOpen }: DropDownMenuProps) => {
+const DropDownMenu = ({ isOpen, setIsOpen, setSortOption }: DropDownMenuProps) => {
   const [selected, setSelected] = useState(MENU_OPTIONS[0]);
   const dropdownRef = useRef<HTMLButtonElement>(null);
 
@@ -17,8 +22,9 @@ const DropDownMenu = ({ isOpen, setIsOpen }: DropDownMenuProps) => {
     setIsOpen(!isOpen);
   };
 
-  const selectOption = (option: string) => {
+  const selectOption = (option: (typeof MENU_OPTIONS)[number]) => {
     setSelected(option);
+    setSortOption(option.value);
     setIsOpen(false);
   };
 
@@ -32,7 +38,7 @@ const DropDownMenu = ({ isOpen, setIsOpen }: DropDownMenuProps) => {
         aria-expanded={isOpen}
         aria-controls="dropdown-menu"
       >
-        {selected}
+        {selected.label}
         <ArrowBottom
           className={`ml-[4px] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
@@ -45,14 +51,14 @@ const DropDownMenu = ({ isOpen, setIsOpen }: DropDownMenuProps) => {
         style={{ willChange: "transform" }}
       >
         {MENU_OPTIONS.map((option, index) => (
-          <li key={option} role="menuitem" className="px-[10px] hover:bg-outline">
+          <li key={option.value} role="menuitem" className="px-[10px] hover:bg-outline">
             <button
               className={`w-full py-[17px] text-body2 ${
                 index !== MENU_OPTIONS.length - 1 ? "border-b border-outline" : ""
               }`}
               onClick={() => selectOption(option)}
             >
-              {option}
+              {option.label}
             </button>
           </li>
         ))}

@@ -1,6 +1,7 @@
 /** 플레이리스트 추천 페이지 */
 
 import { useEffect, useState } from "react";
+
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { usePlaylists } from "@/hooks/usePlaylists";
@@ -12,6 +13,7 @@ const Home = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const userId = useUserStore.getState().user?.id;
 
+
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
     order: "subscribe_count.desc,updated_at.desc",
     creator_id: `neq.${userId}`,
@@ -19,14 +21,20 @@ const Home = () => {
     title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
 
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
-      if (hasMore && !isFetchingNextPage) {
-        fetchNextPage();
+      if (hasMore && !isFetchingNextPage && !isLoadingMore) {
+        setIsLoadingMore(true);
+        setTimeout(() => {
+          fetchNextPage();
+          setIsLoadingMore(false);
+        }, 1000);
       }
     },
   });
@@ -59,7 +67,7 @@ const Home = () => {
             </li>
           ))}
           <div ref={targetRef} className="flex h-4 items-center justify-center">
-            {isFetchingNextPage && <div>Loading more...</div>}
+            {(isFetchingNextPage || isLoadingMore) && <div>Loading more...</div>}
           </div>
         </ul>
       ) : (

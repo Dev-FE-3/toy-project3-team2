@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import IconDelete from "../../assets/icons/delete.svg";
-import IconEyeCrossedPlaceholder from "../../assets/icons/eye-crossed-muted.svg";
-import IconEyeCrossed from "../../assets/icons/eye-crossed.svg";
-import IconEye from "../../assets/icons/eye.svg";
-import { cn } from "../../utils/shadcn";
+import IconDelete from "@/assets/icons/delete.svg";
+import IconEyeCrossedPlaceholder from "@/assets/icons/eye-crossed-muted.svg";
+import IconEyeCrossed from "@/assets/icons/eye-crossed.svg";
+import IconEye from "@/assets/icons/eye.svg";
+import { cn } from "@/utils/shadcn";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   showDelete?: boolean;

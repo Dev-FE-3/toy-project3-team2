@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../../utils/shadcn";
+import { cn } from "@/utils/shadcn";
 
 interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;

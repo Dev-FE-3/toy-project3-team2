@@ -8,6 +8,7 @@ interface FetchParams {
   pageParam?: number;
   creatorId: string;
   isOwner: boolean;
+  order: string;
 }
 
 interface PlaylistParams {
@@ -19,15 +20,24 @@ interface PlaylistParams {
   is_public?: string;
 }
 
-const fetchUserPlaylists = async ({ pageParam = 0, creatorId, isOwner }: FetchParams) => {
+const fetchUserPlaylists = async ({ pageParam = 0, creatorId, isOwner, order }: FetchParams) => {
   const offset = pageParam * LIMIT;
+
+  const orderBy =
+    order === "updated"
+      ? "updated_at.desc"
+      : order === "subscribe"
+        ? "subscribe_count.desc"
+        : order === "like"
+          ? "like_count.desc"
+          : "updated_at.desc";
 
   const params: PlaylistParams = {
     creator_id: `eq.${creatorId}`,
     select: "*",
     limit: LIMIT,
     offset,
-    order: "updated_at.desc",
+    order: orderBy,
   };
 
   if (!isOwner) {
@@ -41,10 +51,10 @@ const fetchUserPlaylists = async ({ pageParam = 0, creatorId, isOwner }: FetchPa
   };
 };
 
-export const useUserPlaylists = (creatorId: string, isOwner: boolean) => {
+export const useUserPlaylists = (creatorId: string, isOwner: boolean, order: string) => {
   return useInfiniteQuery({
-    queryKey: ["userPlaylists", creatorId, isOwner],
-    queryFn: ({ pageParam = 0 }) => fetchUserPlaylists({ pageParam, creatorId, isOwner }),
+    queryKey: ["userPlaylists", creatorId, isOwner, order],
+    queryFn: ({ pageParam = 0 }) => fetchUserPlaylists({ pageParam, creatorId, isOwner, order }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
     enabled: !!creatorId,
