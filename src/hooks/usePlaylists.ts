@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axiosInstance from "@/services/axios/axiosInstance";
-import useUserStore from "@/store/useUserStore";
+// import useUserStore from "@/store/useUserStore";
 
 interface Playlist {
   id: string;
@@ -17,6 +17,7 @@ interface UsePlaylistsOptions {
   creator_id?: string;
   subscribed_by?: string;
   is_public?: boolean;
+  title?: string;
 }
 
 const LIMIT = 5; // 한 번에 5개씩 가져오기
@@ -71,14 +72,24 @@ const fetchPlaylistPage = async (
     }
 
     // 일반 플레이리스트 조회
+    const params: Record<string, any> = {
+      select: "*,user:creator_id(profile_image)",
+      is_public: "eq.true",
+      offset: start,
+      limit: LIMIT,
+    };
+
+    // 옵션에서 title이 있으면 추가
+    if (options?.title) {
+      params.title = options.title;
+    }
+
+    // 다른 옵션들 추가
+    if (options?.order) params.order = options.order;
+    if (options?.creator_id) params.creator_id = options.creator_id;
+
     const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
-      params: {
-        select: "*,user:creator_id(profile_image)",
-        is_public: "eq.true",
-        offset: start,
-        limit: LIMIT,
-        ...options,
-      },
+      params,
     });
 
     if (!data) {

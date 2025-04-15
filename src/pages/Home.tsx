@@ -1,6 +1,6 @@
 /** 플레이리스트 추천 페이지 */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PlaylistCard from "@/components/common/PlaylistCard";
 import Header from "@/layout/Header";
 // import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
@@ -11,10 +11,13 @@ import useUserStore from "@/store/useUserStore";
 
 const Home = () => {
   // const navigate = useNavigate();
+  const [searchKeyword, setSearchKeyword] = useState("");
   const userId = useUserStore.getState().user?.id;
+
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
     order: "subscribe_count.desc,updated_at.desc",
     creator_id: `neq.${userId}`,
+    title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
 
   useEffect(() => {
@@ -39,8 +42,7 @@ const Home = () => {
 
   return (
     <>
-      {/* <Header onSearch={setSearchKeyword} /> */}
-      <Header />
+      <Header onSearch={setSearchKeyword} />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">추천 플레이리스트</h1>
       </div>
