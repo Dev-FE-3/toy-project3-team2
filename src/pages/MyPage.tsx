@@ -24,8 +24,6 @@ const fetchUser = async (userId: string) => {
 
 // 플레이리스트 삭제
 const deletePlaylist = async (playlistId: string) => {
-  if (!confirm("정말 삭제하시겠습니까?")) return;
-
   // 댓글 삭제
   await axiosInstance.delete("/comment", {
     params: { playlist_id: `eq.${playlistId}` },
