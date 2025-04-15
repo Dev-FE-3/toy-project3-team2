@@ -1,4 +1,4 @@
-import { Skeleton } from "../common/skeleton";
+import { Skeleton } from "@/components/common/skeleton";
 
 const PlaylistSkeleton = () => (
   <div className="animate-fadeIn animate-pulse">

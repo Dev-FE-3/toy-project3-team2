@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import PlaylistActions from "./PlaylistAction";
 import OverflowMenu from "./OverflowMenu";
-import { useNavigate } from "react-router-dom";
+
+import Lock from "@/assets/icons/lock.svg?react";
 
 interface PlaylistCardProps {
   id: string;
@@ -51,10 +53,10 @@ const PlaylistCard = ({
       </div>
 
       {/* 정보 영역 */}
-      <div className="flex flex-row px-[16px] py-[12px]">
+      <div className="flex flex-row px-4 py-3">
         {/* 유저 프로필 이미지 (타인의 플레이리스트만 표시) */}
         {!isOwner && userImage && (
-          <img src={userImage} alt="User" className="mr-[8px] h-[36px] w-[36px] rounded-full" />
+          <img src={userImage} alt="User" className="mr-2 h-9 w-9 rounded-full" />
         )}
 
         <div className="flex-1">
@@ -62,12 +64,7 @@ const PlaylistCard = ({
           <div className="flex items-start justify-between">
             <div className="flex flex-row gap-1">
               {/* 비공개 아이콘 */}
-              {!isPublic && (
-                <img
-                  src="/src/assets/icons/lock.svg"
-                  className="mr-[4px] mt-[2px] inline h-[16px] w-[16px]"
-                />
-              )}
+              {!isPublic && <Lock className="mr-1 mt-[2px] inline h-4 w-4" />}
               {/* 제목 */}
               <h3 className="line-clamp-2 text-body2 leading-[1.5] text-font-primary">{title}</h3>
             </div>
@@ -82,7 +79,7 @@ const PlaylistCard = ({
 
           {/* 좋아요, 구독, 댓글 */}
           <div
-            className="mb-[6px] mt-[12px]"
+            className="mb-[6px] mt-3"
             onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
           >
             <PlaylistActions playlistId={id} />

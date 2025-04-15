@@ -145,6 +145,38 @@ const Header = ({ onSearch }: HeaderProps) => {
     navigate("/login");
   };
 
+  const deletePlaylist = async (playlistId: string) => {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      // 1. 댓글 삭제
+      await axiosInstance.delete("/comment", {
+        params: { playlist_id: `eq.${playlistId}` },
+      });
+
+      // 2. 액션 삭제
+      await axiosInstance.delete("/action", {
+        params: { playlist_id: `eq.${playlistId}` },
+      });
+
+      // 3. 비디오 삭제 (모두)
+      await axiosInstance.delete("/video", {
+        params: { playlist_id: `eq.${playlistId}` },
+      });
+
+      // 4. 플레이리스트 삭제
+      await axiosInstance.delete("/playlist", {
+        params: { id: `eq.${playlistId}` },
+      });
+
+      alert("플레이리스트 삭제 완료!");
+      navigate("/");
+    } catch (error) {
+      console.error("삭제 실패:", error);
+      alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");
+    }
+  };
+
   const myPageMenu = [
     { label: "정보수정", action: () => navigate("/user/edit") },
     { label: "로그아웃", action: handleLogout },
@@ -152,14 +184,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   const playlistMenu = [
     { label: "수정", action: () => navigate(`/playlist/edit/${playlistId}`) },
-    {
-      label: "삭제",
-      action: () => {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          alert("삭제 완료");
-        }
-      },
-    },
+    { label: "삭제", action: () => playlistId && deletePlaylist(playlistId) }, // 삭제 버튼에 함수 연결
   ];
 
   // 현재 페이지에 따라 메뉴 결정
