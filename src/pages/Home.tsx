@@ -13,6 +13,7 @@ const Home = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const userId = useUserStore.getState().user?.id;
 
+
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
     order: "subscribe_count.desc,updated_at.desc",
     creator_id: `neq.${userId}`,
