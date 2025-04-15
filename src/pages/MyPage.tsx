@@ -10,6 +10,7 @@ import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Playlist } from "@/types/playlist";
 import { User } from "@/types/user";
 import axiosInstance from "@/services/axios/axiosInstance";
+import PlaylistEmpty from "@/components/common/PlaylistEmpty";
 
 // fetch
 const fetchUser = async (userId: string) => {
@@ -170,7 +171,7 @@ const MyPage = () => {
             </div>
           </ul>
         ) : (
-          <p className="px-[16px]">생성한 플레이리스트가 없습니다.</p>
+          <PlaylistEmpty />
         )}
       </section>
 
