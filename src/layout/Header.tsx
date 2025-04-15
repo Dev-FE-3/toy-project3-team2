@@ -142,8 +142,6 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   const deletePlaylist = async (playlistId: string) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-
     try {
       // 1. 댓글 삭제
       await axiosInstance.delete("/comment", {

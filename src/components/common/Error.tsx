@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "./Button";
-import BrokenNote from "../../assets/icons/broken-not.svg?react";
+import BrokenNote from "@/assets/icons/broken-not.svg?react";
 
 interface ErrorProps {
   title?: string;

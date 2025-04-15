@@ -8,14 +8,14 @@ import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
 import { showToast } from "@/utils/toast";
 
-import Camera from "../assets/icons/camera.svg?react";
-import { Button } from "../components/common/Button";
-import { Input } from "../components/common/Input";
-import { TextArea } from "../components/common/TextArea";
-import supabase from "../services/supabase/supabaseClient";
-import uploadProfileImage from "../services/supabase/uploadProfileImage";
-import useUserStore from "../store/useUserStore";
-import axiosInstance from "./../services/axios/axiosInstance";
+import Camera from "@/assets/icons/camera.svg?react";
+import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
+import { TextArea } from "@/components/common/TextArea";
+import supabase from "@/services/supabase/supabaseClient";
+import uploadProfileImage from "@/services/supabase/uploadProfileImage";
+import useUserStore from "@/store/useUserStore";
+import axiosInstance from "@/services/axios/axiosInstance";
 
 // 사용자 정보 가져오기
 const fetchUser = async (userId: string) => {
@@ -228,6 +228,7 @@ const EditProfile = () => {
               className="flex-grow"
               type="text"
               placeholder="닉네임을 입력하세요"
+              maxLength={15}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
@@ -261,6 +262,7 @@ const EditProfile = () => {
             type="password"
             placeholder="비밀번호를 입력하세요"
             label="비밀번호"
+            maxLength={32}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -271,6 +273,7 @@ const EditProfile = () => {
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
             label="비밀번호 확인"
+            maxLength={32}
             value={passwordCheck}
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
@@ -292,6 +295,7 @@ const EditProfile = () => {
             htmlFor="user-description"
             placeholder="소개글을 입력하세요"
             label="소개"
+            maxLength={500}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
