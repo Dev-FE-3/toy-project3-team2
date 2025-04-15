@@ -5,15 +5,15 @@ import * as React from "react";
 import { cn } from "../../utils/shadcn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-body1-bold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex py-[12px] items-center justify-center gap-2 whitespace-nowrap rounded-lg text-body1-bold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        full: "bg-main !text-body1-bold text-background-main hover:bg-button_hover hover:text-font-primary w-full h-[40px]",
+        full: "bg-main !text-body1-bold text-background-main hover:bg-button_hover hover:text-font-primary w-full",
         small:
-          "bg-main rounded !text-body2-bold text-background-main hover:bg-button_hover hover:text-font-primary w-[67px] h-[40px]",
+          "bg-main rounded !text-body2-bold text-background-main hover:bg-button_hover hover:text-font-primary w-[67px]",
         secondary:
-          "bg-background-toast rounded !text-body2-bold text-background-main hover:bg-font-muted hover:text-font-primary w-[67px] h-[40px]",
+          "bg-background-toast rounded !text-body2-bold text-background-main hover:bg-font-muted hover:text-font-primary w-[67px]",
       },
     },
     defaultVariants: {
@@ -37,7 +37,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <div className="fixed bottom-0 left-0 right-0 z-10 mx-auto flex h-[73px] w-full max-w-[430px] items-center justify-center bg-[linear-gradient(180deg,_rgba(26,28,28,0)_0%,_rgba(26,28,28,1)_100%)] p-[16px]">
           <div className="absolute inset-0 -top-[12px] h-[85px] bg-[linear-gradient(180deg,_rgba(26,28,28,0)_0%,_rgba(26,28,28,1)_24px,_rgba(26,28,28,1)_100%)]" />
           <Comp
-            className={cn(buttonVariants({ variant, className }), "relative max-w-[398px] p-4")}
+            className={cn(buttonVariants({ variant, className }), "relative max-w-[398px]")}
             ref={ref}
             {...props}
           />
