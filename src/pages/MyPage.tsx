@@ -83,7 +83,7 @@ const MyPage = () => {
     mutationFn: deletePlaylist,
     onSuccess: (deletedId) => {
       queryClient.setQueryData<InfiniteData<{ data: Playlist[]; nextPage: number | null }>>(
-        ["userPlaylists", userId, isOwner],
+        ["userPlaylists", userId, isOwner, sortOption],
         (old) =>
           old
             ? {
