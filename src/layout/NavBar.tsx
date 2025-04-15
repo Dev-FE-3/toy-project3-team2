@@ -1,12 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import useUserStore from "../store/useUserStore";
-import Home from "../assets/icons/home.svg";
-import FillHome from "../assets/icons/fill-home.svg";
+
+import Add from "../assets/icons/add.svg";
 import BookMark from "../assets/icons/bookmark.svg";
 import FillBookMark from "../assets/icons/fill-bookmark.svg";
-import Add from "../assets/icons/add.svg";
-import User from "../assets/icons/user.svg";
+import FillHome from "../assets/icons/fill-home.svg";
 import FillUser from "../assets/icons/fill-user.svg";
+import Home from "../assets/icons/home.svg";
+import User from "../assets/icons/user.svg";
+import useUserStore from "../store/useUserStore";
 
 const NavBar = () => {
   const location = useLocation(); // 현재 URL 가져오기

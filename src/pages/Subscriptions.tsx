@@ -1,18 +1,20 @@
 /** 플레이리스트 구독 페이지 */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PlaylistCard from "@/components/common/PlaylistCard";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { usePlaylists } from "@/hooks/usePlaylists";
 import Header from "@/layout/Header";
 // import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
-import { usePlaylists } from "@/hooks/usePlaylists";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useUserStore from "@/store/useUserStore";
 
 const Subscriptions = () => {
+  const [searchKeyword, setSearchKeyword] = useState("");
   const userId = useUserStore.getState().user?.id;
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
     order: "updated_at.desc",
     subscribed_by: userId,
+    title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const Subscriptions = () => {
 
   return (
     <>
-      <Header />
+      <Header onSearch={setSearchKeyword} />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">구독 플레이리스트</h1>
       </div>

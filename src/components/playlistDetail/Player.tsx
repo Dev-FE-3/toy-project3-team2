@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Lock from "@/assets/icons/lock.svg?react";
+import PlaylistActions from "@/components/common/PlaylistAction";
 import { PlaylistDetailData } from "@/types/playlist";
 import { Video } from "@/types/video";
-
-import PlaylistActions from "@/components/common/PlaylistAction";
 import { formatDate } from "@/utils/formatData";
-
-import Lock from "@/assets/icons/lock.svg?react";
 
 const MAX_DESCRIPTION_PREVIEW_LENGTH = 60;
 
