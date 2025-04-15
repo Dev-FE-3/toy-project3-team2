@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axiosInstance from "../services/axios/axiosInstance";
 
 interface Playlist {
@@ -11,23 +11,50 @@ interface Playlist {
   };
 }
 
-const fetchPlaylists = async () => {
-  const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
-    params: {
-      select: "*,user:creator_id(profile_image)",
-    },
-  });
+const LIMIT = 5; // 한 번에 5개씩 가져오기
 
-  if (!data) {
-    throw new Error("플레이리스트를 가져오는데 실패했습니다.");
+const fetchPlaylistPage = async ({ pageParam = 0 }: { pageParam: number }) => {
+  const start = pageParam * LIMIT;
+
+  try {
+    const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
+      params: {
+        select: "*,user:creator_id(profile_image)",
+        offset: start,
+        limit: LIMIT,
+      },
+    });
+
+    if (!data) {
+      throw new Error("플레이리스트를 가져오는데 실패했습니다.");
+    }
+
+    return {
+      data,
+      nextPage: pageParam + 1,
+    };
+  } catch (error) {
+    console.error("Error in fetchPlaylistPage:", error);
+    throw error;
   }
-
-  return data;
 };
 
 export const usePlaylists = () => {
-  return useQuery<Playlist[]>({
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["playlists"],
-    queryFn: fetchPlaylists,
+    queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam }),
+    getNextPageParam: (lastPage) =>
+      lastPage.data.length === LIMIT ? lastPage.nextPage : undefined,
+    initialPageParam: 0,
   });
+
+  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
+
+  return {
+    playlists,
+    isLoading,
+    hasMore: hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  };
 };
