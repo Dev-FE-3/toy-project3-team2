@@ -1,7 +1,7 @@
 import { RefObject } from "react";
 
 import { Input } from "./Input";
-import Cross from "../../assets/icons/cross.svg?react";
+import Cross from "@/assets/icons/cross.svg?react";
 
 interface SearchBarProps {
   searchQuery: string;
@@ -27,8 +27,9 @@ const SearchBar = ({
 
   // 닫기 버튼 클릭 시 검색어 초기화 및 검색창 닫기
   const handleClose = () => {
-    onSearchQueryChange("");
-    onClose();
+    onSearchQueryChange(""); // 검색어 초기화
+    onSearch(""); // 검색 결과 초기화
+    onClose(); // 검색창 닫기
   };
 
   return (

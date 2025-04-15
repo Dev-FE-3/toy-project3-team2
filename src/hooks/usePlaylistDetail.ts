@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import axiosInstance from "../services/axios/axiosInstance";
-import { PlaylistDetailData } from "../types/playlist";
+import axiosInstance from "@/services/axios/axiosInstance";
+import { PlaylistDetailData } from "@/types/playlist";
 
 // 데이터 가져오기
 const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> => {
