@@ -1,13 +1,23 @@
 /** 플레이리스트 구독 페이지 */
 
+import { useEffect } from "react";
 import PlaylistCard from "@/components/common/PlaylistCard";
 import Header from "@/layout/Header";
 // import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import useUserStore from "@/store/useUserStore";
 
 const Subscriptions = () => {
-  const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists();
+  const userId = useUserStore.getState().user?.id;
+  const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
+    order: "updated_at.desc",
+    subscribed_by: userId,
+  });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
@@ -41,9 +51,6 @@ const Subscriptions = () => {
                 thumbnailUrl={playlist.thumbnail_image}
                 userImage={playlist.user.profile_image}
                 isOwner={playlist.is_owner}
-                // subscribeCount={playlist.subscribe_count}
-                // likeCount={playlist.like_count}
-                // commentCount={playlist.comment_count}
               />
             </li>
           ))}
