@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "./../services/axios/axiosInstance";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, InfiniteData } from "@tanstack/react-query";
 import useUserStore from "../store/useUserStore";
+import { useUserPlaylists } from "@/hooks/useUserPlaylists";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Playlist } from "../types/playlist";
 import { User } from "../types/user";
 import { useParams, useNavigate } from "react-router-dom";
@@ -17,27 +19,6 @@ const fetchUser = async (userId: string) => {
     },
   });
   return data[0];
-};
-
-interface Params {
-  creator_id: string;
-  select: string;
-  is_public?: string;
-}
-
-const fetchPlaylists = async (creatorId: string, isOwner: boolean) => {
-  const params: Params = {
-    creator_id: `eq.${creatorId}`,
-    select: "*",
-  };
-
-  // 다른 유저의 마이페이지인 경우 비공개 플레이리스트 제외
-  if (!isOwner) {
-    params.is_public = "eq.true";
-  }
-
-  const { data } = await axiosInstance.get<Playlist[]>("/playlist", { params });
-  return data;
 };
 
 // 플레이리스트 삭제
@@ -88,21 +69,31 @@ const MyPage = () => {
   const isOwner = user?.id === userId;
 
   const {
-    data: items = [],
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading: isPlaylistLoading,
     error: playlistError,
-  } = useQuery({
-    queryKey: ["userPlaylists", userId, isOwner],
-    queryFn: () => fetchPlaylists(userId!, isOwner),
-    enabled: !!userId,
-  });
+  } = useUserPlaylists(userId!, isOwner);
+
+  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
 
   const deleteMutation = useMutation({
     mutationFn: deletePlaylist,
     onSuccess: (deletedId) => {
-      queryClient.setQueryData<Playlist[]>(
-        ["userPlaylists", user?.id],
-        (old) => old?.filter((item) => item.id !== deletedId) ?? [],
+      queryClient.setQueryData<InfiniteData<{ data: Playlist[]; nextPage: number | null }>>(
+        ["userPlaylists", userId, isOwner],
+        (old) =>
+          old
+            ? {
+                ...old,
+                pages: old.pages.map((page) => ({
+                  ...page,
+                  data: page.data.filter((item) => item.id !== deletedId),
+                })),
+              }
+            : old,
       );
     },
     onError: (error) => {
@@ -111,7 +102,16 @@ const MyPage = () => {
     },
   });
 
-  const sortedItems = [...items].sort((a, b) => {
+  const { targetRef } = useInfiniteScroll({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+  });
+
+  // 정렬
+  const sortedItems = [...playlists].sort((a, b) => {
     const dateA = new Date(a.updated_at ?? a.created_at).getTime();
     const dateB = new Date(b.updated_at ?? b.created_at).getTime();
 
@@ -155,7 +155,7 @@ const MyPage = () => {
         <div className="px-[20px] py-[12px] text-right">
           <DropDownMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
         </div>
-        {items.length ? (
+        {playlists.length > 0 ? (
           <ul>
             {sortedItems.map((item) => (
               <li key={item.id}>
@@ -169,6 +169,9 @@ const MyPage = () => {
                 />
               </li>
             ))}
+            <div ref={targetRef} className="flex h-4 items-center justify-center">
+              {isFetchingNextPage && <div>Loading more...</div>}
+            </div>
           </ul>
         ) : (
           <p className="px-[16px]">생성한 플레이리스트가 없습니다.</p>
