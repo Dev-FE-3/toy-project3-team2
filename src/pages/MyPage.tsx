@@ -7,6 +7,7 @@ import { User } from "../types/user";
 import { useParams, useNavigate } from "react-router-dom";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
+import { showToast } from "@/utils/toast";
 
 // fetch
 const fetchUser = async (userId: string) => {
@@ -64,7 +65,9 @@ const deletePlaylist = async (playlistId: string) => {
     params: { id: `eq.${playlistId}` },
   });
 
-  alert("플레이리스트 삭제 완료!");
+  // alert("플레이리스트 삭제 완료!");
+  // react-toastify 사용
+  showToast("success", "플레이리스트가 삭제되었습니다.");
   return playlistId;
 };
 
@@ -108,6 +111,8 @@ const MyPage = () => {
     onError: (error) => {
       console.error("삭제 실패", error);
       alert("삭제에 실패했습니다.");
+      // react-toastify 사용
+      showToast("error", "플레이리스트 삭제에 실패했습니다.");
     },
   });
 

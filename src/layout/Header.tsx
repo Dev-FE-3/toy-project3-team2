@@ -173,7 +173,9 @@ const Header = ({ onSearch }: HeaderProps) => {
       navigate(`/mypage/${currentUser?.id}`);
     } catch (error) {
       console.error("삭제 실패:", error);
-      alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");
+      // alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");
+      // react-toastify 사용
+      showToast("error", "삭제에 실패했습니다. 나중에 다시 시도해주세요.");
     }
   };
 

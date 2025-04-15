@@ -6,6 +6,7 @@ import { useState } from "react";
 import supabase from "@/services/supabase/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import DefaultProfileImage from "@/assets/imgs/profile-image-default.svg";
+import { showToast } from "@/utils/toast";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -72,22 +73,30 @@ const Signup = () => {
     e.preventDefault();
 
     if (!email || !nickname || !password || !passwordConfirm) {
-      alert("모든 필드를 입력해주세요.");
+      // alert("모든 필드를 입력해주세요.");
+      // react-toastify 사용
+      showToast("info", "모든 필드를 입력해주세요.");
       return;
     }
 
     if (!isEmailValid || !isNicknameValid) {
-      alert("이메일과 닉네임 중복 확인을 해주세요.");
+      // alert("이메일과 닉네임 중복 확인을 해주세요.");
+      // react-toastify 사용
+      showToast("info", "이메일과 닉네임의 중복 여부를 확인해주세요.");
       return;
     }
 
     if (!validatePassword(password)) {
-      alert("비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.");
+      // alert("비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.");
+      // react-toastify 사용
+      showToast("info", "비밀번호는 8~32자, 영문, 숫자, 특수문자 2개 이상을 포함하야 합니다.");
       return;
     }
 
     if (password !== passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
+      // alert("비밀번호가 일치하지 않습니다.");
+      // react-toastify 사용
+      showToast("error", "비밀번호가 일치하지 않습니다.");
       return;
     }
 

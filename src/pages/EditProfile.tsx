@@ -13,6 +13,7 @@ import { Button } from "../components/common/Button";
 import Camera from "../assets/icons/camera.svg?react";
 import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
+import { showToast } from "@/utils/toast";
 
 enum NicknameValidation {
   Unchecked = "unchecked",
@@ -164,7 +165,10 @@ const EditProfile = () => {
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
       queryClient.invalidateQueries();
-      alert("저장 완료되었습니다.");
+      // alert("저장 완료되었습니다.");
+      // react-toastify 사용
+      showToast("success", "저장되었습니다.");
+
       navigate(`/mypage/${updatedUser.id}`);
     },
     onError: (error) => {
