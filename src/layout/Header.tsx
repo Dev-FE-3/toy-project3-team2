@@ -1,19 +1,17 @@
 import { useRef, useState, useEffect, RefObject } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import supabase from "@/services/supabase/supabaseClient";
-import axiosInstance from "@/services/axios/axiosInstance";
 
-import useUserStore from "@/store/useUserStore";
 
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
-import Logo from "@/assets/imgs/logo.svg?react";
 import Search from "@/assets/icons/search.svg?react";
-
+import Logo from "@/assets/imgs/logo.svg?react";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
-
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import axiosInstance from "@/services/axios/axiosInstance";
+import supabase from "@/services/supabase/supabaseClient";
+import useUserStore from "@/store/useUserStore";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
