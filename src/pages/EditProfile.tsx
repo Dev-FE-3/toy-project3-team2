@@ -1,18 +1,20 @@
 /** 사용자 정보를 수정하는 페이지 */
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../services/axios/axiosInstance";
-import supabase from "../services/supabase/supabaseClient";
-import uploadProfileImage from "../services/supabase/uploadProfileImage";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useUserStore from "../store/useUserStore";
-import { Input } from "../components/common/Input";
-import { TextArea } from "../components/common/TextArea";
-import { Button } from "../components/common/Button";
-import Camera from "../assets/icons/camera.svg?react";
+
 import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
+
+import Camera from "../assets/icons/camera.svg?react";
+import { Button } from "../components/common/Button";
+import { Input } from "../components/common/Input";
+import { TextArea } from "../components/common/TextArea";
+import supabase from "../services/supabase/supabaseClient";
+import uploadProfileImage from "../services/supabase/uploadProfileImage";
+import useUserStore from "../store/useUserStore";
+import axiosInstance from "./../services/axios/axiosInstance";
 
 // 사용자 정보 가져오기
 const fetchUser = async (userId: string) => {

@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import supabase from "../supabase/supabaseClient";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;

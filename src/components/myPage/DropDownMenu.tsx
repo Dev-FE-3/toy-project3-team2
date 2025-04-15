@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+
 import ArrowBottom from "../../assets/icons/arrow-bottom.svg?react";
 
 const MENU_OPTIONS = ["업데이트순", "구독순", "좋아요순"];

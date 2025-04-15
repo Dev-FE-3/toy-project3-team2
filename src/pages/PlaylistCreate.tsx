@@ -1,21 +1,20 @@
 /** 플레이리스트 생성 페이지 */
 
-import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
-
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import axiosInstance from "@/services/axios/axiosInstance";
+import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
 import { areVideoListsEqual } from "@/utils/video";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
-import useUserStore from "@/store/useUserStore";
-import axiosInstance from "@/services/axios/axiosInstance";
 
 interface NewPlaylistPayload {
   title: string;
@@ -100,7 +99,6 @@ const PlaylistCreate = () => {
   const handleDeleteVideo = async (index: number) => {
     if (videoList.length === 1) return alert("영상은 하나 이상 존재해야 합니다.");
 
-
     setVideoList((prev) => prev.filter((_, i) => i !== index));
 
     const videoToDelete = videoList[index];
@@ -166,7 +164,6 @@ const PlaylistCreate = () => {
       setIsPublic(false);
 
       navigate(`/playlist/${newPlaylistId}`);
-
     } catch (error) {
       console.error("생성 중 오류:", error);
     }
@@ -249,7 +246,7 @@ const PlaylistCreate = () => {
   return (
     <main className="flex flex-col px-4 pb-[29px]">
       <section className="flex gap-[6px]">
-        <div className="flex justify-end w-full py-4 text-sub">공개하기</div>
+        <div className="flex w-full justify-end py-4 text-sub">공개하기</div>
         <button onClick={() => setIsPublic((prev) => !prev)}>
           <Toggle isPublic={isPublic} />
         </button>
@@ -262,6 +259,7 @@ const PlaylistCreate = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           label="제목*"
+          maxLength={50}
         />
         <TextArea
           htmlFor="playlist-description"
@@ -269,6 +267,7 @@ const PlaylistCreate = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           label="소개*"
+          maxLength={500}
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="video-url" className="text-body2-medium">

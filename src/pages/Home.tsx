@@ -1,11 +1,12 @@
 /** 플레이리스트 추천 페이지 */
 
 import { useEffect } from "react";
+
 import PlaylistCard from "@/components/common/PlaylistCard";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { usePlaylists } from "@/hooks/usePlaylists";
 import Header from "@/layout/Header";
 // import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
-import { usePlaylists } from "@/hooks/usePlaylists";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useUserStore from "@/store/useUserStore";
 // import { useNavigate } from "react-router-dom";
 
