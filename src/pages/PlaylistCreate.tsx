@@ -1,21 +1,20 @@
 /** 플레이리스트 생성 페이지 */
 
-import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
-
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import axiosInstance from "@/services/axios/axiosInstance";
+import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
 import { areVideoListsEqual } from "@/utils/video";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
-import useUserStore from "@/store/useUserStore";
-import axiosInstance from "@/services/axios/axiosInstance";
 
 interface NewPlaylistPayload {
   title: string;

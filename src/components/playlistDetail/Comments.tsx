@@ -1,13 +1,13 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Input } from "../common/Input";
-import { Comment } from "../../types/comment";
-import axiosInstance from "../../services/axios/axiosInstance";
-import AddIcon from "../../assets/icons/fill-add.svg?react";
-import useUserStore from "../../store/useUserStore";
 import CommentSkeleton from "./CommentSkeleton";
+import AddIcon from "../../assets/icons/fill-add.svg?react";
+import axiosInstance from "../../services/axios/axiosInstance";
+import useUserStore from "../../store/useUserStore";
+import { Comment } from "../../types/comment";
+import { Input } from "../common/Input";
 
 interface NewCommentPayload {
   playlist_id: string;
