@@ -139,6 +139,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
     // 로그인 페이지로 이동
     navigate("/login");
+    showToast("success", "정상적으로 로그아웃되었습니다");
   };
 
   const deletePlaylist = async (playlistId: string) => {
@@ -162,9 +163,8 @@ const Header = ({ onSearch }: HeaderProps) => {
       await axiosInstance.delete("/playlist", {
         params: { id: `eq.${playlistId}` },
       });
-      // react-toastify 사용
-      showToast("success", "플레이리스트가 삭제되었습니다.");
       navigate(`/mypage/${currentUser?.id}`);
+      showToast("success", "플레이리스트가 삭제되었습니다.");
     } catch (error) {
       console.error("삭제 실패:", error);
       // alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");

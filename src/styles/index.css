@@ -31,5 +31,5 @@ body {
 
 /* 토스트 */
 .toast {
-  @apply w-[95vw] rounded bg-background-toast p-3 text-font-toast;
+  @apply w-[200px] max-w-none rounded bg-background-toast p-2 text-sub text-font-toast;
 }

@@ -60,11 +60,11 @@ const Login = () => {
 
       console.log("로그인 성공:", data);
       navigate("/");
+
+      showToast("success", `${userData.nickname}님, 환영합니다`);
     } catch (error) {
       console.error("로그인 에러:", error);
-      // alert("이메일과 비밀번호를 확인해주세요.");
-      // react-toastify 사용
-      showToast("error", "이메일과 비밀번호를 확인해주세요.");
+      alert("이메일과 비밀번호를 확인해주세요.");
     }
   };
 

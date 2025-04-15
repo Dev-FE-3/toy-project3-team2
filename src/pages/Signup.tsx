@@ -118,6 +118,8 @@ const Signup = () => {
       await supabase.auth.signOut();
 
       navigate("/login");
+
+      showToast("success", "회원가입이 완료되었습니다");
     } catch (error) {
       console.error("회원가입 에러:", error);
       alert("회원가입 중 오류가 발생했습니다.");

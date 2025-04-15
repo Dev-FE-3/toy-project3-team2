@@ -160,9 +160,7 @@ const EditProfile = () => {
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
       queryClient.invalidateQueries();
-      // alert("저장 완료되었습니다.");
-      // react-toastify 사용
-      showToast("success", "저장되었습니다.");
+      showToast("success", "정보 변경이 완료되었습니다");
 
       navigate(`/mypage/${updatedUser.id}`);
     },
