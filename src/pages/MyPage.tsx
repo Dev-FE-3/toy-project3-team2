@@ -56,6 +56,7 @@ const MyPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [sortOption, setSortOption] = useState("updated");
 
   const {
     data: userInfo,
@@ -113,6 +114,22 @@ const MyPage = () => {
 
   // 정렬
   const sortedItems = [...playlists].sort((a, b) => {
+    // 구독순
+    if (sortOption === "subscribe") {
+      if (b.subscribe_count !== a.subscribe_count) {
+        return b.subscribe_count - a.subscribe_count;
+      }
+
+      // 구독수가 같으면 좋아요수 비교
+      return b.like_count - a.like_count;
+    }
+
+    // 좋아요순
+    if (sortOption === "like") {
+      return b.like_count - a.like_count;
+    }
+
+    // 업데이트순
     const dateA = new Date(a.updated_at ?? a.created_at).getTime();
     const dateB = new Date(b.updated_at ?? b.created_at).getTime();
 
@@ -154,7 +171,11 @@ const MyPage = () => {
       {/* user가 생성한 플레이리스트 */}
       <section className="border-t border-outline">
         <div className="px-[20px] py-[12px] text-right">
-          <DropDownMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+          <DropDownMenu
+            isOpen={isMenuOpen}
+            setIsOpen={setIsMenuOpen}
+            setSortOption={setSortOption}
+          />
         </div>
         {playlists.length > 0 ? (
           <ul>
