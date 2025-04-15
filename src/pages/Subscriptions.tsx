@@ -1,6 +1,6 @@
 /** 플레이리스트 구독 페이지 */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -11,6 +11,8 @@ import useUserStore from "@/store/useUserStore";
 
 const Subscriptions = () => {
   const userId = useUserStore.getState().user?.id;
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
     order: "updated_at.desc",
     subscribed_by: userId,
@@ -22,8 +24,12 @@ const Subscriptions = () => {
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
-      if (hasMore && !isFetchingNextPage) {
-        fetchNextPage();
+      if (hasMore && !isFetchingNextPage && !isLoadingMore) {
+        setIsLoadingMore(true);
+        setTimeout(() => {
+          fetchNextPage();
+          setIsLoadingMore(false);
+        }, 1000);
       }
     },
   });
@@ -56,7 +62,7 @@ const Subscriptions = () => {
             </li>
           ))}
           <div ref={targetRef} className="flex h-4 items-center justify-center">
-            {isFetchingNextPage && <div>Loading more...</div>}
+            {(isFetchingNextPage || isLoadingMore) && <div>Loading more...</div>}
           </div>
         </ul>
       ) : (
