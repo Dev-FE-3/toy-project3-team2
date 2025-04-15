@@ -42,8 +42,7 @@ const fetchPlaylistPage = async (
   try {
     // 구독 플레이리스트를 가져오는 경우
     if (options?.subscribed_by) {
-      console.log("구독 플레이리스트 조회 시작 - 사용자 ID:", options.subscribed_by);
-
+      
       // 1. actions 테이블에서 구독한 플레이리스트 ID 목록을 가져옴
       const { data: actions } = await axiosInstance.get(`/action`, {
         params: {
@@ -53,8 +52,6 @@ const fetchPlaylistPage = async (
         },
       });
 
-      console.log("actions 테이블 조회 결과:", actions);
-
       if (!actions?.length) {
         console.log("구독한 플레이리스트가 없습니다.");
         return { data: [], nextPage: undefined };
@@ -62,8 +59,7 @@ const fetchPlaylistPage = async (
 
       // playlist_id만 추출
       const playlistIds = actions.map((action: { playlist_id: string }) => action.playlist_id);
-      console.log("추출된 playlist_id 목록:", playlistIds);
-
+     
       // 2. 구독한 플레이리스트 ID로 플레이리스트를 조회
       const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
         params: {
@@ -73,6 +69,7 @@ const fetchPlaylistPage = async (
           offset: start,
           limit: LIMIT,
           order: options.order,
+          title: options.title,
         },
       });
 

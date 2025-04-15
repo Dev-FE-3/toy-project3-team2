@@ -22,7 +22,6 @@ const SearchBar = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearch(searchQuery);
-      console.log("searchQuery", searchQuery);
     }
   };
 
