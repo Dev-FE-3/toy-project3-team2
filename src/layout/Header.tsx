@@ -1,19 +1,17 @@
 import { useRef, useState, useEffect, RefObject } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import supabase from "@/services/supabase/supabaseClient";
-import axiosInstance from "@/services/axios/axiosInstance";
 
-import useUserStore from "@/store/useUserStore";
 
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
-import Logo from "@/assets/imgs/logo.svg?react";
 import Search from "@/assets/icons/search.svg?react";
-
+import Logo from "@/assets/imgs/logo.svg?react";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
-
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import axiosInstance from "@/services/axios/axiosInstance";
+import supabase from "@/services/supabase/supabaseClient";
+import useUserStore from "@/store/useUserStore";
 
 type HeaderProps = {
   onSearch?: (query: string) => void;
@@ -76,7 +74,7 @@ const Header = ({ onSearch }: HeaderProps) => {
     };
 
     fetchPlaylistTitle();
-  }, [playlistId]);
+  }, [playlistId, playlist?.data?.title]);
 
   // 타이틀: 유저 닉네임
   useEffect(() => {
@@ -206,7 +204,7 @@ const Header = ({ onSearch }: HeaderProps) => {
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
       {/* 왼쪽 영역 */}
-      <div className="absolute left-4 flex items-center">
+      <div className="absolute flex items-center left-4">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
@@ -224,7 +222,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
       {/* 가운데 영역 */}
       {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
-        <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
+        <h1 className="w-full px-8 text-center line-clamp-1 text-title">{title}</h1>
       )}
 
       {/* 검색창 */}
@@ -245,7 +243,7 @@ const Header = ({ onSearch }: HeaderProps) => {
       )}
 
       {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center">
+      <div className="absolute flex items-center right-4">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (

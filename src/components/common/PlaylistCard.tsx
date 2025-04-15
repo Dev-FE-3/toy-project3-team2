@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import PlaylistActions from "./PlaylistAction";
-import OverflowMenu from "./OverflowMenu";
 
 import Lock from "@/assets/icons/lock.svg?react";
+
+import OverflowMenu from "./OverflowMenu";
+import PlaylistActions from "./PlaylistAction";
+
 
 interface PlaylistCardProps {
   id: string;
@@ -79,7 +81,7 @@ const PlaylistCard = ({
 
           {/* 좋아요, 구독, 댓글 */}
           <div
-            className="mb-[6px] mt-3"
+            className="mb-[6px] mt-2"
             onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
           >
             <PlaylistActions playlistId={id} />

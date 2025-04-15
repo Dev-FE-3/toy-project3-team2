@@ -1,24 +1,28 @@
 /** 사용자 정보를 수정하는 페이지 */
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "./../services/axios/axiosInstance";
-import supabase from "../services/supabase/supabaseClient";
-import uploadProfileImage from "../services/supabase/uploadProfileImage";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useUserStore from "../store/useUserStore";
-import { Input } from "../components/common/Input";
-import { TextArea } from "../components/common/TextArea";
-import { Button } from "../components/common/Button";
-import Camera from "../assets/icons/camera.svg?react";
+
 import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
 
-enum NicknameValidation {
-  Unchecked = "unchecked",
-  Valid = "valid",
-  Invalid = "invalid",
-}
+import Camera from "../assets/icons/camera.svg?react";
+import { Button } from "../components/common/Button";
+import { Input } from "../components/common/Input";
+import { TextArea } from "../components/common/TextArea";
+import supabase from "../services/supabase/supabaseClient";
+import uploadProfileImage from "../services/supabase/uploadProfileImage";
+import useUserStore from "../store/useUserStore";
+import axiosInstance from "./../services/axios/axiosInstance";
+
+// 사용자 정보 가져오기
+const fetchUser = async (userId: string) => {
+  const { data } = await axiosInstance.get("/user", {
+    params: { id: `eq.${userId}`, select: "*" },
+  });
+  return data[0];
+};
 
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
@@ -26,79 +30,44 @@ const EditProfile = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // 프로필 이미지
+  const { data: userInfo } = useQuery({
+    queryKey: ["userInfo", user?.id],
+    queryFn: () => fetchUser(user!.id),
+    enabled: !!user?.id,
+  });
+
+  // 상태 관리
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [originalImage, setOriginalImage] = useState<string | null>(null);
-
-  // 닉네임
   const [nickname, setNickname] = useState("");
-  const [originalNickname, setOriginalNickname] = useState("");
-  const [isNicknameValid, setIsNicknameValid] = useState<NicknameValidation>(
-    NicknameValidation.Unchecked,
-  );
-
-  // 비밀번호
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [description, setDescription] = useState("");
+  const [isNicknameValid, setIsNicknameValid] = useState<"unchecked" | "valid" | "invalid">(
+    "unchecked",
+  );
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
   const [isPasswordMatch, setIsPasswordMatch] = useState<boolean | null>(null);
-
-  // 소개글
-  const [description, setDescription] = useState("");
-  const [originalDescription, setOriginalDescription] = useState("");
-
+  const [isNicknameCheckSubmitted, setIsNicknameCheckSubmitted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // 닉네임 유효성 검사 함수 추가
+  // 초기값 세팅
+  useEffect(() => {
+    if (userInfo) {
+      setNickname(userInfo.nickname || "");
+      setDescription(userInfo.description || "");
+      setPreviewImage(userInfo.profile_image || null);
+    }
+  }, [userInfo]);
+
+  // 닉네임 유효성 검사
   const validateNickname = (value: string) => {
     // 한글, 영문, 숫자만 사용 가능
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,15}$/;
     return regex.test(value);
   };
 
-  // 비밀번호 유효성 검사 함수 추가
-  const validatePassword = (value: string) => {
-    // 최소 8자, 최대 32자
-    if (value.length < 8 || value.length > 32) return false;
-
-    // 영문, 숫자, 특수문자 중 최소 2개 조합
-    const hasLetter = /[a-zA-Z]/.test(value);
-    const hasNumber = /\d/.test(value);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-
-    const conditions = [hasLetter, hasNumber, hasSpecialChar];
-    const metConditions = conditions.filter(Boolean).length;
-
-    return metConditions >= 2;
-  };
-
-  // 초기값 세팅
-  useEffect(() => {
-    if (!user) return;
-
-    setNickname(user.nickname || "");
-    setOriginalNickname(user.nickname || "");
-
-    setDescription(user.description || "");
-    setOriginalDescription(user.description || "");
-
-    setPreviewImage(user.profile_image || null);
-    setOriginalImage(user.profile_image || null);
-  }, [user]);
-
-  // 비밀번호 체크
-  useEffect(() => {
-    if (!password && !passwordCheck) {
-      setIsPasswordValid(null);
-      setIsPasswordMatch(null);
-      return;
-    }
-
-    setIsPasswordValid(validatePassword(password));
-    setIsPasswordMatch(password === passwordCheck);
-  }, [password, passwordCheck]);
-
+  // 닉네임 중복 검사
   const nicknameCheckMutation = useMutation({
     mutationFn: async (nickname: string) => {
       const { data } = await axiosInstance.get("/user", {
@@ -108,11 +77,7 @@ const EditProfile = () => {
     },
     onSuccess: (data) => {
       const isDuplicate = data.length > 0 && data[0].id !== user?.id;
-      if (isDuplicate) {
-        setIsNicknameValid(NicknameValidation.Invalid);
-      } else {
-        setIsNicknameValid(NicknameValidation.Valid);
-      }
+      setIsNicknameValid(isDuplicate ? "invalid" : "valid");
     },
     onError: () => {
       alert("중복 확인 중 문제가 발생했어요.");
@@ -120,21 +85,59 @@ const EditProfile = () => {
   });
 
   const handleCheck = () => {
-    if (!nickname || nickname === originalNickname) return;
+    setIsNicknameCheckSubmitted(true);
 
-    if (!validateNickname(nickname)) {
-      setIsNicknameValid(NicknameValidation.Invalid);
-      return;
+    if (nickname && nickname !== user?.nickname && validateNickname(nickname)) {
+      nicknameCheckMutation.mutate(nickname);
+    } else {
+      setIsNicknameValid("invalid");
     }
-
-    nicknameCheckMutation.mutate(nickname);
   };
 
+  // 비밀번호 유효성 검사
+  const validatePassword = (value: string) => {
+    if (value.length < 8 || value.length > 32) return false;
+    const hasLetter = /[a-zA-Z]/.test(value);
+    const hasNumber = /\d/.test(value);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+    return [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
+  };
+
+  // 비밀번호 일치 및 유효성 검사
+  useEffect(() => {
+    if (password && passwordCheck) {
+      setIsPasswordValid(validatePassword(password));
+      setIsPasswordMatch(password === passwordCheck);
+    } else {
+      setIsPasswordValid(null);
+      setIsPasswordMatch(null);
+    }
+  }, [password, passwordCheck]);
+
+  // 폼 유효성 검사
+  const validateForm = () => {
+    const nicknameValid = nickname !== user?.nickname && isNicknameValid === "valid";
+    const passwordValid = password === "" || (isPasswordValid && isPasswordMatch);
+    return (nickname === user?.nickname || nicknameValid) && passwordValid;
+  };
+
+  // 프로필 이미지 변경
+  const onProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewImage(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 프로필 저장
   const updateProfileMutation = useMutation({
     mutationFn: async () => {
       if (!user?.id) throw new Error("유저 정보 없음");
 
-      let imageUrl = user.profile_image;
+      let imageUrl = previewImage;
 
       if (selectedImage) {
         imageUrl = await uploadProfileImage(selectedImage, user.id);
@@ -148,17 +151,9 @@ const EditProfile = () => {
 
       const { data } = await axiosInstance.patch(
         "/user",
-        {
-          profile_image: imageUrl,
-          nickname,
-          description,
-        },
-        {
-          params: { id: `eq.${user.id}` },
-          headers: { Prefer: "return=representation" },
-        },
+        { profile_image: imageUrl, nickname, description },
+        { params: { id: `eq.${user.id}` }, headers: { Prefer: "return=representation" } },
       );
-
       return data[0];
     },
     onSuccess: (updatedUser) => {
@@ -173,71 +168,23 @@ const EditProfile = () => {
     },
   });
 
-  const validateForm = () => {
-    // 닉네임 중복 확인
-    if (nickname !== originalNickname) {
-      if (isNicknameValid === NicknameValidation.Unchecked) {
-        setIsNicknameValid(NicknameValidation.Unchecked);
-        return false;
-      } else if (isNicknameValid === NicknameValidation.Invalid) {
-        return false;
-      }
-    }
-
-    // 비밀번호 유효성
-    if (password) {
-      const isPwValid = validatePassword(password);
-      const isPwMatch = password === passwordCheck;
-
-      setIsPasswordValid(isPwValid);
-      setIsPasswordMatch(isPwMatch);
-
-      if (!isPwValid || !isPwMatch) {
-        return false;
-      }
-    } else {
-      setIsPasswordValid(null);
-      setIsPasswordMatch(null);
-    }
-
-    return true;
-  };
-
-  // 저장
-  const onSubmit = async (e: React.FormEvent) => {
+  // 폼 제출
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsSubmitted(true);
 
-    if (!user?.id) return;
-    if (!validateForm()) return;
-
-    updateProfileMutation.mutate();
+    if (validateForm()) {
+      updateProfileMutation.mutate();
+    }
   };
-
-  const onProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setSelectedImage(file);
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewImage(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const isNicknameCheckRequired = nickname !== originalNickname;
 
   const isFormChanged =
-    nickname !== originalNickname ||
-    description !== originalDescription ||
-    selectedImage !== null ||
-    !!password;
-
+    nickname !== user?.nickname ||
+    description !== userInfo?.description ||
+    selectedImage ||
+    password;
   const isFormValidForSubmit =
-    isFormChanged && (!isNicknameCheckRequired || isNicknameValid === NicknameValidation.Valid);
+    isFormChanged && (isNicknameValid === "valid" || nickname === user?.nickname);
 
   return (
     <form className="px-[16px]" onSubmit={onSubmit}>
@@ -278,29 +225,18 @@ const EditProfile = () => {
               type="text"
               placeholder="닉네임을 입력하세요"
               value={nickname}
-              onChange={(e) => {
-                setNickname(e.target.value);
-                setIsNicknameValid(NicknameValidation.Unchecked);
-              }}
+              onChange={(e) => setNickname(e.target.value)}
             />
             <Button
               variant="small"
               type="button"
-              disabled={!nickname || nickname === originalNickname}
+              disabled={!nickname || nickname === user?.nickname}
               onClick={handleCheck}
             >
               중복확인
             </Button>
           </div>
-          {isSubmitted &&
-            nickname !== originalNickname &&
-            isNicknameValid === NicknameValidation.Unchecked && (
-              <p className="mt-2 text-sub text-red-500">
-                <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
-                닉네임 중복 확인을 해주세요.
-              </p>
-            )}
-          {isNicknameValid === NicknameValidation.Invalid && (
+          {isNicknameCheckSubmitted && isNicknameValid === "invalid" && (
             <p className="mt-2 text-sub text-red-500">
               <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               {validateNickname(nickname)
@@ -308,7 +244,7 @@ const EditProfile = () => {
                 : "2~15자의 한글, 영문, 숫자만 사용 가능합니다."}
             </p>
           )}
-          {isNicknameValid === NicknameValidation.Valid && (
+          {isNicknameCheckSubmitted && isNicknameValid === "valid" && (
             <p className="mt-2 text-sub text-green-500">
               <img src={successIcon} alt="success" className="mr-1 inline-block h-4 w-4" />
               사용 가능한 닉네임입니다.
@@ -334,14 +270,13 @@ const EditProfile = () => {
             value={passwordCheck}
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
-          {isSubmitted && isPasswordValid === false && (
+          {isSubmitted && password && !isPasswordValid && (
             <p className="mt-2 text-sub text-red-500">
               <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.
             </p>
           )}
-
-          {isSubmitted && isPasswordMatch === false && (
+          {isSubmitted && password && passwordCheck && !isPasswordMatch && (
             <p className="mt-2 text-sub text-red-500">
               <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               비밀번호와 비밀번호 확인이 일치하지 않습니다.
