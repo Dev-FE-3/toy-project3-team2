@@ -21,17 +21,7 @@ interface UsePlaylistsOptions {
   title?: string;
 }
 
-interface PlaylistParams {
-  select: string;
-  is_public: string;
-  offset: number;
-  limit: number;
-  title?: string;
-  order?: string;
-  creator_id?: string;
-}
-
-const LIMIT = 5; // 한 번에 5개씩 가져오기
+const LIMIT = 4; // 한 번에 4개씩 가져오기
 
 const fetchPlaylistPage = async (
   { pageParam = 0 }: { pageParam: number },
