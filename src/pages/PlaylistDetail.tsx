@@ -30,7 +30,7 @@ const PlaylistDetail = () => {
       <Videos
         videos={playlist.videos}
         onSelect={setSelectedVideo}
-        selectedVideoId={selectedVideo.id}
+        selectedVideoId={selectedVideo.id ?? ""}
       />
       <Comments />
     </section>
