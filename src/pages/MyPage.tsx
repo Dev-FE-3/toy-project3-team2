@@ -113,14 +113,6 @@ const MyPage = () => {
     },
   });
 
-  // 정렬
-  const sortedItems = [...playlists].sort((a, b) => {
-    const dateA = new Date(a.updated_at ?? a.created_at).getTime();
-    const dateB = new Date(b.updated_at ?? b.created_at).getTime();
-
-    return dateB - dateA;
-  });
-
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
   };
