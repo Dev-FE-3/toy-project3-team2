@@ -28,3 +28,8 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* 토스트 */
+.toast {
+  @apply w-[95vw] rounded bg-background-toast p-3 text-font-toast;
+}

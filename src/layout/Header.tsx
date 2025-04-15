@@ -14,7 +14,7 @@ import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
 
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
-
+import { showToast } from "@/utils/toast";
 type HeaderProps = {
   onSearch?: (query: string) => void;
   nickname?: string;
@@ -168,9 +168,9 @@ const Header = ({ onSearch }: HeaderProps) => {
       await axiosInstance.delete("/playlist", {
         params: { id: `eq.${playlistId}` },
       });
-
-      alert("플레이리스트 삭제 완료!");
-      navigate("/");
+      // react-toastify 사용
+      showToast("success", "플레이리스트가 삭제되었습니다.");
+      navigate(`/mypage/${currentUser?.id}`);
     } catch (error) {
       console.error("삭제 실패:", error);
       alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");

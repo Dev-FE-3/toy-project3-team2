@@ -5,6 +5,7 @@ import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
+import { showToast } from "@/utils/toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -60,7 +61,9 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error("로그인 에러:", error);
-      alert("이메일과 비밀번호를 확인해주세요.");
+      // alert("이메일과 비밀번호를 확인해주세요.");
+      // react-toastify 사용
+      showToast("error", "이메일과 비밀번호를 확인해주세요.");
     }
   };
 
