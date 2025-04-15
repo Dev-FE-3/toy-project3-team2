@@ -78,7 +78,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             htmlFor="email"
-            type="email"
+            type="text"
             placeholder="이메일을 입력해주세요"
             className="mb-5"
             required
