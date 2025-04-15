@@ -1,19 +1,29 @@
-import { useState } from "react";
-import BookmarkIcon from "../../assets/icons/bookmark.svg?react";
-import HeartIcon from "../../assets/icons/heart.svg?react";
-import CommentIcon from "../../assets/icons/comment.svg?react";
+import { useEffect, useState } from "react";
 
-// interface PlaylistActionsProps {
-//   playlistId: string; // 실제 API 연동 시 사용할 예정
-// }
+import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import BookmarkIcon from "@/assets/icons/bookmark.svg?react";
+import HeartIcon from "@/assets/icons/heart.svg?react";
+import CommentIcon from "@/assets/icons/comment.svg?react";
 
-const PlaylistActions = () => {
+interface PlaylistActionsProps {
+  playlistId: string;
+}
+
+const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
   // 기본 값으로 더미 데이터 사용 (API 연결 전까지)
   const [isLiked, setIsLiked] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [likes, setLikes] = useState(0);
   const [subscriptions, setSubscriptions] = useState(0);
-  const [comments] = useState(0); // 댓글 수는 단순 표시용
+  const [commentCount, setCommentCount] = useState(0);
+
+  const playlist = usePlaylistDetail(playlistId);
+
+  useEffect(() => {
+    if (!playlist) return;
+
+    setCommentCount(playlist?.data?.comment_count ?? 0);
+  }, [playlist]);
 
   const handleLike = () => {
     setIsLiked((prev) => !prev);
@@ -30,22 +40,22 @@ const PlaylistActions = () => {
       <button
         onClick={handleSubscribe}
         role="button"
-        className="flex flex-row gap-[6px] items-center"
+        className="flex flex-row items-center gap-[6px]"
       >
         <BookmarkIcon
-          className={`w-[14px] h-[14px] ${isSubscribed ? "fill-white stroke-none" : "fill-none stroke-white"}`}
+          className={`h-[14px] w-[14px] ${isSubscribed ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
         <span>{subscriptions}</span>
       </button>
-      <button onClick={handleLike} role="button" className="flex flex-row gap-[6px] items-center">
+      <button onClick={handleLike} role="button" className="flex flex-row items-center gap-[6px]">
         <HeartIcon
-          className={`w-[14px] h-[14px] ${isLiked ? "fill-white stroke-none" : "fill-none stroke-white"}`}
+          className={`h-[14px] w-[14px] ${isLiked ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
         <span>{likes}</span>
       </button>
-      <div className="flex flex-row gap-[6px] items-center">
-        <CommentIcon className="w-[14px] h-[14px]" />
-        <span>{comments}</span>
+      <div className="flex flex-row items-center gap-[6px]">
+        <CommentIcon className="h-[14px] w-[14px]" />
+        <span>{commentCount}</span>
       </div>
     </div>
   );
