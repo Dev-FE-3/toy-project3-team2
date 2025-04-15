@@ -139,7 +139,7 @@ const MyPage = () => {
           <span>{userInfo?.nickname}</span>
           <span className="text-sub text-font-muted">구독 {userInfo?.subscribe_count ?? 0}</span>
         </div>
-        <p className="my-[2px] w-full text-font-primary">
+        <p className="my-[2px] w-full text-body2">
           {userInfo?.description || "소개글을 작성해주세요."}
         </p>
       </section>
