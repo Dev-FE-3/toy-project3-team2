@@ -19,6 +19,19 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [likes, setLikes] = useState(0);
   const [subscriptions, setSubscriptions] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+
+  const playlist = usePlaylistDetail(playlistId);
+
+  useEffect(() => {
+    if (!playlist) return;
+
+    setCommentCount(playlist?.data?.comment_count ?? 0);
+  }, [playlist]);
+
+  const handleLike = () => {
+    setIsLiked((prev) => !prev);
+    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
   // const [comments, setComments] = useState(0);
 
   // 유저와 플레이리스트에 대한 기존 액션 정보 불러오기
@@ -182,7 +195,7 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
       </button>
       <div className="flex flex-row items-center gap-[6px]">
         <CommentIcon className="h-[14px] w-[14px]" />
-        <span>0</span> {/* 댓글 수 추후 구현 */}
+        <span>{commentCount}</span>
       </div>
     </div>
   );

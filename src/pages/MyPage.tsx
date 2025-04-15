@@ -7,7 +7,6 @@ import { User } from "../types/user";
 import { useParams, useNavigate } from "react-router-dom";
 import PlaylistCard from "../components/common/PlaylistCard";
 import DropDownMenu from "../components/myPage/DropDownMenu";
-import ProfileImageDefault from "../assets/imgs/profile-image-default.svg";
 
 // fetch
 const fetchUser = async (userId: string) => {
@@ -20,13 +19,24 @@ const fetchUser = async (userId: string) => {
   return data[0];
 };
 
-const fetchPlaylists = async (creatorId: string) => {
-  const { data } = await axiosInstance.get<Playlist[]>("/playlist", {
-    params: {
-      creator_id: `eq.${creatorId}`,
-      select: "*",
-    },
-  });
+interface Params {
+  creator_id: string;
+  select: string;
+  is_public?: string;
+}
+
+const fetchPlaylists = async (creatorId: string, isOwner: boolean) => {
+  const params: Params = {
+    creator_id: `eq.${creatorId}`,
+    select: "*",
+  };
+
+  // 다른 유저의 마이페이지인 경우 비공개 플레이리스트 제외
+  if (!isOwner) {
+    params.is_public = "eq.true";
+  }
+
+  const { data } = await axiosInstance.get<Playlist[]>("/playlist", { params });
   return data;
 };
 
@@ -64,14 +74,16 @@ const MyPage = () => {
     enabled: !!userId,
   });
 
+  const isOwner = user?.id === userId;
+
   const {
     data: items = [],
     isLoading: isPlaylistLoading,
     error: playlistError,
   } = useQuery({
-    queryKey: ["userPlaylists", user?.id],
-    queryFn: () => fetchPlaylists(user!.id),
-    enabled: !!user?.id,
+    queryKey: ["userPlaylists", userId, isOwner],
+    queryFn: () => fetchPlaylists(userId!, isOwner),
+    enabled: !!userId,
   });
 
   const deleteMutation = useMutation({
@@ -115,7 +127,7 @@ const MyPage = () => {
       <section className="flex flex-wrap items-center gap-[14px] p-[16px]">
         <img
           className="h-[60px] w-[60px] rounded-full object-cover"
-          src={userInfo?.profile_image || ProfileImageDefault}
+          src={userInfo?.profile_image}
           alt="User Profile"
         />
         <div className="flex flex-grow flex-col gap-[4px]">
@@ -141,7 +153,7 @@ const MyPage = () => {
                   title={item.title}
                   thumbnailUrl={item.thumbnail_image}
                   isPublic={item.is_public}
-                  isOwner={true}
+                  isOwner={isOwner}
                   onDelete={handleDelete}
                 />
               </li>

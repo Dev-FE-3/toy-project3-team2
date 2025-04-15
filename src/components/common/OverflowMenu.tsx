@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MenuDotsVertical from "../../assets/icons/menu-dots-vertical.svg?react";
 
 interface OverflowMenuOption {
@@ -14,12 +14,28 @@ interface OverflowMenuProps {
 const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // 페이지 이동 시 메뉴 닫기
+  useEffect(() => {
+    const handleClick = () => {
+      setIsOpen(false);
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, [setIsOpen]);
+
   return (
     <nav className="relative inline-block align-middle leading-none">
       <button
         type="button"
         className="align-middle leading-none"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         aria-haspopup="true"
         aria-expanded={isOpen}
         aria-controls="overflow-menu"
@@ -31,7 +47,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
         <ul
           id="overflow-menu"
           role="menu"
-          className="absolute right-0 w-max min-w-[90px] rounded-[4px] border border-outline bg-background-container text-center"
+          className="absolute right-0 z-10 w-max min-w-[90px] rounded-[4px] border border-outline bg-background-container text-center"
           style={{ top: "calc(100% + 7px)" }}
         >
           {options.map((option) => (
