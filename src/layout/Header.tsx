@@ -146,28 +146,17 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   const deletePlaylist = async (playlistId: string) => {
-    const user = useUserStore.getState().user;
-    if (!user || !user.id) {
-      alert("로그인 정보가 없습니다.");
-      return;
-    }
-
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-      const userId = user.id;
-
       // 1. 댓글 삭제
       await axiosInstance.delete("/comment", {
         params: { playlist_id: `eq.${playlistId}` },
       });
 
-      // 2. 액션 삭제 - 내가 한 액션만
+      // 2. 액션 삭제
       await axiosInstance.delete("/action", {
-        params: {
-          playlist_id: `eq.${playlistId}`,
-          user_id: `eq.${userId}`,
-        },
+        params: { playlist_id: `eq.${playlistId}` },
       });
 
       // 3. 비디오 삭제 (모두)
