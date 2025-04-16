@@ -80,8 +80,8 @@ const EditProfile = () => {
       const isDuplicate = data.length > 0 && data[0].id !== user?.id;
       setIsNicknameValid(isDuplicate ? "invalid" : "valid");
     },
-    onError: () => {
-      alert("중복 확인 중 문제가 발생했어요.");
+    onError: (error) => {
+      console.error("중복 확인 문제:", error);
     },
   });
 
@@ -166,7 +166,6 @@ const EditProfile = () => {
     },
     onError: (error) => {
       console.error("업데이트 실패:", error);
-      alert("업데이트 중 문제가 발생했어요.");
     },
   });
 

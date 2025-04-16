@@ -63,8 +63,8 @@ const Header = ({ onSearch }: HeaderProps) => {
           } else {
             throw new Error("데이터 없음");
           }
-        } catch (err) {
-          console.error("플레이리스트 제목 불러오기 실패:", err);
+        } catch (error) {
+          console.error("플레이리스트 제목 불러오기 실패:", error);
           setPlaylistTitle("플레이리스트");
         }
       }
