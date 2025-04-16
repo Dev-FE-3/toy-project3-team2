@@ -7,6 +7,7 @@ import DefaultProfileImage from "@/assets/imgs/profile-image-default.svg";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import supabase from "@/services/supabase/supabaseClient";
+import { showToast } from "@/utils/toast";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -92,12 +93,16 @@ const Signup = () => {
     e.preventDefault();
 
     if (!email || !nickname || !password || !passwordConfirm) {
-      alert("모든 필드를 입력해주세요.");
+      // alert("모든 필드를 입력해주세요.");
+      // react-toastify 사용
+      showToast("info", "모든 필드를 입력해주세요.");
       return;
     }
 
     if (!isEmailValid || !isNicknameValid) {
-      alert("이메일과 닉네임 중복 확인을 해주세요.");
+      // alert("이메일과 닉네임 중복 확인을 해주세요.");
+      // react-toastify 사용
+      showToast("info", "이메일과 닉네임의 중복 여부를 확인해주세요.");
       return;
     }
 
@@ -129,6 +134,8 @@ const Signup = () => {
       await supabase.auth.signOut();
 
       navigate("/login");
+
+      showToast("success", "회원가입이 완료되었습니다");
     } catch (error) {
       console.error("회원가입 에러:", error);
       alert("회원가입 중 오류가 발생했습니다.");
