@@ -10,6 +10,7 @@ import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Playlist } from "../types/playlist";
 import { User } from "../types/user";
 import axiosInstance from "./../services/axios/axiosInstance";
+import PlaylistEmpty from "@/components/common/PlaylistEmpty";
 import { showToast } from "@/utils/toast";
 
 // fetch
@@ -58,6 +59,7 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sortOption, setSortOption] = useState("updated");
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const {
     data: userInfo,
@@ -86,7 +88,7 @@ const MyPage = () => {
     mutationFn: deletePlaylist,
     onSuccess: (deletedId) => {
       queryClient.setQueryData<InfiniteData<{ data: Playlist[]; nextPage: number | null }>>(
-        ["userPlaylists", userId, isOwner],
+        ["userPlaylists", userId, isOwner, sortOption],
         (old) =>
           old
             ? {
@@ -107,8 +109,12 @@ const MyPage = () => {
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
+      if (hasNextPage && !isFetchingNextPage && !isLoadingMore) {
+        setIsLoadingMore(true);
+        setTimeout(() => {
+          fetchNextPage();
+          setIsLoadingMore(false);
+        }, 1000);
       }
     },
   });
@@ -169,11 +175,11 @@ const MyPage = () => {
               </li>
             ))}
             <div ref={targetRef} className="flex h-4 items-center justify-center">
-              {isFetchingNextPage && <div>Loading more...</div>}
+              {(isFetchingNextPage || isLoadingMore) && <div>Loading more...</div>}
             </div>
           </ul>
         ) : (
-          <p className="px-[16px]">생성한 플레이리스트가 없습니다.</p>
+          <PlaylistEmpty />
         )}
       </section>
 
