@@ -10,7 +10,7 @@ import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 import axiosInstance from "@/services/axios/axiosInstance";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
-
+import { showToast } from "@/utils/toast";
 type HeaderProps = {
   onSearch?: (query: string) => void;
   nickname?: string;
@@ -45,9 +45,6 @@ const Header = ({ onSearch }: HeaderProps) => {
   useEffect(() => {
     setSearchQuery("");
     setIsSearchOpen(false);
-    if (onSearch) {
-      onSearch("");
-    }
   }, [location.pathname]);
 
   // 플레이리스트 상세 제목 fetch
@@ -96,6 +93,12 @@ const Header = ({ onSearch }: HeaderProps) => {
     fetchNickname();
   }, [userId]);
 
+  useEffect(() => {
+    if (isSearchOpen) {
+      searchInputRef.current?.focus();
+    }
+  }, [isSearchOpen]);
+
   if (hiddenPaths.includes(location.pathname)) {
     return null;
   }
@@ -139,6 +142,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
     // 로그인 페이지로 이동
     navigate("/login");
+    showToast("success", "정상적으로 로그아웃되었습니다");
   };
 
   const deletePlaylist = async (playlistId: string) => {
@@ -162,12 +166,13 @@ const Header = ({ onSearch }: HeaderProps) => {
       await axiosInstance.delete("/playlist", {
         params: { id: `eq.${playlistId}` },
       });
-
-      alert("플레이리스트 삭제 완료!");
-      navigate("/");
+      navigate(`/mypage/${currentUser?.id}`);
+      showToast("success", "플레이리스트가 삭제되었습니다.");
     } catch (error) {
       console.error("삭제 실패:", error);
-      alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");
+      // alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");
+      // react-toastify 사용
+      showToast("error", "삭제에 실패했습니다. 나중에 다시 시도해주세요.");
     }
   };
 
@@ -192,9 +197,6 @@ const Header = ({ onSearch }: HeaderProps) => {
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
     setIsSearchOpen(true);
-    setTimeout(() => {
-      searchInputRef.current?.focus();
-    }, 0);
   };
 
   return (

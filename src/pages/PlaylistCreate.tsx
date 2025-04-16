@@ -15,6 +15,7 @@ import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
 import { areVideoListsEqual } from "@/utils/video";
+import { showToast } from "@/utils/toast";
 
 interface NewPlaylistPayload {
   title: string;
@@ -97,7 +98,8 @@ const PlaylistCreate = () => {
   };
 
   const handleDeleteVideo = async (index: number) => {
-    if (videoList.length === 1) return alert("영상은 하나 이상 존재해야 합니다.");
+    if (videoList.length === 1)
+      return showToast("info", "플레이리스트에는 최소 한 개 이상의 영상이 필요합니다.");
 
     setVideoList((prev) => prev.filter((_, i) => i !== index));
 
@@ -164,6 +166,8 @@ const PlaylistCreate = () => {
       setIsPublic(false);
 
       navigate(`/playlist/${newPlaylistId}`);
+
+      showToast("success", "플레이리스트가 생성되었습니다");
     } catch (error) {
       console.error("생성 중 오류:", error);
     }
@@ -211,6 +215,7 @@ const PlaylistCreate = () => {
       setIsPublic(false);
 
       navigate(`/playlist/${id}`);
+      showToast("success", "플레이리스트가 수정되었습니다");
     } catch (error) {
       console.error("수정 중 오류:", error);
     }

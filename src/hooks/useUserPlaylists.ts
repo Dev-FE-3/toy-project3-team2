@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import axiosInstance from "@/services/axios/axiosInstance";
 import { Playlist } from "@/types/playlist";
 
-const LIMIT = 2;
+const LIMIT = 3;
 
 interface FetchParams {
   pageParam?: number;
