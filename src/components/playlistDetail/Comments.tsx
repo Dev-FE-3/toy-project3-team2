@@ -1,40 +1,19 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-import CommentSkeleton from "./CommentSkeleton";
-import AddIcon from "@/assets/icons/fill-add.svg?react";
-import axiosInstance from "@/services/axios/axiosInstance";
-import useUserStore from "@/store/useUserStore";
-import { Comment } from "@/types/comment";
 import { Input } from "@/components/common/Input";
-
-interface NewCommentPayload {
-  playlist_id: string;
-  content: string;
-  author_id: string;
-}
+import CommentSkeleton from "./CommentSkeleton";
+import useUserStore from "@/store/useUserStore";
+import { fetchComments } from "@/api/commentApi";
+import { usePostComment } from "@/hooks/queries/usePostComment";
+import AddIcon from "@/assets/icons/fill-add.svg?react";
 
 const Comments = () => {
   const [content, setContent] = useState("");
-  const queryClient = useQueryClient();
   const user = useUserStore((state) => state.user);
   const { id: playlistId } = useParams<{ id: string }>();
 
-  // 댓글 목록 가져오기 함수
-  const fetchComments = async (playlistId: string): Promise<Comment[]> => {
-    const response = await axiosInstance.get<Comment[]>("/comment", {
-      params: {
-        playlist_id: `eq.${playlistId}`,
-        select: "*,user:author_id(nickname, profile_image)",
-        order: "created_at.desc",
-      },
-    });
-
-    return response.data;
-  };
-
-  // 댓글 쿼리
   const {
     data: comments = [],
     isLoading: isCommentsLoading,
@@ -45,34 +24,23 @@ const Comments = () => {
     enabled: !!playlistId,
   });
 
-  // 댓글 등록 함수
-  const postComment = async (payload: NewCommentPayload) => {
-    return axiosInstance.post("/comment", payload);
-  };
-
-  // 댓글 등록 뮤테이션
   const {
-    mutate,
+    mutate: postComment,
     isPending: isPosting,
     isError: isPostError,
-  } = useMutation({
-    mutationFn: postComment,
-    onSuccess: () => {
-      setContent("");
-      queryClient.invalidateQueries({ queryKey: ["comments", playlistId] });
-      queryClient.invalidateQueries({ queryKey: ["playlist", playlistId] }); // 댓글 등록 시 comment_count update 되도록
-    },
-  });
+  } = usePostComment(playlistId);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // 폼 제출 시 새로고침 방지
+    e.preventDefault();
     if (!user || !content || !playlistId) return;
 
-    mutate({
+    postComment({
       playlist_id: playlistId,
       content,
       author_id: user.id,
     });
+
+    setContent("");
   };
 
   return (
@@ -95,7 +63,7 @@ const Comments = () => {
               disabled={isPosting}
             />
             {content.length > 0 && (
-              <button type="submit" onClick={handleSubmit} className="absolute right-[6px]">
+              <button type="submit" className="absolute right-[6px]">
                 <AddIcon />
               </button>
             )}
