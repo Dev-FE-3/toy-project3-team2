@@ -21,29 +21,52 @@ interface UsePlaylistsOptions {
   title?: string;
 }
 
-interface PlaylistParams {
-  select: string;
-  is_public: string;
-  offset: number;
-  limit: number;
-  title?: string;
-  order?: string;
-  creator_id?: string;
-}
-
-const LIMIT = 5; // 한 번에 5개씩 가져오기
+const LIMIT = 4; // 한 번에 4개씩 가져오기
 
 const fetchPlaylistPage = async (
   { pageParam = 0 }: { pageParam: number },
   options?: UsePlaylistsOptions,
 ) => {
   const start = pageParam * LIMIT;
-  // const userId = useUserStore.getState().user?.id;
   try {
-    // 구독 플레이리스트를 가져오는 경우
-    if (options?.subscribed_by) {
-      
+    // 구독하지 않은 플레이리스트를 가져오는 경우
+    if (options?.subscribed_by?.startsWith("neq.")) {
+      const userId = options.subscribed_by.replace("neq.", "");
+
       // 1. actions 테이블에서 구독한 플레이리스트 ID 목록을 가져옴
+      const { data: actions } = await axiosInstance.get(`/action`, {
+        params: {
+          select: "*",
+          user_id: `eq.${userId}`,
+          is_subscribed: "eq.true",
+        },
+      });
+
+      const subscribedPlaylistIds =
+        actions?.map((action: { playlist_id: string }) => action.playlist_id) || [];
+
+      // 2. 구독하지 않은 플레이리스트를 조회
+      const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
+        params: {
+          select: "*,user:creator_id(profile_image)",
+          id: `not.in.(${subscribedPlaylistIds.join(",")})`,
+          is_public: "eq.true",
+          offset: start,
+          limit: LIMIT,
+          order: options.order,
+          title: options.title,
+          creator_id: options.creator_id,
+        },
+      });
+
+      return {
+        data,
+        nextPage: data.length === LIMIT ? pageParam + 1 : undefined,
+      };
+    }
+
+    // 구독한 플레이리스트 가져오는 로직
+    if (options?.subscribed_by) {
       const { data: actions } = await axiosInstance.get(`/action`, {
         params: {
           select: "*",
@@ -53,14 +76,11 @@ const fetchPlaylistPage = async (
       });
 
       if (!actions?.length) {
-        console.log("구독한 플레이리스트가 없습니다.");
         return { data: [], nextPage: undefined };
       }
 
-      // playlist_id만 추출
       const playlistIds = actions.map((action: { playlist_id: string }) => action.playlist_id);
-     
-      // 2. 구독한 플레이리스트 ID로 플레이리스트를 조회
+
       const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
         params: {
           select: "*,user:creator_id(profile_image)",
@@ -79,35 +99,7 @@ const fetchPlaylistPage = async (
       };
     }
 
-    // 일반 플레이리스트 조회
-    const params: PlaylistParams = {
-      select: "*,user:creator_id(profile_image)",
-      is_public: "eq.true",
-      offset: start,
-      limit: LIMIT,
-    };
-
-    // 옵션에서 title이 있으면 추가
-    if (options?.title) {
-      params.title = options.title;
-    }
-
-    // 다른 옵션들 추가
-    if (options?.order) params.order = options.order;
-    if (options?.creator_id) params.creator_id = options.creator_id;
-
-    const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
-      params,
-    });
-
-    if (!data) {
-      throw new Error("플레이리스트를 가져오는데 실패했습니다.");
-    }
-
-    return {
-      data,
-      nextPage: data.length === LIMIT ? pageParam + 1 : undefined,
-    };
+    throw new Error("subscribed_by 옵션이 필요합니다.");
   } catch (error) {
     console.error("Error in fetchPlaylistPage:", error);
     throw error;

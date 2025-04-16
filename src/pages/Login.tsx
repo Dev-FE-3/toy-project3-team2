@@ -7,6 +7,7 @@ import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
+import { showToast } from "@/utils/toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -62,6 +63,8 @@ const Login = () => {
 
       console.log("로그인 성공:", data);
       navigate("/");
+
+      showToast("success", `${userData.nickname}님, 환영합니다`);
     } catch (error) {
       console.error("로그인 에러:", error);
       setError("이메일과 비밀번호를 확인해주세요.");

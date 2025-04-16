@@ -7,6 +7,7 @@ import DefaultProfileImage from "@/assets/imgs/profile-image-default.svg";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import supabase from "@/services/supabase/supabaseClient";
+import { showToast } from "@/utils/toast";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -119,6 +120,8 @@ const Signup = () => {
       await supabase.auth.signOut();
 
       navigate("/login");
+
+      showToast("success", "회원가입이 완료되었습니다");
     } catch (error) {
       console.error("회원가입 에러:", error);
     }
