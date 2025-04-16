@@ -7,9 +7,9 @@ import DropDownMenu from "@/components/myPage/DropDownMenu";
 import useUserStore from "@/store/useUserStore";
 import { useUserPlaylists } from "@/hooks/useUserPlaylists";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Playlist } from "../types/playlist";
-import { User } from "../types/user";
-import axiosInstance from "./../services/axios/axiosInstance";
+import { Playlist } from "@/types/playlist";
+import { User } from "@/types/user";
+import axiosInstance from "@/services/axios/axiosInstance";
 import PlaylistEmpty from "@/components/common/PlaylistEmpty";
 import { showToast } from "@/utils/toast";
 

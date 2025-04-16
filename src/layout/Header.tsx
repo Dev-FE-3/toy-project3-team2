@@ -170,7 +170,6 @@ const Header = ({ onSearch }: HeaderProps) => {
       showToast("success", "플레이리스트가 삭제되었습니다.");
     } catch (error) {
       console.error("삭제 실패:", error);
-      showToast("error", "삭제에 실패했습니다. 나중에 다시 시도해주세요.");
     }
   };
 
