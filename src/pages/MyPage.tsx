@@ -46,8 +46,6 @@ const deletePlaylist = async (playlistId: string) => {
     params: { id: `eq.${playlistId}` },
   });
 
-  // alert("플레이리스트 삭제 완료!");
-  // react-toastify 사용
   showToast("success", "플레이리스트가 삭제되었습니다.");
   return playlistId;
 };
