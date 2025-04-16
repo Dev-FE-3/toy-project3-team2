@@ -11,7 +11,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <ToastContainer />
+        <ToastContainer
+          style={{
+            top: 0,
+            width: "100%",
+            maxWidth: "420px",
+            padding: "16px",
+          }}
+        />
         <AppRoutes />
       </Router>
     </QueryClientProvider>

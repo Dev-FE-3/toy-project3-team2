@@ -92,20 +92,6 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !nickname || !password || !passwordConfirm) {
-      // alert("모든 필드를 입력해주세요.");
-      // react-toastify 사용
-      showToast("info", "모든 필드를 입력해주세요.");
-      return;
-    }
-
-    if (!isEmailValid || !isNicknameValid) {
-      // alert("이메일과 닉네임 중복 확인을 해주세요.");
-      // react-toastify 사용
-      showToast("info", "이메일과 닉네임의 중복 여부를 확인해주세요.");
-      return;
-    }
-
     setShowPasswordError(true);
     setShowPasswordConfirmError(true);
 
@@ -138,7 +124,6 @@ const Signup = () => {
       showToast("success", "회원가입이 완료되었습니다");
     } catch (error) {
       console.error("회원가입 에러:", error);
-      alert("회원가입 중 오류가 발생했습니다.");
     }
   };
 
@@ -151,7 +136,9 @@ const Signup = () => {
     email.trim() !== "" &&
     nickname.trim() !== "" &&
     password.trim() !== "" &&
-    passwordConfirm.trim() !== "";
+    passwordConfirm.trim() !== "" &&
+    isEmailValid === true &&
+    isNicknameValid === true;
 
   return (
     <div className="px-4">

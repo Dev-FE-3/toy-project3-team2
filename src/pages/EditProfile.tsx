@@ -293,7 +293,7 @@ const EditProfile = () => {
             htmlFor="user-description"
             placeholder="소개글을 입력하세요"
             label="소개"
-            maxLength={500}
+            maxLength={300}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
