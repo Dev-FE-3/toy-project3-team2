@@ -8,10 +8,10 @@ test.describe("플레이리스트 생성 페이지 테스트", () => {
   });
 
   test("필수 입력값이 없으면 생성 버튼이 비활성화되어야 함", async ({ page }) => {
-    const createButton = page.getByRole("button", { name: "생성" });
+    const createButton = page.getByTestId("submit-button");
 
     await test.step("초기 상태 확인", async () => {
-      await expect(createButton).toBeDisabled(); // 그다음 버튼이 비활성화인지 확인
+      await expect(createButton).toBeDisabled(); // 버튼이 비활성화인지 확인
     });
 
     await test.step("제목만 입력", async () => {
@@ -58,7 +58,6 @@ test.describe("플레이리스트 생성 페이지 테스트", () => {
     });
 
     await test.step("플레이리스트 정보 입력", async () => {
-      await page.waitForLoadState("domcontentloaded");
       await page.getByTestId("title-input").fill(testTitle);
       await page.getByTestId("description-input").fill(testDescription);
 
