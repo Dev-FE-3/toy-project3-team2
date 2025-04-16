@@ -56,6 +56,7 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sortOption, setSortOption] = useState("updated");
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const {
     data: userInfo,
@@ -105,8 +106,12 @@ const MyPage = () => {
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
+      if (hasNextPage && !isFetchingNextPage && !isLoadingMore) {
+        setIsLoadingMore(true);
+        setTimeout(() => {
+          fetchNextPage();
+          setIsLoadingMore(false);
+        }, 1000);
       }
     },
   });
@@ -167,7 +172,7 @@ const MyPage = () => {
               </li>
             ))}
             <div ref={targetRef} className="flex h-4 items-center justify-center">
-              {isFetchingNextPage && <div>Loading more...</div>}
+              {(isFetchingNextPage || isLoadingMore) && <div>Loading more...</div>}
             </div>
           </ul>
         ) : (

@@ -45,9 +45,6 @@ const Header = ({ onSearch }: HeaderProps) => {
   useEffect(() => {
     setSearchQuery("");
     setIsSearchOpen(false);
-    if (onSearch) {
-      onSearch("");
-    }
   }, [location.pathname]);
 
   // 플레이리스트 상세 제목 fetch
@@ -95,6 +92,12 @@ const Header = ({ onSearch }: HeaderProps) => {
 
     fetchNickname();
   }, [userId]);
+
+  useEffect(() => {
+    if (isSearchOpen) {
+      searchInputRef.current?.focus();
+    }
+  }, [isSearchOpen]);
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -192,9 +195,6 @@ const Header = ({ onSearch }: HeaderProps) => {
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
     setIsSearchOpen(true);
-    setTimeout(() => {
-      searchInputRef.current?.focus();
-    }, 0);
   };
 
   return (

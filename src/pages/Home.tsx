@@ -17,6 +17,7 @@ const Home = () => {
   const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
     order: "subscribe_count.desc,updated_at.desc",
     creator_id: `neq.${userId}`,
+    subscribed_by: `neq.${userId}`,
     title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
 
