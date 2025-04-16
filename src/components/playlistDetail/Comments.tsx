@@ -6,7 +6,7 @@ import { Input } from "@/components/common/Input";
 import CommentSkeleton from "./CommentSkeleton";
 import useUserStore from "@/store/useUserStore";
 import { fetchComments } from "@/api/commentApi";
-import { usePostComment } from "@/hooks/queries/usePostComment";
+import { usePostCommentMutation } from "@/hooks/queries/usePostCommentMutation";
 import AddIcon from "@/assets/icons/fill-add.svg?react";
 
 const Comments = () => {
@@ -28,7 +28,7 @@ const Comments = () => {
     mutate: postComment,
     isPending: isPosting,
     isError: isPostError,
-  } = usePostComment(playlistId);
+  } = usePostCommentMutation(playlistId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
