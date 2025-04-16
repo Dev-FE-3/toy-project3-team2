@@ -8,7 +8,6 @@ test.describe("플레이리스트 생성 페이지 테스트", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/playlist/create");
     await page.waitForLoadState("networkidle");
-    console.log("페이지가 로드되었습니다.");
   });
 
   test("필수 입력값이 없으면 생성 버튼이 비활성화되어야 함", async ({ page }) => {
