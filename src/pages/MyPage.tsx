@@ -101,7 +101,6 @@ const MyPage = () => {
     },
     onError: (error) => {
       console.error("삭제 실패", error);
-      alert("삭제에 실패했습니다.");
     },
   });
 

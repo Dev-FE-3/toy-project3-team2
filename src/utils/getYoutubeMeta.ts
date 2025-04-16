@@ -17,7 +17,7 @@ export const getYoutubeMeta = async (url: string): Promise<YoutubeMeta | null> =
       thumbnailUrl: data.thumbnail_url,
     };
   } catch (error) {
-    console.warn("유튜브 메타데이터를 가져오는 데 실패했습니다:", error);
+    console.error("유튜브 메타데이터를 가져오는 데 실패했습니다:", error);
     return null;
   }
 };
