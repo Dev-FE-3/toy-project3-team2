@@ -16,7 +16,11 @@ const VideoCard = ({ index, video, onDelete }: VideoCardProps) => (
         썸네일
       </span>
     )}
-    <DeleteIcon className="absolute right-2 top-2 cursor-pointer" onClick={() => onDelete(index)}  data-testid="delete-video-button"/>
+    <DeleteIcon
+      className="absolute right-2 top-2 cursor-pointer"
+      onClick={() => onDelete(index)}
+      data-testid="delete-video-button"
+    />
 
     <img
       src={video.thumbnail}
