@@ -10,9 +10,10 @@ interface OverflowMenuOption {
 interface OverflowMenuProps {
   options: OverflowMenuOption[];
   iconSize?: number;
+  id?: string;
 }
 
-const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
+const OverflowMenu = ({ options, iconSize = 16, id }: OverflowMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   // 페이지 이동 시 메뉴 닫기
@@ -39,14 +40,14 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
         }}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        aria-controls="overflow-menu"
+        aria-controls={id}
       >
         <MenuDotsVertical width={iconSize} height={iconSize} />
       </button>
 
       {isOpen && (
         <ul
-          id="overflow-menu"
+          id={id}
           role="menu"
           className="absolute right-0 z-10 w-max min-w-[90px] rounded-[4px] border border-outline bg-background-container text-center"
           style={{ top: "calc(100% + 7px)" }}

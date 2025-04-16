@@ -251,7 +251,9 @@ const Header = ({ onSearch }: HeaderProps) => {
             )}
           </>
         ) : (
-          MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
+          MENU_OPTIONS.length > 0 && (
+            <OverflowMenu options={MENU_OPTIONS} iconSize={24} id="user-menu" />
+          )
         )}
       </div>
     </header>
