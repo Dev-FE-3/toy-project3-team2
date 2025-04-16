@@ -12,12 +12,21 @@ import { showToast } from "@/utils/toast";
 const Signup = () => {
   const navigate = useNavigate();
   const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
+  const [isEmailFormatValid, setIsEmailFormatValid] = useState<boolean | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
+  const [showPasswordError, setShowPasswordError] = useState(false);
+  const [showPasswordConfirmError, setShowPasswordConfirmError] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [nickname, setNickname] = useState("");
+
+  // 이메일 유효성 검사 함수 추가
+  const validateEmail = (value: string) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(value);
+  };
 
   // 닉네임 유효성 검사 함수 추가
   const validateNickname = (value: string) => {
@@ -45,6 +54,16 @@ const Signup = () => {
   // 중복 확인 함수 수정
   const checkDuplicate = async (type: "email" | "nickname", value: string) => {
     try {
+      // 이메일일 경우 유효성 먼저 검사
+      if (type === "email") {
+        const isValid = validateEmail(value);
+        setIsEmailFormatValid(isValid);
+        if (!isValid) {
+          setIsEmailValid(null);
+          return;
+        }
+      }
+
       // 닉네임일 경우 유효성 먼저 검사
       if (type === "nickname" && !validateNickname(value)) {
         setIsNicknameValid(false);
@@ -87,17 +106,14 @@ const Signup = () => {
       return;
     }
 
+    setShowPasswordError(true);
+    setShowPasswordConfirmError(true);
+
     if (!validatePassword(password)) {
-      // alert("비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.");
-      // react-toastify 사용
-      showToast("info", "비밀번호는 8~32자, 영문, 숫자, 특수문자 2개 이상을 포함하야 합니다.");
       return;
     }
 
     if (password !== passwordConfirm) {
-      // alert("비밀번호가 일치하지 않습니다.");
-      // react-toastify 사용
-      showToast("error", "비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -147,7 +163,7 @@ const Signup = () => {
           <div className="flex gap-2">
             <Input
               id="email"
-              type="email"
+              type="text"
               placeholder="이메일을 입력해주세요"
               className="flex-grow"
               value={email}
@@ -161,6 +177,12 @@ const Signup = () => {
               중복확인
             </Button>
           </div>
+          {isEmailFormatValid === false && (
+            <p className="mt-2 text-sub text-red-500">
+              <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+              이메일 형식이 맞지 않습니다.
+            </p>
+          )}
           {isEmailValid === false && (
             <p className="mt-2 text-sub text-red-500">
               <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
@@ -218,14 +240,30 @@ const Signup = () => {
           onChange={(e) => setPassword(e.target.value)}
           label="비밀번호*"
         />
-        <Input
-          htmlFor="passwordConfirm"
-          type="password"
-          placeholder="비밀번호를 다시 입력해주세요"
-          label="비밀번호 확인*"
-          value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
-        />
+        <div>
+          <Input
+            htmlFor="passwordConfirm"
+            type="password"
+            placeholder="비밀번호를 다시 입력해주세요"
+            label="비밀번호 확인*"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+          />
+          {showPasswordError && !validatePassword(password) && (
+            <p className="mt-2 text-sub text-red-500">
+              <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+              비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.
+            </p>
+          )}
+          {showPasswordConfirmError &&
+            validatePassword(password) &&
+            password !== passwordConfirm && (
+              <p className="mt-2 text-sub text-red-500">
+                <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+                비밀번호가 일치하지 않습니다.
+              </p>
+            )}
+        </div>
         <Button type="submit" variant="full" fixed disabled={!isSignupEnabled}>
           회원가입
         </Button>
