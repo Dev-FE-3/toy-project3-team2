@@ -13,6 +13,7 @@ import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
 import { areVideoListsEqual } from "@/utils/video";
+import { showToast } from "@/utils/toast";
 import {
   useAddVideosMutation,
   useCreatePlaylistMutation,
@@ -113,7 +114,8 @@ const PlaylistCreate = () => {
 
     try {
       // 플레이리스트 생성
-      const { data } = await useCreatePlaylistMutation.mutateAsync(playlistPayload);
+      const createPlaylistMutation = useCreatePlaylistMutation();
+      const { data } = await createPlaylistMutation.mutateAsync(playlistPayload);
       const newPlaylistId = data[0].id; // 생성된 playlist id를 반환 받음
 
       // 영상 추가
@@ -122,7 +124,8 @@ const PlaylistCreate = () => {
         ...video,
       }));
 
-      await useAddVideosMutation.mutateAsync(videoPayloads);
+      const addVideosMutation = useAddVideosMutation();
+      await addVideosMutation.mutateAsync(videoPayloads);
 
       // 폼 초기화
       setTitle("");
@@ -151,7 +154,8 @@ const PlaylistCreate = () => {
     };
 
     try {
-      await useEditPlaylistMutation.mutateAsync({
+      const editPlaylistMutation = useEditPlaylistMutation();
+      await editPlaylistMutation.mutateAsync({
         playlist_id: id,
         payload: playlistPayload,
       });
@@ -161,12 +165,13 @@ const PlaylistCreate = () => {
         // 기존꺼 삭제
         if (deletedVideoIds.length > 0) {
           await Promise.all(
-            deletedVideoIds.map((video_id) =>
-              useDeleteVideoMutation.mutateAsync({
+            deletedVideoIds.map((video_id) => {
+              const deleteVideoMutation = useDeleteVideoMutation();
+              return deleteVideoMutation.mutateAsync({
                 video_id,
                 playlist_id: id,
-              }),
-            ),
+              });
+            }),
           );
         }
 
@@ -178,7 +183,8 @@ const PlaylistCreate = () => {
         }));
 
         if (videoPayloads.length > 0) {
-          await useAddVideosMutation.mutateAsync(videoPayloads);
+          const addVideosMutation = useAddVideosMutation();
+          await addVideosMutation.mutateAsync(videoPayloads);
         }
       }
 
