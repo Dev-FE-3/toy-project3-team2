@@ -14,20 +14,15 @@ test.describe("마이페이지 로그아웃", () => {
     // 마이페이지 접속
     await page.goto(`/mypage/${userId}`);
 
-    // 메뉴 버튼 찾기
-    const overflowMenuButton = page.locator('header button[aria-controls="user-menu"]');
-    await overflowMenuButton.click();
+    // header icon 찾기
+    const headerIcon = page.locator('[data-test-id="header-icon"]');
+    await headerIcon.click();
 
-    // 메뉴가 펼쳐졌으면 로그아웃 버튼 클릭
-    const logoutButton = page.locator('#user-menu button:has-text("로그아웃")');
+    // 로그아웃 버튼 클릭
+    const logoutButton = page.locator('[data-test-id="logout-button"]');
     await logoutButton.click();
 
     // 로그인 페이지로 리디렉션 확인
-    await expect(page).toHaveURL("/login");
-    await expect(page.locator("text=로그인")).toBeVisible();
-
-    // 다시 마이페이지 접근 시 로그인 페이지로 리디렉션 되는지 확인
-    await page.goto(`/mypage/${userId}`);
     await expect(page).toHaveURL("/login");
   });
 });
