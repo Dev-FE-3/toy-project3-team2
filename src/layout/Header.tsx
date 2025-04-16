@@ -22,7 +22,7 @@ const Header = ({ onSearch }: HeaderProps) => {
   const [nickname, setNickname] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
