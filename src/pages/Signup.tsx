@@ -93,16 +93,10 @@ const Signup = () => {
     e.preventDefault();
 
     if (!email || !nickname || !password || !passwordConfirm) {
-      // alert("모든 필드를 입력해주세요.");
-      // react-toastify 사용
-      showToast("info", "모든 필드를 입력해주세요.");
       return;
     }
 
     if (!isEmailValid || !isNicknameValid) {
-      // alert("이메일과 닉네임 중복 확인을 해주세요.");
-      // react-toastify 사용
-      showToast("info", "이메일과 닉네임의 중복 여부를 확인해주세요.");
       return;
     }
 
