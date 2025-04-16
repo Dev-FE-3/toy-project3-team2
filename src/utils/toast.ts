@@ -9,6 +9,15 @@ export const showToast = (type: "success" | "error" | "info", message: string, o
     closeButton: false, // 닫힘 버튼 숨김
     icon: false,
     transition: Slide,
+    style: {
+      width: "100%",
+      minHeight: "40px",
+      padding: "12px",
+      fontSize: "12px",
+      color: "#222423",
+      backgroundColor: "#E6E0E9",
+      borderRadius: "4px",
+    },
     ...options,
   } as const;
 
