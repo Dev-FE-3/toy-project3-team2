@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postComment, NewCommentPayload } from "@/api/commentApi";
 
-export const usePostComment = (playlistId?: string) => {
+export const usePostCommentMutation = (playlistId?: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
