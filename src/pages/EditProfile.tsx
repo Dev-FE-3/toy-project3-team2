@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
+import { showToast } from "@/utils/toast";
 
 import Camera from "@/assets/icons/camera.svg?react";
 import { Button } from "@/components/common/Button";
@@ -159,7 +160,8 @@ const EditProfile = () => {
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
       queryClient.invalidateQueries();
-      alert("저장 완료되었습니다.");
+      showToast("success", "정보 변경이 완료되었습니다");
+
       navigate(`/mypage/${updatedUser.id}`);
     },
     onError: (error) => {
@@ -291,7 +293,7 @@ const EditProfile = () => {
             htmlFor="user-description"
             placeholder="소개글을 입력하세요"
             label="소개"
-            maxLength={500}
+            maxLength={300}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />

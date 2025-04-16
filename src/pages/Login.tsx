@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import ErrorIcon from "@/assets/icons/error.svg";
 import Logo from "@/assets/imgs/logo.svg";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
+import { showToast } from "@/utils/toast";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
@@ -30,6 +33,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     try {
       const { data } = await supabase.auth.signInWithPassword({
@@ -59,9 +63,11 @@ const Login = () => {
 
       console.log("로그인 성공:", data);
       navigate("/");
+
+      showToast("success", `${userData.nickname}님, 환영합니다`);
     } catch (error) {
       console.error("로그인 에러:", error);
-      alert("이메일과 비밀번호를 확인해주세요.");
+      setError("이메일과 비밀번호를 확인해주세요.");
     }
   };
 
@@ -75,7 +81,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             htmlFor="email"
-            type="email"
+            type="text"
             placeholder="이메일을 입력해주세요"
             className="mb-5"
             required
@@ -83,16 +89,24 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Input
-            htmlFor="password"
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            className="mb-6"
-            required
-            label="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            <Input
+              htmlFor="password"
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+              className="mb-6"
+              required
+              label="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {error && (
+              <p className="mt-[-16px] text-sub text-red-500">
+                <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
+                {error}
+              </p>
+            )}
+          </div>
           <Button type="submit" variant="full" disabled={!isLoginEnabled}>
             로그인
           </Button>

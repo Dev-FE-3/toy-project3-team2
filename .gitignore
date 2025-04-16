@@ -157,3 +157,4 @@ dist
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/tests/fixtures/auth.json

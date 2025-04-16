@@ -11,6 +11,7 @@ import { Playlist } from "@/types/playlist";
 import { User } from "@/types/user";
 import axiosInstance from "@/services/axios/axiosInstance";
 import PlaylistEmpty from "@/components/common/PlaylistEmpty";
+import { showToast } from "@/utils/toast";
 
 // fetch
 const fetchUser = async (userId: string) => {
@@ -45,7 +46,7 @@ const deletePlaylist = async (playlistId: string) => {
     params: { id: `eq.${playlistId}` },
   });
 
-  alert("플레이리스트 삭제 완료!");
+  showToast("success", "플레이리스트가 삭제되었습니다.");
   return playlistId;
 };
 
