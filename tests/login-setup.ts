@@ -11,7 +11,7 @@ test.describe("로그인 테스트", () => {
     await page.goto("http://localhost:5173/login");
   });
 
-  test("로그인 테스트 시나리오", async ({ page }) => {
+  test("로그인 유효성 검사 후 유저 정보 저장", async ({ page }) => {
     // Step 1: 유효성 검사
     await test.step("빈 필드로 로그인 시도", async () => {
       const submitButton = page.getByTestId("login-button");
