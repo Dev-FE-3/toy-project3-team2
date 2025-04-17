@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, RefObject } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
@@ -21,7 +21,6 @@ const Header = () => {
   const [, setIsLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
 
-  const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
   const hiddenPaths = ["/login"];
 
   const { userId, id: playlistId } = useParams();
@@ -199,9 +198,7 @@ const Header = () => {
       )}
 
       {/* 검색창 */}
-      {isSearchOpen && (
-        <SearchBar searchInputRef={searchInputRef} onClose={() => setIsSearchOpen(false)} />
-      )}
+      {isSearchOpen && <SearchBar onClose={() => setIsSearchOpen(false)} />}
 
       {/* 오른쪽 영역 */}
       <div className="absolute right-4 flex items-center" data-testid="header-icon">

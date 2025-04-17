@@ -6,12 +6,12 @@ import useSearchStore from "@/store/useSearchStore";
 import { useLocation } from "react-router-dom";
 
 interface SearchBarProps {
-  searchInputRef: RefObject<HTMLInputElement | null>;
   onClose: () => void;
 }
 
-const SearchBar = ({ searchInputRef, onClose }: SearchBarProps) => {
+const SearchBar = ({ onClose }: SearchBarProps) => {
   const location = useLocation();
+  const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
 
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const setSearchKeyword = useSearchStore((state) => state.setSearchKeyword);
