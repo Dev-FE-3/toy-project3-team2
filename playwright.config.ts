@@ -37,7 +37,7 @@ export default defineConfig({
     // 로그인 상태 저장용
     {
       name: "setup",
-      testMatch: /tests\/login-setup\.ts/, // 또는 'tests/login-setup.ts'
+      testMatch: /tests\/auth-setup\.spec\.ts/,
     },
     // 실제 테스트용 프로젝트
     {
