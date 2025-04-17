@@ -59,9 +59,7 @@ const Login = () => {
       };
 
       setUser(userData);
-      console.log("유저 정보 저장 완료:", userData);
 
-      console.log("로그인 성공:", data);
       navigate("/");
 
       showToast("success", `${userData.nickname}님, 환영합니다`);
