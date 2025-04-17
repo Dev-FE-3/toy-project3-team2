@@ -8,7 +8,7 @@ const WRONG_PASSWORD = "wrongpassword";
 
 test.describe("로그인 테스트", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:5173/login");
+    await page.goto("/login");
   });
 
   test("로그인 유효성 검사 후 유저 정보 저장", async ({ page }) => {
@@ -38,14 +38,14 @@ test.describe("로그인 테스트", () => {
     await test.step("회원가입 페이지로 이동", async () => {
       await page.getByTestId("signup-link").click();
       await expect(page.getByTestId("signup-page")).toBeVisible();
-      await page.goto("http://localhost:5173/login"); // 로그인 페이지로 돌아가기
     });
-
+    
     await test.step("유효한 이메일과 비밀번호로 로그인 성공", async () => {
+      await page.goto("/login"); // 로그인 페이지로 돌아가기
       await page.getByTestId("email-input").fill(TEST_EMAIL);
       await page.getByTestId("password-input").fill(TEST_PASSWORD);
       await page.getByTestId("login-button").click();
-      await expect(page).toHaveURL("http://localhost:5173");
+      await expect(page).toHaveURL("/");
     });
 
     // Step 3: 상태 저장
