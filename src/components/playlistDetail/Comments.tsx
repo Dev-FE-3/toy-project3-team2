@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 
 import { Input } from "@/components/common/Input";
 import CommentSkeleton from "./CommentSkeleton";
 import useUserStore from "@/store/useUserStore";
-import { fetchComments } from "@/api/commentApi";
 import { usePostCommentMutation } from "@/hooks/queries/usePostCommentMutation";
+import { useGetCommentQuery } from "@/hooks/queries/useGetCommentQuery";
+
 import AddIcon from "@/assets/icons/fill-add.svg?react";
 
 const Comments = () => {
@@ -14,21 +14,9 @@ const Comments = () => {
   const user = useUserStore((state) => state.user);
   const { id: playlistId } = useParams<{ id: string }>();
 
-  const {
-    data: comments = [],
-    isLoading: isCommentsLoading,
-    isError: isCommentsError,
-  } = useQuery({
-    queryKey: ["comments", playlistId],
-    queryFn: () => fetchComments(playlistId!),
-    enabled: !!playlistId,
-  });
+  const { data: comments, isPending, isError } = useGetCommentQuery(playlistId ?? "");
 
-  const {
-    mutate: postComment,
-    isPending: isPosting,
-    isError: isPostError,
-  } = usePostCommentMutation(playlistId);
+  const { mutate: postComment, isError: isPostError } = usePostCommentMutation(playlistId ?? "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,9 +33,9 @@ const Comments = () => {
 
   return (
     <div className="flex flex-col gap-3 p-4">
-      {isCommentsLoading ? (
+      {isPending ? (
         <CommentSkeleton />
-      ) : isCommentsError ? (
+      ) : isError ? (
         <p className="text-sub text-red-500">댓글을 불러오는 데 실패했어요.</p>
       ) : (
         <>
@@ -60,7 +48,6 @@ const Comments = () => {
               inputClassName="pr-10"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              disabled={isPosting}
             />
             {content.length > 0 && (
               <button type="submit" className="absolute right-[6px]">

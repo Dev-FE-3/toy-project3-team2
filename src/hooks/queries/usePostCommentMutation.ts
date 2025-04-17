@@ -1,7 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postComment, NewCommentPayload } from "@/api/commentApi";
+import axiosInstance from "@/services/axios/axiosInstance";
 
-export const usePostCommentMutation = (playlistId?: string) => {
+export interface NewCommentPayload {
+  playlist_id: string;
+  content: string;
+  author_id: string;
+}
+
+// 댓글 작성 api
+export const postComment = async (payload: NewCommentPayload) => {
+  return axiosInstance.post("/comment", payload);
+};
+
+export const usePostCommentMutation = (playlistId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
