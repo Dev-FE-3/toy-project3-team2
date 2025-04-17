@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("마이페이지 로그아웃", () => {
+test.describe("로그아웃 테스트", () => {
   test("로그아웃 버튼 클릭 시 로그아웃 되고 로그인 페이지로 이동해야 함", async ({ page }) => {
     // 홈(메인) 페이지 접속
     await page.goto("/");
@@ -14,13 +14,11 @@ test.describe("마이페이지 로그아웃", () => {
     // 마이페이지 접속
     await page.goto(`/mypage/${userId}`);
 
-    // header icon 찾기
-    const headerIcon = page.locator('[data-test-id="header-icon"]');
-    await headerIcon.click();
+    // header icon 클릭
+    await page.getByTestId("header-icon").click();
 
     // 로그아웃 버튼 클릭
-    const logoutButton = page.locator('[data-test-id="logout-button"]');
-    await logoutButton.click();
+    await page.getByTestId("logout-button").click();
 
     // 로그인 페이지로 리디렉션 확인
     await expect(page).toHaveURL("/login");

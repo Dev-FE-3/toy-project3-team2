@@ -65,7 +65,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
                   option.action();
                   setIsOpen(false);
                 }}
-                data-test-id={option.dataTestId}
+                data-testid={option.dataTestId}
               >
                 {option.label}
               </button>
