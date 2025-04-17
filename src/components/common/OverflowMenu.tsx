@@ -5,6 +5,7 @@ import MenuDotsVertical from "@/assets/icons/menu-dots-vertical.svg?react";
 interface OverflowMenuOption {
   label: string;
   action: () => void;
+  dataTestId?: string;
 }
 
 interface OverflowMenuProps {
@@ -64,6 +65,7 @@ const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
                   option.action();
                   setIsOpen(false);
                 }}
+                data-test-id={option.dataTestId}
               >
                 {option.label}
               </button>

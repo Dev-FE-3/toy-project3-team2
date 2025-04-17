@@ -265,6 +265,7 @@ const PlaylistCreate = () => {
           onChange={(e) => setTitle(e.target.value)}
           label="제목*"
           maxLength={50}
+          data-testid="title-input"
         />
         <TextArea
           htmlFor="playlist-description"
@@ -273,6 +274,7 @@ const PlaylistCreate = () => {
           onChange={(e) => setDescription(e.target.value)}
           label="소개*"
           maxLength={500}
+          data-testid="description-input"
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="video-url" className="text-body2-medium">
@@ -287,8 +289,15 @@ const PlaylistCreate = () => {
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
               showDelete={!!videoUrl}
+              data-testid="video-input"
             />
-            <Button type="button" variant="small" onClick={handleAddVideo} disabled={!videoUrl}>
+            <Button
+              type="button"
+              variant="small"
+              onClick={handleAddVideo}
+              disabled={!videoUrl}
+              data-testid="add-video-button"
+            >
               추가
             </Button>
           </div>
@@ -305,7 +314,14 @@ const PlaylistCreate = () => {
           ))}
         </ul>
 
-        <Button type="button" variant="full" onClick={handleSubmit} disabled={!isFormValid} fixed>
+        <Button
+          type="button"
+          variant="full"
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+          fixed
+          data-testid="submit-button"
+        >
           {!id ? "생성" : "저장"}
         </Button>
       </form>

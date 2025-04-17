@@ -45,6 +45,9 @@ const Header = ({ onSearch }: HeaderProps) => {
   useEffect(() => {
     setSearchQuery("");
     setIsSearchOpen(false);
+    if (onSearch) {
+      onSearch("");
+    }
   }, [location.pathname]);
 
   // 플레이리스트 상세 제목 fetch
@@ -60,8 +63,8 @@ const Header = ({ onSearch }: HeaderProps) => {
           } else {
             throw new Error("데이터 없음");
           }
-        } catch (err) {
-          console.error("플레이리스트 제목 불러오기 실패:", err);
+        } catch (error) {
+          console.error("플레이리스트 제목 불러오기 실패:", error);
           setPlaylistTitle("플레이리스트");
         }
       }
@@ -170,15 +173,12 @@ const Header = ({ onSearch }: HeaderProps) => {
       showToast("success", "플레이리스트가 삭제되었습니다.");
     } catch (error) {
       console.error("삭제 실패:", error);
-      // alert("삭제에 실패했습니다. 나중에 다시 시도해주세요.");
-      // react-toastify 사용
-      showToast("error", "삭제에 실패했습니다. 나중에 다시 시도해주세요.");
     }
   };
 
   const myPageMenu = [
     { label: "정보수정", action: () => navigate("/user/edit") },
-    { label: "로그아웃", action: handleLogout },
+    { label: "로그아웃", action: handleLogout, dataTestId: "logout-button" },
   ];
 
   const playlistMenu = [
@@ -197,6 +197,9 @@ const Header = ({ onSearch }: HeaderProps) => {
   // 검색창 열기 및 포커스
   const handleSearchOpen = () => {
     setIsSearchOpen(true);
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 0);
   };
 
   return (
@@ -241,7 +244,7 @@ const Header = ({ onSearch }: HeaderProps) => {
       )}
 
       {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center">
+      <div className="absolute right-4 flex items-center" data-test-id="header-icon">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
