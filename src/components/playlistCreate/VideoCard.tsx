@@ -10,13 +10,17 @@ type VideoCardProps = {
 };
 
 const VideoCard = ({ index, video, onDelete }: VideoCardProps) => (
-  <li className="relative flex flex-col gap-1">
+  <li className="relative flex flex-col gap-1" data-testid="video-card">
     {index === 0 && (
       <span className="absolute left-2 top-2 rounded-md bg-overlay-primary px-1 py-[2px] text-tab">
         썸네일
       </span>
     )}
-    <DeleteIcon className="absolute right-2 top-2 cursor-pointer" onClick={() => onDelete(index)} />
+    <DeleteIcon
+      className="absolute right-2 top-2 cursor-pointer"
+      onClick={() => onDelete(index)}
+      data-testid="delete-video-button"
+    />
 
     <img
       src={video.thumbnail}

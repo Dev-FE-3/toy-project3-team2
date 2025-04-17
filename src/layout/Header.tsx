@@ -63,8 +63,8 @@ const Header = ({ onSearch }: HeaderProps) => {
           } else {
             throw new Error("데이터 없음");
           }
-        } catch (err) {
-          console.error("플레이리스트 제목 불러오기 실패:", err);
+        } catch (error) {
+          console.error("플레이리스트 제목 불러오기 실패:", error);
           setPlaylistTitle("플레이리스트");
         }
       }
@@ -178,7 +178,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   const myPageMenu = [
     { label: "정보수정", action: () => navigate("/user/edit") },
-    { label: "로그아웃", action: handleLogout },
+    { label: "로그아웃", action: handleLogout, dataTestId: "logout-button" },
   ];
 
   const playlistMenu = [
@@ -244,7 +244,7 @@ const Header = ({ onSearch }: HeaderProps) => {
       )}
 
       {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center">
+      <div className="absolute right-4 flex items-center" data-test-id="header-icon">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
