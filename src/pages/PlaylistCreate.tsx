@@ -45,6 +45,7 @@ const PlaylistCreate = () => {
 
   const playlist = usePlaylistDetail(id); // playlist id 값을 통해 playlist data 조회
 
+  // 훅 호출
   const createPlaylistMutation = useCreatePlaylistMutation();
   const editPlaylistMutation = useEditPlaylistMutation();
   const addVideosMutation = useAddVideosMutation();
@@ -128,7 +129,6 @@ const PlaylistCreate = () => {
         ...video,
       }));
 
-      const addVideosMutation = useAddVideosMutation();
       await addVideosMutation.mutateAsync(videoPayloads);
 
       // 폼 초기화
