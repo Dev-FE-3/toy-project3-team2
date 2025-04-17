@@ -20,8 +20,8 @@ export const ModalDelete = ({ isOpen, onClose, onConfirm }: ModalProps) => {
       >
         {/* 모달 헤더 */}
         <div className="mb-4 text-center">
-          <h2 className="text-body1-bold text-font-primary">플레이리스트 삭제</h2>
-          <p className="mt-1.5 text-sub text-font-second">정말 삭제하시겠습니까?</p>
+          <h2 className="text-body1-bold text-font-primary">플레이리스트를 삭제하시겠습니까?</h2>
+          <p className="mt-1.5 text-sub text-font-second">선택한 플레이리스트가 삭제됩니다</p>
         </div>
 
         {/* 모달 바디 */}
