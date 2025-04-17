@@ -11,19 +11,14 @@ import axiosInstance from "@/services/axios/axiosInstance";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
 import { showToast } from "@/utils/toast";
-type HeaderProps = {
-  onSearch?: (query: string) => void;
-  nickname?: string;
-};
 
-const Header = ({ onSearch }: HeaderProps) => {
+const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [nickname, setNickname] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
   const [, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
   const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
@@ -40,15 +35,6 @@ const Header = ({ onSearch }: HeaderProps) => {
     if (playlist.data?.creator_id === user.id) setIsOwner(true);
     else setIsOwner(false);
   }, [location, playlist.data?.creator_id, user]);
-
-  // 페이지 이동 시 검색 상태 초기화
-  useEffect(() => {
-    setSearchQuery("");
-    setIsSearchOpen(false);
-    if (onSearch) {
-      onSearch("");
-    }
-  }, [location.pathname]);
 
   // 플레이리스트 상세 제목 fetch
   useEffect(() => {
@@ -95,12 +81,6 @@ const Header = ({ onSearch }: HeaderProps) => {
 
     fetchNickname();
   }, [userId]);
-
-  useEffect(() => {
-    if (isSearchOpen) {
-      searchInputRef.current?.focus();
-    }
-  }, [isSearchOpen]);
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -194,14 +174,6 @@ const Header = ({ onSearch }: HeaderProps) => {
         ? playlistMenu
         : [];
 
-  // 검색창 열기 및 포커스
-  const handleSearchOpen = () => {
-    setIsSearchOpen(true);
-    setTimeout(() => {
-      searchInputRef.current?.focus();
-    }, 0);
-  };
-
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
       {/* 왼쪽 영역 */}
@@ -228,19 +200,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
       {/* 검색창 */}
       {isSearchOpen && (
-        <SearchBar
-          searchQuery={searchQuery}
-          searchInputRef={searchInputRef}
-          onSearchQueryChange={setSearchQuery}
-          onSearch={onSearch || (() => {})}
-          onClose={() => {
-            setSearchQuery("");
-            setIsSearchOpen(false);
-            if (onSearch) {
-              onSearch("");
-            }
-          }}
-        />
+        <SearchBar searchInputRef={searchInputRef} onClose={() => setIsSearchOpen(false)} />
       )}
 
       {/* 오른쪽 영역 */}
@@ -248,7 +208,7 @@ const Header = ({ onSearch }: HeaderProps) => {
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
-              <button onClick={handleSearchOpen}>
+              <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
                 <Search />
               </button>
             )}
