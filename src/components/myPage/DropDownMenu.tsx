@@ -1,29 +1,23 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
+import DROP_DOWN_MENU_OPTIONS from "@/constants/dropDownMenuOptions";
 import ArrowBottom from "@/assets/icons/arrow-bottom.svg?react";
-
-const MENU_OPTIONS = [
-  { label: "업데이트순", value: "updated" },
-  { label: "구독순", value: "subscribe" },
-  { label: "좋아요순", value: "like" },
-];
 
 interface DropDownMenuProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   setSortOption: (option: string) => void;
+  selected: { label: string; value: string };
 }
 
-const DropDownMenu = ({ isOpen, setIsOpen, setSortOption }: DropDownMenuProps) => {
-  const [selected, setSelected] = useState(MENU_OPTIONS[0]);
+const DropDownMenu = ({ isOpen, setIsOpen, setSortOption, selected }: DropDownMenuProps) => {
   const dropdownRef = useRef<HTMLButtonElement>(null);
 
   const toggleDropDown = () => {
     setIsOpen(!isOpen);
   };
 
-  const selectOption = (option: (typeof MENU_OPTIONS)[number]) => {
-    setSelected(option);
+  const selectOption = (option: (typeof DROP_DOWN_MENU_OPTIONS)[number]) => {
     setSortOption(option.value);
     setIsOpen(false);
   };
@@ -50,11 +44,11 @@ const DropDownMenu = ({ isOpen, setIsOpen, setSortOption }: DropDownMenuProps) =
         className={`fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[430px] overflow-hidden rounded-t-[10px] bg-background-container transition-transform duration-300 ease-in-out ${isOpen ? "pointer-events-auto translate-y-0" : "pointer-events-none translate-y-full"}`}
         style={{ willChange: "transform" }}
       >
-        {MENU_OPTIONS.map((option, index) => (
+        {DROP_DOWN_MENU_OPTIONS.map((option, index) => (
           <li key={option.value} role="menuitem" className="px-[10px] hover:bg-outline">
             <button
               className={`w-full py-[17px] text-body2 ${
-                index !== MENU_OPTIONS.length - 1 ? "border-b border-outline" : ""
+                index !== DROP_DOWN_MENU_OPTIONS.length - 1 ? "border-b border-outline" : ""
               }`}
               onClick={() => selectOption(option)}
             >
