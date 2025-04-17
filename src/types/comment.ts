@@ -9,3 +9,9 @@ export interface Comment {
     profile_image: string;
   };
 }
+
+export interface NewCommentPayload {
+  playlist_id: string;
+  content: string;
+  author_id: string;
+}

@@ -24,3 +24,19 @@ export interface PlaylistDetailData extends Playlist {
     profile_image: string;
   };
 }
+
+export interface NewPlaylistPayload {
+  title: string;
+  description: string;
+  creator_id: string;
+  thumbnail_image: string;
+  is_public: boolean;
+}
+
+export interface EditPlaylistPayload {
+  title: string;
+  description: string;
+  updated_at: string;
+  thumbnail_image: string;
+  is_public: boolean;
+}

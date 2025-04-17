@@ -1,6 +1,5 @@
 /** 플레이리스트 생성 페이지 */
 
-import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -10,28 +9,18 @@ import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
-import axiosInstance from "@/services/axios/axiosInstance";
 import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
 import { areVideoListsEqual } from "@/utils/video";
 import { showToast } from "@/utils/toast";
-
-interface NewPlaylistPayload {
-  title: string;
-  description: string;
-  creator_id: string;
-  thumbnail_image: string;
-  is_public: boolean;
-}
-
-interface EditPlaylistPayload {
-  title: string;
-  description: string;
-  updated_at: string;
-  thumbnail_image: string;
-  is_public: boolean;
-}
+import {
+  useAddVideosMutation,
+  useCreatePlaylistMutation,
+  useDeleteVideoMutation,
+  useEditPlaylistMutation,
+} from "@/hooks/queries/usePlaylistMutation";
+import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
 
 const PlaylistCreate = () => {
   const [isPublic, setIsPublic] = useState(true);
@@ -52,7 +41,7 @@ const PlaylistCreate = () => {
   const user = useUserStore((state) => state.user);
 
   const navigate = useNavigate();
-  const { id } = useParams(); // 수정 모드일 경우 id 존재
+  const { id } = useParams(); // 수정 모드일 경우 playlist id 존재
 
   const playlist = usePlaylistDetail(id); // playlist id 값을 통해 playlist data 조회
 
@@ -111,29 +100,6 @@ const PlaylistCreate = () => {
     }
   };
 
-  // 플레이리스트 생성 뮤테이션
-  const createPlaylistMutation = useMutation({
-    mutationFn: (payload: NewPlaylistPayload) => axiosInstance.post("/playlist", payload),
-  });
-
-  // 플레이리스트 수정 뮤테이션
-  const editPlaylistMutation = useMutation({
-    mutationFn: (payload: EditPlaylistPayload) =>
-      axiosInstance.patch(`/playlist?id=eq.${id}`, payload),
-  });
-
-  // 영상 추가 뮤테이션
-  const addVideosMutation = useMutation({
-    mutationFn: (payload: Video[]) =>
-      Promise.all(payload.map((payload) => axiosInstance.post("/video", payload))),
-  });
-
-  // 영상 삭제 뮤테이션
-  const deleteVideoMutation = useMutation({
-    mutationFn: ({ video_id }: { video_id: string }) =>
-      axiosInstance.delete(`/video?playlist_id=eq.${id}&id=eq.${video_id}`),
-  });
-
   // 플레이리스트 생성하는 함수
   const handleCreate = async () => {
     if (!user) return;
@@ -148,6 +114,7 @@ const PlaylistCreate = () => {
 
     try {
       // 플레이리스트 생성
+      const createPlaylistMutation = useCreatePlaylistMutation();
       const { data } = await createPlaylistMutation.mutateAsync(playlistPayload);
       const newPlaylistId = data[0].id; // 생성된 playlist id를 반환 받음
 
@@ -157,6 +124,7 @@ const PlaylistCreate = () => {
         ...video,
       }));
 
+      const addVideosMutation = useAddVideosMutation();
       await addVideosMutation.mutateAsync(videoPayloads);
 
       // 폼 초기화
@@ -186,14 +154,24 @@ const PlaylistCreate = () => {
     };
 
     try {
-      await editPlaylistMutation.mutateAsync(playlistPayload);
+      const editPlaylistMutation = useEditPlaylistMutation();
+      await editPlaylistMutation.mutateAsync({
+        playlist_id: id,
+        payload: playlistPayload,
+      });
 
       // 영상이 변경된 경우
       if (!areVideoListsEqual(initialVideoList, videoList)) {
         // 기존꺼 삭제
         if (deletedVideoIds.length > 0) {
           await Promise.all(
-            deletedVideoIds.map((video_id) => deleteVideoMutation.mutateAsync({ video_id })),
+            deletedVideoIds.map((video_id) => {
+              const deleteVideoMutation = useDeleteVideoMutation();
+              return deleteVideoMutation.mutateAsync({
+                video_id,
+                playlist_id: id,
+              });
+            }),
           );
         }
 
@@ -205,6 +183,7 @@ const PlaylistCreate = () => {
         }));
 
         if (videoPayloads.length > 0) {
+          const addVideosMutation = useAddVideosMutation();
           await addVideosMutation.mutateAsync(videoPayloads);
         }
       }
