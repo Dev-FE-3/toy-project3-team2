@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-
 import BookmarkIcon from "@/assets/icons/bookmark.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
 import HeartIcon from "@/assets/icons/heart.svg?react";
@@ -175,20 +174,28 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
   return (
     <div className="flex flex-row gap-[16px] text-body2">
       <button
+        data-testid="subscribe-button"
         onClick={handleSubscribe}
         role="button"
         className="flex flex-row items-center gap-[6px]"
       >
         <BookmarkIcon
+          data-testid="subscribe-icon"
           className={`h-[14px] w-[14px] ${isSubscribed ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
-        <span>{subscriptions}</span>
+        <span data-testid="subscribe-count">{subscriptions}</span>
       </button>
-      <button onClick={handleLike} role="button" className="flex flex-row items-center gap-[6px]">
+      <button
+        data-testid="like-button"
+        onClick={handleLike}
+        role="button"
+        className="flex flex-row items-center gap-[6px]"
+      >
         <HeartIcon
+          data-testid="like-icon"
           className={`h-[14px] w-[14px] ${isLiked ? "fill-white stroke-none" : "fill-none stroke-white"}`}
         />
-        <span>{likes}</span>
+        <span data-testid="like-count">{likes}</span>
       </button>
       <div className="flex flex-row items-center gap-[6px]">
         <CommentIcon className="h-[14px] w-[14px]" />
