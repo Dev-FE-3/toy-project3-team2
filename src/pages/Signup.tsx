@@ -140,7 +140,7 @@ const Signup = () => {
     isNicknameValid === true;
 
   return (
-    <div className="px-4">
+    <div data-testid="signup-page" className="px-4">
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div>
           <label htmlFor="email" className="mb-2 block text-body2">

@@ -78,6 +78,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
+            data-testid="email-input"
             htmlFor="email"
             type="text"
             placeholder="이메일을 입력해주세요"
@@ -89,6 +90,7 @@ const Login = () => {
           />
           <div>
             <Input
+              data-testid="password-input"
               htmlFor="password"
               type="password"
               placeholder="비밀번호를 입력해주세요"
@@ -105,14 +107,23 @@ const Login = () => {
               </p>
             )}
           </div>
-          <Button type="submit" variant="full" disabled={!isLoginEnabled}>
+          <Button
+            data-testid="login-button"
+            type="submit"
+            variant="full"
+            disabled={!isLoginEnabled}
+          >
             로그인
           </Button>
         </form>
 
         <div className="mt-10 text-center">
           <span className="mr-2 text-sub text-font-muted">아직 회원이 아니신가요?</span>
-          <Link to="/signup" className="text-sub-bold text-font-primary hover:underline">
+          <Link
+            to="/signup"
+            data-testid="signup-link"
+            className="text-sub-bold text-font-primary hover:underline"
+          >
             회원가입
           </Link>
         </div>
