@@ -244,7 +244,7 @@ const Header = ({ onSearch }: HeaderProps) => {
       )}
 
       {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center" data-test-id="header-icon">
+      <div className="absolute right-4 flex items-center" data-testid="header-icon">
         {location.pathname === "/" || location.pathname === "/subscriptions" ? (
           <>
             {!isSearchOpen && (
