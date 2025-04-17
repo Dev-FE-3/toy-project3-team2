@@ -12,8 +12,8 @@ test("구독/좋아요 버튼 클릭 시 상태 업데이트 및 카운트 반�
   const subscribeCountText = page.getByTestId("subscribe-count");
   const likeCountText = page.getByTestId("like-count");
 
-  await expect(subscribeButton).toBeVisible({ timeout: 5000 });
-  await expect(likeButton).toBeVisible({ timeout: 5000 });
+  await expect(subscribeButton).toBeVisible();
+  await expect(likeButton).toBeVisible();
 
   // 초기 상태 가져오기
   const initialLikeClass = (await likeIcon.getAttribute("class")) ?? "";
