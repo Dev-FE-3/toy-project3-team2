@@ -5,12 +5,11 @@ import { useEffect, useState } from "react";
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { usePlaylists } from "@/hooks/usePlaylists";
-import Header from "@/layout/Header";
-// import { usePlaylistSearch } from "@/hooks/usePlaylistSearch";
+import useSearchStore from "@/store/useSearchStore";
 import useUserStore from "@/store/useUserStore";
 
 const Subscriptions = () => {
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const userId = useUserStore.getState().user?.id;
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -46,7 +45,6 @@ const Subscriptions = () => {
 
   return (
     <>
-      <Header onSearch={setSearchKeyword} />
       <div className="mb-[16px] ml-[19px] mt-[10px]">
         <h1 className="text-body1-bold">구독 플레이리스트</h1>
       </div>
