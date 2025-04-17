@@ -45,6 +45,11 @@ const PlaylistCreate = () => {
 
   const playlist = usePlaylistDetail(id); // playlist id 값을 통해 playlist data 조회
 
+  const createPlaylistMutation = useCreatePlaylistMutation();
+  const editPlaylistMutation = useEditPlaylistMutation();
+  const addVideosMutation = useAddVideosMutation();
+  const deleteVideoMutation = useDeleteVideoMutation();
+
   // 기존 playlist 정보 매핑
   useEffect(() => {
     const loadPlaylist = async () => {
@@ -114,7 +119,6 @@ const PlaylistCreate = () => {
 
     try {
       // 플레이리스트 생성
-      const createPlaylistMutation = useCreatePlaylistMutation();
       const { data } = await createPlaylistMutation.mutateAsync(playlistPayload);
       const newPlaylistId = data[0].id; // 생성된 playlist id를 반환 받음
 
@@ -154,7 +158,6 @@ const PlaylistCreate = () => {
     };
 
     try {
-      const editPlaylistMutation = useEditPlaylistMutation();
       await editPlaylistMutation.mutateAsync({
         playlist_id: id,
         payload: playlistPayload,
@@ -166,7 +169,6 @@ const PlaylistCreate = () => {
         if (deletedVideoIds.length > 0) {
           await Promise.all(
             deletedVideoIds.map((video_id) => {
-              const deleteVideoMutation = useDeleteVideoMutation();
               return deleteVideoMutation.mutateAsync({
                 video_id,
                 playlist_id: id,
@@ -183,7 +185,6 @@ const PlaylistCreate = () => {
         }));
 
         if (videoPayloads.length > 0) {
-          const addVideosMutation = useAddVideosMutation();
           await addVideosMutation.mutateAsync(videoPayloads);
         }
       }
