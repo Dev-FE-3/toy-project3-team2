@@ -19,7 +19,7 @@ import {
   useCreatePlaylistMutation,
   useDeleteVideoMutation,
   useEditPlaylistMutation,
-} from "@/hooks/queries/useMutation";
+} from "@/hooks/queries/usePlaylistMutation";
 import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
 
 const PlaylistCreate = () => {
