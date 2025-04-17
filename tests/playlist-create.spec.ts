@@ -40,7 +40,7 @@ test.describe("플레이리스트 생성 페이지 테스트", () => {
 
     await test.step("마지막 영상 삭제 시도", async () => {
       // 삭제 버튼 클릭
-      await page.locator("[data-testid='delete-video-button']").first().click(); // 첫번째 영상 삭제 버튼 클릭
+      await page.getByTestId("delete-video-button").first().click(); // 첫번째 영상 삭제 버튼 클릭
 
       await expect(
         page.getByText("플레이리스트에는 최소 한 개 이상의 영상이 필요합니다."),
