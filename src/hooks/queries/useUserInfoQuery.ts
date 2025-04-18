@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchUser } from "@/api/fetchUser";
+import { fetchUser } from "@/api/user";
 
 // 마이페이지 유저 쿼리
 export const useUserInfoQuery = (userId: string) => {
