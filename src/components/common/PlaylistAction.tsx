@@ -6,6 +6,7 @@ import HeartIcon from "@/assets/icons/heart.svg?react";
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 import axiosInstance from "@/services/axios/axiosInstance";
 import useUserStore from "@/store/useUserStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PlaylistActionsProps {
   playlistId: string;
@@ -23,6 +24,8 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
   const [commentCount, setCommentCount] = useState(0);
 
   const playlist = usePlaylistDetail(playlistId);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!playlist) return;
@@ -163,6 +166,10 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
         { subscribe_count: newIsSubscribed ? subscriptions + 1 : subscriptions - 1 },
         { params: { id: `eq.${playlistId}` } },
       );
+
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ["userInfo", userId] });
+      }
     } catch (error) {
       // 오류 발생 시 UI 롤백
       setIsSubscribed((prev) => !prev);
