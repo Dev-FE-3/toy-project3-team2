@@ -4,7 +4,8 @@ import Lock from "@/assets/icons/lock.svg?react";
 
 import OverflowMenu from "./OverflowMenu";
 import PlaylistActions from "./PlaylistAction";
-
+import { ModalDelete } from "./ModalDelete";
+import { useState } from "react";
 
 interface PlaylistCardProps {
   id: string;
@@ -27,17 +28,32 @@ const PlaylistCard = ({
 }: PlaylistCardProps) => {
   const navigate = useNavigate();
 
+  // 모달을 제어할 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [playlistToDelete, setPlaylistToDelete] = useState<string | null>(null); // 삭제할 플레이리스트 ID
+
   const menuOptions = [
     { label: "수정", action: () => navigate(`/playlist/edit/${id}`) },
     {
       label: "삭제",
       action: () => {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          onDelete?.(id);
-        }
+        setPlaylistToDelete(id); // 삭제할 플레이리스트 ID 설정
+        setIsModalOpen(true); // 모달 열기
       },
     },
   ];
+
+  // 삭제 확인 모달
+  const confirmDelete = () => {
+    if (playlistToDelete) {
+      onDelete?.(playlistToDelete); // 삭제 함수 호출
+      setIsModalOpen(false); // 모달 닫기
+    }
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false); // 모달 닫기
+  };
 
   const handleCardClick = () => {
     navigate(`/playlist/${id}`);
@@ -88,6 +104,10 @@ const PlaylistCard = ({
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <ModalDelete isOpen={isModalOpen} onClose={cancelDelete} onConfirm={confirmDelete} />
+      )}
     </div>
   );
 };

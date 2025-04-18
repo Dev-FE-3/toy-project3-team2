@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, RefObject } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
@@ -11,27 +11,25 @@ import axiosInstance from "@/services/axios/axiosInstance";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
 import { showToast } from "@/utils/toast";
-type HeaderProps = {
-  onSearch?: (query: string) => void;
-  nickname?: string;
-};
+import { ModalDelete } from "@/components/common/ModalDelete";
 
-const Header = ({ onSearch }: HeaderProps) => {
+const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [nickname, setNickname] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
   const [, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
-  const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
+  // 삭제 모달 상태
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [playlistToDelete, setPlaylistToDelete] = useState<string | null>(null);
+
   const hiddenPaths = ["/login"];
 
   const { userId, id: playlistId } = useParams();
   const user = useUserStore((state) => state.user);
-
   const playlist = usePlaylistDetail(playlistId);
 
   useEffect(() => {
@@ -40,15 +38,6 @@ const Header = ({ onSearch }: HeaderProps) => {
     if (playlist.data?.creator_id === user.id) setIsOwner(true);
     else setIsOwner(false);
   }, [location, playlist.data?.creator_id, user]);
-
-  // 페이지 이동 시 검색 상태 초기화
-  useEffect(() => {
-    setSearchQuery("");
-    setIsSearchOpen(false);
-    if (onSearch) {
-      onSearch("");
-    }
-  }, [location.pathname]);
 
   // 플레이리스트 상세 제목 fetch
   useEffect(() => {
@@ -96,12 +85,6 @@ const Header = ({ onSearch }: HeaderProps) => {
     fetchNickname();
   }, [userId]);
 
-  useEffect(() => {
-    if (isSearchOpen) {
-      searchInputRef.current?.focus();
-    }
-  }, [isSearchOpen]);
-
   if (hiddenPaths.includes(location.pathname)) {
     return null;
   }
@@ -148,7 +131,22 @@ const Header = ({ onSearch }: HeaderProps) => {
     showToast("success", "정상적으로 로그아웃되었습니다");
   };
 
-  const deletePlaylist = async (playlistId: string) => {
+  // 삭제 모달 열기
+  const openDeleteModal = (id: string) => {
+    setPlaylistToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  // 삭제 모달 닫기
+  const closeDeleteModal = () => {
+    setPlaylistToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
+
+  // 삭제 확인 시 실행되는 함수
+  const handleConfirmDelete = async () => {
+    if (!playlistToDelete) return;
+
     try {
       // 1. 댓글 삭제
       await axiosInstance.delete("/comment", {
@@ -169,6 +167,11 @@ const Header = ({ onSearch }: HeaderProps) => {
       await axiosInstance.delete("/playlist", {
         params: { id: `eq.${playlistId}` },
       });
+
+      // 모달 닫기
+      closeDeleteModal();
+
+      // 마이페이지로 이동
       navigate(`/mypage/${currentUser?.id}`);
       showToast("success", "플레이리스트가 삭제되었습니다.");
     } catch (error) {
@@ -183,7 +186,7 @@ const Header = ({ onSearch }: HeaderProps) => {
 
   const playlistMenu = [
     { label: "수정", action: () => navigate(`/playlist/edit/${playlistId}`) },
-    { label: "삭제", action: () => playlistId && deletePlaylist(playlistId) }, // 삭제 버튼에 함수 연결
+    { label: "삭제", action: () => playlistId && openDeleteModal(playlistId) }, // 모달로 연결
   ];
 
   // 현재 페이지에 따라 메뉴 결정
@@ -194,70 +197,57 @@ const Header = ({ onSearch }: HeaderProps) => {
         ? playlistMenu
         : [];
 
-  // 검색창 열기 및 포커스
-  const handleSearchOpen = () => {
-    setIsSearchOpen(true);
-    setTimeout(() => {
-      searchInputRef.current?.focus();
-    }, 0);
-  };
-
   return (
-    <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
-      {/* 왼쪽 영역 */}
-      <div className="absolute left-4 flex items-center">
-        {location.pathname === "/" || location.pathname === "/subscriptions" ? (
-          <>
-            {!isSearchOpen && (
-              <Link to={"/"}>
-                <Logo className="h-[22px] w-[93px]" />
-              </Link>
-            )}
-          </>
-        ) : (
-          <button onClick={() => navigate(-1)}>
-            <ArrowLeft />
-          </button>
+    <>
+      <header className="fixed top-0 z-10 flex h-[60px] w-full max-w-[430px] items-center bg-background-main px-4">
+        {/* 왼쪽 영역 */}
+        <div className="absolute left-4 flex items-center">
+          {location.pathname === "/" || location.pathname === "/subscriptions" ? (
+            <>
+              {!isSearchOpen && (
+                <Link to={"/"}>
+                  <Logo className="h-[22px] w-[93px]" />
+                </Link>
+              )}
+            </>
+          ) : (
+            <button onClick={() => navigate(-1)}>
+              <ArrowLeft />
+            </button>
+          )}
+        </div>
+
+        {/* 가운데 영역 */}
+        {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
+          <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
         )}
-      </div>
 
-      {/* 가운데 영역 */}
-      {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
-        <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
-      )}
+        {/* 검색창 */}
+        {isSearchOpen && <SearchBar onClose={() => setIsSearchOpen(false)} />}
 
-      {/* 검색창 */}
-      {isSearchOpen && (
-        <SearchBar
-          searchQuery={searchQuery}
-          searchInputRef={searchInputRef}
-          onSearchQueryChange={setSearchQuery}
-          onSearch={onSearch || (() => {})}
-          onClose={() => {
-            setSearchQuery("");
-            setIsSearchOpen(false);
-            if (onSearch) {
-              onSearch("");
-            }
-          }}
-        />
-      )}
+        {/* 오른쪽 영역 */}
+        <div className="absolute right-4 flex items-center" data-testid="header-icon">
+          {location.pathname === "/" || location.pathname === "/subscriptions" ? (
+            <>
+              {!isSearchOpen && (
+                <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
+                  <Search />
+                </button>
+              )}
+            </>
+          ) : (
+            MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
+          )}
+        </div>
+      </header>
 
-      {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center" data-testid="header-icon">
-        {location.pathname === "/" || location.pathname === "/subscriptions" ? (
-          <>
-            {!isSearchOpen && (
-              <button onClick={handleSearchOpen}>
-                <Search />
-              </button>
-            )}
-          </>
-        ) : (
-          MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
-        )}
-      </div>
-    </header>
+      {/* 삭제 모달 */}
+      <ModalDelete
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+      />
+    </>
   );
 };
 
