@@ -1,6 +1,5 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import axiosInstance from "@/services/axios/axiosInstance";
-import { Playlist } from "@/types/playlist";
+import { PlaylistParams } from "@/types/playlist";
+import { getPlaylists } from "@/api/playlist";
 
 const LIMIT = 3;
 
@@ -11,16 +10,12 @@ interface FetchParams {
   order: string;
 }
 
-interface PlaylistParams {
-  creator_id: string;
-  select: string;
-  limit: number;
-  offset: number;
-  order: string;
-  is_public?: string;
-}
-
-const fetchUserPlaylists = async ({ pageParam = 0, creatorId, isOwner, order }: FetchParams) => {
+export const fetchUserPlaylists = async ({
+  pageParam = 0,
+  creatorId,
+  isOwner,
+  order,
+}: FetchParams) => {
   const offset = pageParam * LIMIT;
 
   const orderBy =
@@ -44,19 +39,11 @@ const fetchUserPlaylists = async ({ pageParam = 0, creatorId, isOwner, order }: 
     params.is_public = "eq.true";
   }
 
-  const { data } = await axiosInstance.get<Playlist[]>("/playlist", { params });
-  return {
-    data,
-    nextPage: data.length === LIMIT ? pageParam + 1 : null,
-  };
-};
+  const response = await getPlaylists(params);
+  const playlists = response.data;
 
-export const useUserPlaylists = (creatorId: string, isOwner: boolean, order: string) => {
-  return useInfiniteQuery({
-    queryKey: ["userPlaylists", creatorId, isOwner, order],
-    queryFn: ({ pageParam = 0 }) => fetchUserPlaylists({ pageParam, creatorId, isOwner, order }),
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
-    enabled: !!creatorId,
-  });
+  return {
+    playlists,
+    nextPage: playlists.length === LIMIT ? pageParam + 1 : null,
+  };
 };

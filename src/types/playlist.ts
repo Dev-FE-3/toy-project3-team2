@@ -40,3 +40,12 @@ export interface EditPlaylistPayload {
   thumbnail_image: string;
   is_public: boolean;
 }
+
+export interface PlaylistParams {
+  creator_id: string;
+  select: string;
+  limit: number;
+  offset: number;
+  order: string;
+  is_public?: string;
+}
