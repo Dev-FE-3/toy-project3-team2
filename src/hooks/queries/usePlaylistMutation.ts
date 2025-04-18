@@ -49,7 +49,7 @@ export const useDeletePlaylistMutation = (userId: string, isOwner: boolean, sort
     onSuccess: (deletedId) => {
       showToast("success", "플레이리스트가 삭제되었습니다.");
 
-      queryClient.setQueryData<InfiniteData<{ data: Playlist[]; nextPage: number | null }>>(
+      queryClient.setQueryData<InfiniteData<{ playlists: Playlist[]; nextPage: number | null }>>(
         ["userPlaylists", userId, isOwner, sortOption],
         (old) =>
           old
@@ -57,7 +57,7 @@ export const useDeletePlaylistMutation = (userId: string, isOwner: boolean, sort
                 ...old,
                 pages: old.pages.map((page) => ({
                   ...page,
-                  data: page.data.filter((item) => item.id !== deletedId),
+                  playlists: page.playlists.filter((item) => item.id !== deletedId),
                 })),
               }
             : old,
