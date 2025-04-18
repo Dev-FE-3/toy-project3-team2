@@ -106,7 +106,7 @@ Re:Play는 영상 링크 기반 플레이리스트를 만들고, 공유하고, �
 - Header 메뉴 내 로그아웃 기능 구현 (세션 종료 처리 포함)
 
 <div align="center">
-  <img width="300px" src="https://github.com/user-attachments/assets/9425ac7c-db8a-4bf5-9810-981dc1736cf1">
+  <img width="300px" src="https://github.com/user-attachments/assets/2febca8f-5be1-4659-8325-67b1cfa8cf1d">
 </div>
 
 <br>
