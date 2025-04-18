@@ -11,15 +11,7 @@ import axiosInstance from "@/services/axios/axiosInstance";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
 import { showToast } from "@/utils/toast";
-<<<<<<< HEAD
 import { ModalDelete } from "@/components/common/ModalDelete";
-
-type HeaderProps = {
-  onSearch?: (query: string) => void;
-  nickname?: string;
-};
-=======
->>>>>>> ac3951ca09dd9dcf7a6f9ff4285cb0d45e707d74
 
 const Header = () => {
   const location = useLocation();
@@ -30,14 +22,10 @@ const Header = () => {
   const [, setIsLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
 
-<<<<<<< HEAD
   // 삭제 모달 상태
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [playlistToDelete, setPlaylistToDelete] = useState<string | null>(null);
 
-  const searchInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
-=======
->>>>>>> ac3951ca09dd9dcf7a6f9ff4285cb0d45e707d74
   const hiddenPaths = ["/login"];
 
   const { userId, id: playlistId } = useParams();
@@ -234,52 +222,15 @@ const Header = () => {
           <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
         )}
 
-<<<<<<< HEAD
         {/* 검색창 */}
-        {isSearchOpen && (
-          <SearchBar
-            searchQuery={searchQuery}
-            searchInputRef={searchInputRef}
-            onSearchQueryChange={setSearchQuery}
-            onSearch={onSearch || (() => {})}
-            onClose={() => {
-              setSearchQuery("");
-              setIsSearchOpen(false);
-              if (onSearch) {
-                onSearch("");
-              }
-            }}
-          />
-=======
-      {/* 가운데 영역 */}
-      {location.pathname !== "/" && location.pathname !== "/subscriptions" && (
-        <h1 className="line-clamp-1 w-full px-8 text-center text-title">{title}</h1>
-      )}
-
-      {/* 검색창 */}
-      {isSearchOpen && <SearchBar onClose={() => setIsSearchOpen(false)} />}
-
-      {/* 오른쪽 영역 */}
-      <div className="absolute right-4 flex items-center" data-testid="header-icon">
-        {location.pathname === "/" || location.pathname === "/subscriptions" ? (
-          <>
-            {!isSearchOpen && (
-              <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
-                <Search />
-              </button>
-            )}
-          </>
-        ) : (
-          MENU_OPTIONS.length > 0 && <OverflowMenu options={MENU_OPTIONS} iconSize={24} />
->>>>>>> ac3951ca09dd9dcf7a6f9ff4285cb0d45e707d74
-        )}
+        {isSearchOpen && <SearchBar onClose={() => setIsSearchOpen(false)} />}
 
         {/* 오른쪽 영역 */}
         <div className="absolute right-4 flex items-center" data-testid="header-icon">
           {location.pathname === "/" || location.pathname === "/subscriptions" ? (
             <>
               {!isSearchOpen && (
-                <button onClick={handleSearchOpen}>
+                <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
                   <Search />
                 </button>
               )}
