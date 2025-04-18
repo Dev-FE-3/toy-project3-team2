@@ -11,6 +11,7 @@ import { Playlist } from "@/types/playlist";
 import { User } from "@/types/user";
 import axiosInstance from "@/services/axios/axiosInstance";
 import PlaylistEmpty from "@/components/common/PlaylistEmpty";
+import DROP_DOWN_MENU_OPTIONS from "@/constants/dropDownMenuOptions";
 import { showToast } from "@/utils/toast";
 
 // fetch
@@ -58,6 +59,8 @@ const MyPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sortOption, setSortOption] = useState("updated");
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const selectedOption =
+    DROP_DOWN_MENU_OPTIONS.find((opt) => opt.value === sortOption) ?? DROP_DOWN_MENU_OPTIONS[0];
 
   const {
     data: userInfo,
@@ -80,7 +83,7 @@ const MyPage = () => {
     error: playlistError,
   } = useUserPlaylists(userId!, isOwner, sortOption);
 
-  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
+  const playlists = data?.pages.flatMap((page) => page.data);
 
   const deleteMutation = useMutation({
     mutationFn: deletePlaylist,
@@ -155,9 +158,10 @@ const MyPage = () => {
             isOpen={isMenuOpen}
             setIsOpen={setIsMenuOpen}
             setSortOption={setSortOption}
+            selected={selectedOption}
           />
         </div>
-        {playlists.length > 0 ? (
+        {playlists && playlists.length > 0 ? (
           <ul>
             {playlists.map((item) => (
               <li key={item.id}>
