@@ -202,10 +202,11 @@ Re:Play는 영상 링크 기반 플레이리스트를 만들고, 공유하고, �
 
 ## 🎮 프로젝트 실행 방법
 
-1. `.env` 파일 설정 <br>
-   API 키를 안전하게 보관하기 위해 `.env` 파일을 생성하고, 필요한 환경 변수를 설정합니다.
-2. 프로젝트 clone <br>
+1. 프로젝트 clone <br>
    `git clone https://github.com/Dev-FE-3/toy-project3-team2.git`
+
+2. `.env` 파일 설정 <br>
+   API 키를 안전하게 보관하기 위해 `.env` 파일을 생성하고, 필요한 환경 변수를 설정합니다.
 
 3. 패키지 설치 <br>
    `npm install`
