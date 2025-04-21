@@ -8,7 +8,7 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetail } from "@/hooks/queries/usePlaylistDetail";
 import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";

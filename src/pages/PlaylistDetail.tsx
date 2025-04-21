@@ -5,7 +5,7 @@ import Comments from "@/components/playlistDetail/Comments";
 import Player from "@/components/playlistDetail/Player";
 import PlaylistSkeleton from "@/components/playlistDetail/playlistSkeleton";
 import Videos from "@/components/playlistDetail/Videos";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetail } from "@/hooks/queries/usePlaylistDetail";
 import { Video } from "@/types/video";
 
 const PlaylistDetail = () => {
