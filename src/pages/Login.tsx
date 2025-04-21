@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import ErrorIcon from "@/assets/icons/error.svg";
 import Logo from "@/assets/imgs/logo.svg";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
+import { ValidationMessage } from "@/components/common/ValidationMessage";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
 import { showToast } from "@/utils/toast";
@@ -100,12 +100,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {error && (
-              <p className="mt-[-16px] text-sub text-red-500">
-                <img src={ErrorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
-                {error}
-              </p>
-            )}
+            {error && <ValidationMessage type="error" message={error} />}
           </div>
           <Button
             data-testid="login-button"
