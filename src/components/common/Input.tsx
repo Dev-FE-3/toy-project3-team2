@@ -39,6 +39,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       "border-[1px] border-transparent focus:border-font-placeholder",
       (type === "password" || (showDelete && hasValue)) && "pr-10",
     );
+
     const sharedProps = {
       onChange: handleChange,
       ref,
@@ -47,10 +48,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       ...props,
     };
 
-    let inputElement;
-    switch (type) {
-      case "round":
-        inputElement = (
+    const inputElement = () => {
+      if (type === "round") {
+        return (
           <input
             className={cn(
               baseClassName,
@@ -60,17 +60,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...sharedProps}
           />
         );
-        break;
-      default:
-        inputElement = (
-          <input
-            type={type === "password" && showPassword ? "text" : type}
-            className={cn(baseClassName, "py-[14px]", inputClassName)}
-            {...sharedProps}
-          />
-        );
-        break;
-    }
+      }
+      return (
+        <input
+          type={type === "password" && showPassword ? "text" : type}
+          className={cn(baseClassName, "py-[14px]", inputClassName)}
+          {...sharedProps}
+        />
+      );
+    };
 
     return (
       <div className={cn("relative flex flex-col gap-2", className)}>
@@ -80,7 +78,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
         <div className="relative">
-          {inputElement}
+          {inputElement()}
           {showDelete &&
             hasValue && ( // delete옵션 있으면, 값 있을 때 X아이콘
               <button
