@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "@/assets/imgs/logo.svg";
@@ -9,12 +10,22 @@ import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
 import { showToast } from "@/utils/toast";
 
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const setUser = useUserStore((state) => state.setUser);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    watch,
+  } = useForm<LoginForm>();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -28,17 +39,17 @@ const Login = () => {
     checkSession();
   }, [navigate]);
 
+  const email = watch("email");
+  const password = watch("password");
+
   // 로그인 버튼 활성화 상태 체크
-  const isLoginEnabled = email.trim() !== "" && password.trim() !== "";
+  const isLoginEnabled = email?.trim() !== "" && password?.trim() !== "";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
+  const onSubmit = async (data: LoginForm) => {
     try {
-      const { data } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const { data: authData } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
       });
 
       const {
@@ -65,7 +76,10 @@ const Login = () => {
       showToast("success", `${userData.nickname}님, 환영합니다`);
     } catch (error) {
       console.error("로그인 에러:", error);
-      setError("이메일과 비밀번호를 확인해주세요.");
+      setError("root", {
+        type: "manual",
+        message: "이메일과 비밀번호를 확인해주세요.",
+      });
     }
   };
 
@@ -76,7 +90,7 @@ const Login = () => {
           <img src={Logo} alt="logo" className="h-[35px]" />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <Input
             data-testid="email-input"
             htmlFor="email"
@@ -85,8 +99,7 @@ const Login = () => {
             className="mb-5"
             required
             label="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email")}
           />
           <div>
             <Input
@@ -97,10 +110,12 @@ const Login = () => {
               className="mb-6"
               required
               label="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={password || ""}
+              {...register("password")}
             />
-            {error && <ValidationMessage type="error" message={error} />}
+            {errors.root && (
+              <ValidationMessage className="mt-[-16px]" type="error" message={errors.root.message || ""} />
+            )}
           </div>
           <Button
             data-testid="login-button"
