@@ -1,6 +1,6 @@
 /** 플레이리스트 추천 페이지 */
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -20,10 +20,6 @@ const Home = () => {
   });
 
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {

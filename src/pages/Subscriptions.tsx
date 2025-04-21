@@ -1,6 +1,6 @@
 /** 플레이리스트 구독 페이지 */
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -18,10 +18,6 @@ const Subscriptions = () => {
     subscribed_by: userId,
     title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
