@@ -1,8 +1,9 @@
 /** 사용자 정보를 수정하는 페이지 */
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserInfoQuery } from "@/hooks/queries/useUserInfoQuery";
 
 import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
@@ -17,25 +18,12 @@ import uploadProfileImage from "@/services/supabase/uploadProfileImage";
 import useUserStore from "@/store/useUserStore";
 import axiosInstance from "@/services/axios/axiosInstance";
 
-// 사용자 정보 가져오기
-const fetchUser = async (userId: string) => {
-  const { data } = await axiosInstance.get("/user", {
-    params: { id: `eq.${userId}`, select: "*" },
-  });
-  return data[0];
-};
-
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const { data: userInfo } = useQuery({
-    queryKey: ["userInfo", user?.id],
-    queryFn: () => fetchUser(user!.id),
-    enabled: !!user?.id,
-  });
+  const { data: userInfo } = useUserInfoQuery(user?.id);
 
   // 상태 관리
   const [previewImage, setPreviewImage] = useState<string | null>(null);
