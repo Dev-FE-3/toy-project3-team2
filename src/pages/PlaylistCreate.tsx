@@ -8,19 +8,18 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
+import { useCreatePlaylistMutation } from "@/hooks/queries/useCreatePlaylistMutation";
+import { useCreateVideosMutation } from "@/hooks/queries/useCreateVideoMutation";
+import { useDeleteVideoMutation } from "@/hooks/queries/useDeleteVideoMutation";
+import { useEditPlaylistMutation } from "@/hooks/queries/useEditPlaylistMutation";
 import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
 import useUserStore from "@/store/useUserStore";
+import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
-import { areVideoListsEqual } from "@/utils/video";
 import { showToast } from "@/utils/toast";
-import {
-  useAddVideosMutation,
-  useCreatePlaylistMutation,
-  useDeleteVideoMutation,
-  useEditPlaylistMutation,
-} from "@/hooks/queries/usePlaylistMutation";
-import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
+import { areVideoListsEqual } from "@/utils/video";
+
 
 const PlaylistCreate = () => {
   const [isPublic, setIsPublic] = useState(true);
@@ -48,7 +47,7 @@ const PlaylistCreate = () => {
   // 훅 호출
   const createPlaylistMutation = useCreatePlaylistMutation();
   const editPlaylistMutation = useEditPlaylistMutation();
-  const addVideosMutation = useAddVideosMutation();
+  const addVideosMutation = useCreateVideosMutation();
   const deleteVideoMutation = useDeleteVideoMutation();
 
   // 기존 playlist 정보 매핑

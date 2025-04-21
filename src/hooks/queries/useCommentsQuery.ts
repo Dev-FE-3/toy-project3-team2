@@ -1,5 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+
 import axiosInstance from "@/services/axios/axiosInstance";
-import { NewCommentPayload } from "@/types/comment";
+import { Comment } from "@/types/comment";
 
 // 댓글 목록 조회 API
 export const getComments = async (playlistId: string): Promise<Comment[]> => {
@@ -14,7 +16,11 @@ export const getComments = async (playlistId: string): Promise<Comment[]> => {
   return response.data;
 };
 
-// 댓글 등록 API
-export const postComment = async (payload: NewCommentPayload) => {
-  return axiosInstance.post("/comment", payload);
+// 댓글 조회 쿼리
+export const useCommentsQuery = (playlistId: string) => {
+  return useQuery({
+    queryKey: ["comments", playlistId],
+    queryFn: () => getComments(playlistId!),
+    enabled: !!playlistId,
+  });
 };

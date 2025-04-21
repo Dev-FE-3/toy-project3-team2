@@ -1,5 +1,5 @@
-import { PlaylistParams } from "@/types/playlist";
-import { getPlaylists } from "@/api/playlist";
+import axiosInstance from "@/services/axios/axiosInstance";
+import { Playlist, PlaylistParams } from "@/types/playlist";
 
 const LIMIT = 3;
 
@@ -9,6 +9,11 @@ interface FetchParams {
   isOwner: boolean;
   order: string;
 }
+
+// 플레이리스트 조회 API
+export const getPlaylists = (params: PlaylistParams) => {
+  return axiosInstance.get<Playlist[]>("/playlist", { params });
+};
 
 export const fetchUserPlaylists = async ({
   pageParam = 0,
