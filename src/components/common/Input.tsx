@@ -20,22 +20,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const [showPassword, setShowPassword] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState(value);
-
-    React.useEffect(() => {
-      if (value !== undefined) {
-        setInputValue(value);
-      }
-    }, [value]);
-    const hasValue = !!inputValue;
+    const hasValue = !!value;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value);
       onChange?.(e);
     };
 
     const handleDelete = () => {
-      setInputValue("");
       if (onChange) {
         onChange({
           target: { value: "" },
@@ -51,7 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const sharedProps = {
       onChange: handleChange,
       ref,
-      value: inputValue,
+      value,
       id: htmlFor,
       ...props,
     };
