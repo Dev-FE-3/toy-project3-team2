@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import BookmarkIcon from "@/assets/icons/bookmark.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
 import HeartIcon from "@/assets/icons/heart.svg?react";
-import { usePlaylistDetail } from "@/hooks/queries/usePlaylistDetail";
-import { usePlaylistActionInfo } from "@/hooks/queries/usePlaylistActionInfo";
+import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
+import { usePlaylistActionInfoQuery } from "@/hooks/queries/usePlaylistActionInfoQuery";
 import axiosInstance from "@/services/axios/axiosInstance";
 import useUserStore from "@/store/useUserStore";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,8 +28,8 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
   const [commentCount, setCommentCount] = useState(0);
 
   // API 호출로 액션 정보 로드
-  const { data: actionInfo } = usePlaylistActionInfo(playlistId, userId);
-  const playlist = usePlaylistDetail(playlistId);
+  const { data: actionInfo } = usePlaylistActionInfoQuery(playlistId, userId);
+  const playlist = usePlaylistDetailQuery(playlistId);
   const queryClient = useQueryClient();
 
   // 댓글 수 불러오기

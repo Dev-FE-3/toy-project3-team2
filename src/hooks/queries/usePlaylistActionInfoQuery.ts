@@ -30,7 +30,7 @@ const fetchPlaylistActionInfo = async (playlistId: string, userId: string) => {
   };
 };
 
-export const usePlaylistActionInfo = (playlistId: string, userId?: string) => {
+export const usePlaylistActionInfoQuery = (playlistId: string, userId?: string) => {
   return useQuery({
     queryKey: ["playlistAction", playlistId, userId],
     queryFn: async () => {

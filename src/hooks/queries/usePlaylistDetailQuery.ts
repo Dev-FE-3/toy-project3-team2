@@ -29,7 +29,7 @@ const fetchPlaylistDetail = async (playlistId: string): Promise<PlaylistDetailDa
   };
 };
 
-export const usePlaylistDetail = (playlistId?: string) => {
+export const usePlaylistDetailQuery = (playlistId?: string) => {
   return useQuery<PlaylistDetailData>({
     queryKey: ["playlist", playlistId],
     queryFn: () => fetchPlaylistDetail(playlistId!),
