@@ -49,9 +49,14 @@ const Player = ({ playlist, video }: { playlist: PlaylistDetailData; video: Vide
       <section className="space-y-4 px-4 pb-6 pt-3">
         {/* 유저 정보 */}
         <div className="flex items-center justify-between">
-          <div className="flex cursor-pointer gap-2.5" onClick={handleCreatorClick}>
+          <div onClick={handleCreatorClick} className="group relative flex cursor-pointer gap-2.5">
             <img src={creator?.profile_image} className="h-6 w-6 rounded-full" />
             <p>{creator?.nickname}</p>
+
+            {/* 툴팁 */}
+            <div className="absolute -top-7 left-1/2 -translate-x-1/4 whitespace-nowrap rounded bg-background-input px-2 py-1 text-xs text-font-second opacity-0 transition-opacity duration-200 group-hover:opacity-80">
+              {creator?.nickname}의 마이페이지로 이동
+            </div>
           </div>
           <div className="text-sub">
             <p>등록일 {formatDate(playlist.created_at)}</p>
