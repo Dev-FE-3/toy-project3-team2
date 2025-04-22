@@ -6,6 +6,7 @@ import useUserStore from "@/store/useUserStore";
 import { useNicknameCheckMutation } from "@/hooks/queries/useNicknameCheckMutation";
 import { useUpdateProfileMutation } from "@/hooks/queries/useUpdateProfileMutation";
 
+import ProfileImage from "@/components/editProfile/ProfileImage";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
@@ -13,7 +14,6 @@ import { validateNickname, validatePassword } from "@/utils/validation";
 
 import errorIcon from "@/assets/icons/error.svg";
 import successIcon from "@/assets/icons/success.svg";
-import Camera from "@/assets/icons/camera.svg?react";
 
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
@@ -125,28 +125,11 @@ const EditProfile = () => {
   return (
     <form className="px-[16px]" onSubmit={onSubmit}>
       {/* 프로필 이미지 */}
-      <div className="mb-[20px] mt-[50px] text-center">
-        <div className="relative inline-block">
-          <label htmlFor="profile" className="cursor-pointer">
-            {previewImage && (
-              <img
-                className="mx-auto h-[80px] w-[80px] rounded-full object-cover brightness-[0.6]"
-                src={previewImage}
-                alt="User Profile"
-              />
-            )}
-            <Camera className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-          </label>
-          <input
-            id="profile"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={onProfileChange}
-          />
-        </div>
-        <span className="mt-[8px] block">{user?.email}</span>
-      </div>
+      <ProfileImage
+        previewImage={previewImage}
+        onProfileChange={onProfileChange}
+        email={user?.email}
+      />
 
       {/* Input Fields */}
       <ul className="flex flex-col gap-[20px]">
