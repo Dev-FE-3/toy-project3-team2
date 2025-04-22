@@ -76,11 +76,10 @@ const EditProfile = () => {
     const isImageChanged = selectedImage !== null;
     const isNicknameChanged = nickname !== userInfo?.nickname;
     const isDescriptionChanged = description !== userInfo?.description;
-    const isPasswordEntered = password !== "";
 
     // 아무것도 변경하지 않은 경우
     const nothingChanged =
-      !isImageChanged && !isNicknameChanged && !isPasswordEntered && !isDescriptionChanged;
+      !isImageChanged && !isNicknameChanged && !password && !isDescriptionChanged;
     if (nothingChanged) return false;
 
     // 닉네임을 변경한 경우
@@ -97,12 +96,11 @@ const EditProfile = () => {
     e.preventDefault();
     setIsSubmitted(true);
 
-    const isPasswordEntered = password !== "";
     const isPasswordValid = validatePassword(password);
     const isPasswordMatch = password === passwordCheck;
 
     // 비밀번호 유효성 검사
-    if (isPasswordEntered && (!isPasswordValid || !isPasswordMatch)) return;
+    if (!!password && (!isPasswordValid || !isPasswordMatch)) return;
 
     if (!isFormValid()) return;
 
