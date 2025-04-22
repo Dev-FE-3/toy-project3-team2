@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { usePlaylists } from "@/hooks/usePlaylists";
+import { usePlaylistsQuery } from "@/hooks/queries/usePlaylistsQuery";
 import useSearchStore from "@/store/useSearchStore";
 import useUserStore from "@/store/useUserStore";
 
@@ -12,11 +12,14 @@ const Subscriptions = () => {
   const userId = useUserStore.getState().user?.id;
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const { playlists, isLoading, hasMore, fetchNextPage, isFetchingNextPage } = usePlaylists({
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
     order: "updated_at.desc",
     subscribed_by: userId,
     title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
+
+  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
+  const hasMore = hasNextPage;
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {

@@ -1,7 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-
 import axiosInstance from "@/services/axios/axiosInstance";
-// import useUserStore from "@/store/useUserStore";
 
 interface Playlist {
   id: string;
@@ -23,7 +20,7 @@ interface UsePlaylistsOptions {
 
 const LIMIT = 4; // 한 번에 4개씩 가져오기
 
-const fetchPlaylistPage = async (
+export const fetchPlaylistPage = async (
   { pageParam = 0 }: { pageParam: number },
   options?: UsePlaylistsOptions,
 ) => {
@@ -104,23 +101,4 @@ const fetchPlaylistPage = async (
     console.error("Error in fetchPlaylistPage:", error);
     throw error;
   }
-};
-
-export const usePlaylists = (options?: UsePlaylistsOptions) => {
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ["playlists", options],
-    queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam }, options),
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
-  });
-
-  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
-
-  return {
-    playlists,
-    isLoading,
-    hasMore: hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  };
 };
