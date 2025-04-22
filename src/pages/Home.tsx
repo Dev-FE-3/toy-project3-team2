@@ -10,18 +10,14 @@ import PlaylistList from "@/components/common/PlaylistList";
 const Home = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const userId = useUserStore.getState().user?.id;
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
+  const { playlists, hasMore, isLoading, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
     order: "subscribe_count.desc,updated_at.desc",
     creator_id: `neq.${userId}`,
     subscribed_by: `neq.${userId}`,
     title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
-
-  const playlists = data?.pages.flatMap((page) => page.data) ?? [];
-  const hasMore = hasNextPage;
-
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
