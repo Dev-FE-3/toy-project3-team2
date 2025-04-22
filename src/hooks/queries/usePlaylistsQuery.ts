@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchPlaylistPage } from "../usePlaylists";
+import { PlaylistCard } from "@/types/playlist";
 
 interface UsePlaylistsOptions {
   order?: string;
@@ -10,9 +11,9 @@ interface UsePlaylistsOptions {
 }
 
 export const usePlaylistsQuery = (options?: UsePlaylistsOptions) => {
-  return useInfiniteQuery({
+  return useInfiniteQuery<{ data: PlaylistCard[]; nextPage?: number }>({
     queryKey: ["playlists", options],
-    queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam }, options),
+    queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam: pageParam as number }, options),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });

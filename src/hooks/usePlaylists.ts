@@ -1,14 +1,5 @@
 import axiosInstance from "@/services/axios/axiosInstance";
-
-interface Playlist {
-  id: string;
-  title: string;
-  thumbnail_image: string;
-  is_owner: boolean;
-  user: {
-    profile_image: string;
-  };
-}
+import { PlaylistCard } from "@/types/playlist";
 
 interface UsePlaylistsOptions {
   order?: string;
@@ -23,7 +14,7 @@ const LIMIT = 4; // 한 번에 4개씩 가져오기
 export const fetchPlaylistPage = async (
   { pageParam = 0 }: { pageParam: number },
   options?: UsePlaylistsOptions,
-) => {
+): Promise<{ data: PlaylistCard[]; nextPage?: number }> => {
   const start = pageParam * LIMIT;
   try {
     // 구독하지 않은 플레이리스트를 가져오는 경우
@@ -43,7 +34,7 @@ export const fetchPlaylistPage = async (
         actions?.map((action: { playlist_id: string }) => action.playlist_id) || [];
 
       // 2. 구독하지 않은 플레이리스트를 조회
-      const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
+      const { data } = await axiosInstance.get<PlaylistCard[]>(`/playlist`, {
         params: {
           select: "*,user:creator_id(profile_image)",
           id: `not.in.(${subscribedPlaylistIds.join(",")})`,
@@ -78,7 +69,7 @@ export const fetchPlaylistPage = async (
 
       const playlistIds = actions.map((action: { playlist_id: string }) => action.playlist_id);
 
-      const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
+      const { data } = await axiosInstance.get<PlaylistCard[]>(`/playlist`, {
         params: {
           select: "*,user:creator_id(profile_image)",
           id: `in.(${playlistIds.join(",")})`,
