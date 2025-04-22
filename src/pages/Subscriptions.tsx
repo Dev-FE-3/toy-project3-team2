@@ -1,7 +1,5 @@
 /** 플레이리스트 구독 페이지 */
-import { useState } from "react";
-
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useInfiniteScrollHandler } from "@/hooks/useInfiniteScrollHandler";
 import { usePlaylistsQuery } from "@/hooks/queries/usePlaylistsQuery";
 import useSearchStore from "@/store/useSearchStore";
 import useUserStore from "@/store/useUserStore";
@@ -10,7 +8,6 @@ import PlaylistList from "@/components/common/PlaylistList";
 const Subscriptions = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const userId = useUserStore.getState().user?.id;
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const { playlists, hasMore, isLoading, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
     order: "updated_at.desc",
@@ -18,16 +15,10 @@ const Subscriptions = () => {
     title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
   });
 
-  const { targetRef } = useInfiniteScroll({
-    onIntersect: () => {
-      if (hasMore && !isFetchingNextPage && !isLoadingMore) {
-        setIsLoadingMore(true);
-        setTimeout(() => {
-          fetchNextPage();
-          setIsLoadingMore(false);
-        }, 1000);
-      }
-    },
+  const { targetRef, isLoadingMore } = useInfiniteScrollHandler({
+    hasMore,
+    isFetchingNextPage,
+    fetchNextPage,
   });
 
   if (isLoading) {
