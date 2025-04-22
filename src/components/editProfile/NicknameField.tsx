@@ -9,7 +9,7 @@ interface NicknameFieldProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCheck: () => void;
   isSubmitted: boolean;
-  isValid: "unchecked" | "valid" | "invalid";
+  isValid: "idle" | "valid" | "invalid";
   originalNickname: string;
 }
 

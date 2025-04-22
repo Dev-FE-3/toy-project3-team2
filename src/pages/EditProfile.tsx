@@ -25,9 +25,7 @@ const EditProfile = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [description, setDescription] = useState("");
-  const [isNicknameValid, setIsNicknameValid] = useState<"unchecked" | "valid" | "invalid">(
-    "unchecked",
-  );
+  const [isNicknameValid, setIsNicknameValid] = useState<"idle" | "valid" | "invalid">("idle");
   const [isNicknameCheckSubmitted, setIsNicknameCheckSubmitted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
