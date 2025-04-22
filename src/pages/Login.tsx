@@ -45,13 +45,8 @@ const Login = () => {
   // 로그인 버튼 활성화 상태 체크
   const isLoginEnabled = email?.trim() !== "" && password?.trim() !== "";
 
-  const onSubmit = async (data: LoginForm) => {
+  const onSubmit = async (_: LoginForm) => {
     try {
-      const { data: authData } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
       const {
         data: { user: supabaseUser },
       } = await supabase.auth.getUser();
@@ -110,11 +105,14 @@ const Login = () => {
               className="mb-6"
               required
               label="비밀번호"
-              value={password || ""}
               {...register("password")}
             />
             {errors.root && (
-              <ValidationMessage className="mt-[-16px]" type="error" message={errors.root.message || ""} />
+              <ValidationMessage
+                className="mt-[-16px]"
+                type="error"
+                message={errors.root.message || ""}
+              />
             )}
           </div>
           <Button

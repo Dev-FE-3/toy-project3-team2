@@ -108,7 +108,7 @@ const Signup = () => {
     const { email, password, nickname } = data;
 
     try {
-      const { data: userData } = await supabase.auth.signUp({
+      await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -204,9 +204,7 @@ const Signup = () => {
             type="password"
             placeholder="비밀번호를 입력해주세요"
             label="비밀번호*"
-            value={password || ""}
-            {...register("password", {
-            })}
+            {...register("password", {})}
           />
         </div>
 
@@ -216,7 +214,6 @@ const Signup = () => {
             type="password"
             placeholder="비밀번호를 다시 입력해주세요"
             label="비밀번호 확인*"
-            value={passwordConfirm || ""}
             {...register("passwordConfirm", {
               validate: (value) => {
                 if (!validatePassword(password)) {

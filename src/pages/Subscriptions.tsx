@@ -1,6 +1,5 @@
 /** 플레이리스트 구독 페이지 */
-
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useState } from "react";
 
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
