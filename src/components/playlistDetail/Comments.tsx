@@ -16,13 +16,15 @@ const Comments = () => {
 
   const { data: comments, isPending, isError } = useCommentsQuery(playlistId ?? "");
 
-  const { mutate: postComment, isError: isPostError } = useCreateCommentMutation(playlistId ?? "");
+  const { mutate: createComment, isError: isPostError } = useCreateCommentMutation(
+    playlistId ?? "",
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !content || !playlistId) return;
 
-    postComment({
+    createComment({
       playlist_id: playlistId,
       content,
       author_id: user.id,
