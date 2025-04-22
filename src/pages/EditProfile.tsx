@@ -4,19 +4,21 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserInfoQuery } from "@/hooks/queries/useUserInfoQuery";
-
-import errorIcon from "@/assets/icons/error.svg";
-import successIcon from "@/assets/icons/success.svg";
-import { showToast } from "@/utils/toast";
-
-import Camera from "@/assets/icons/camera.svg?react";
-import { Button } from "@/components/common/Button";
-import { Input } from "@/components/common/Input";
-import { TextArea } from "@/components/common/TextArea";
 import supabase from "@/services/supabase/supabaseClient";
 import uploadProfileImage from "@/services/supabase/uploadProfileImage";
 import useUserStore from "@/store/useUserStore";
 import axiosInstance from "@/services/axios/axiosInstance";
+
+import { useNicknameCheckMutation } from "@/hooks/queries/nicknameCheckMutation";
+import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
+import { TextArea } from "@/components/common/TextArea";
+import { showToast } from "@/utils/toast";
+import { validateNickname, validatePassword } from "@/utils/validation";
+
+import errorIcon from "@/assets/icons/error.svg";
+import successIcon from "@/assets/icons/success.svg";
+import Camera from "@/assets/icons/camera.svg?react";
 
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
@@ -49,65 +51,26 @@ const EditProfile = () => {
     }
   }, [userInfo]);
 
-  // 닉네임 유효성 검사
-  const validateNickname = (value: string) => {
-    // 한글, 영문, 숫자만 사용 가능
-    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,15}$/;
-    return regex.test(value);
-  };
-
   // 닉네임 중복 검사
-  const nicknameCheckMutation = useMutation({
-    mutationFn: async (nickname: string) => {
-      const { data } = await axiosInstance.get("/user", {
-        params: { nickname: `eq.${nickname}` },
-      });
-      return data;
-    },
-    onSuccess: (data) => {
-      const isDuplicate = data.length > 0 && data[0].id !== user?.id;
-      setIsNicknameValid(isDuplicate ? "invalid" : "valid");
+  const nicknameCheckMutation = useNicknameCheckMutation({
+    userId: user?.id,
+    onSuccess: (isValid) => {
+      setIsNicknameValid(isValid ? "valid" : "invalid");
     },
     onError: (error) => {
       console.error("중복 확인 문제:", error);
     },
   });
 
-  const handleCheck = () => {
+  const handleNicknameCheck = () => {
     setIsNicknameCheckSubmitted(true);
+    const isChanged = nickname !== user?.nickname;
 
-    if (nickname && nickname !== user?.nickname && validateNickname(nickname)) {
+    if (nickname && isChanged && validateNickname(nickname)) {
       nicknameCheckMutation.mutate(nickname);
     } else {
       setIsNicknameValid("invalid");
     }
-  };
-
-  // 비밀번호 유효성 검사
-  const validatePassword = (value: string) => {
-    if (value.length < 8 || value.length > 32) return false;
-    const hasLetter = /[a-zA-Z]/.test(value);
-    const hasNumber = /\d/.test(value);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-    return [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
-  };
-
-  // 비밀번호 일치 및 유효성 검사
-  useEffect(() => {
-    if (password && passwordCheck) {
-      setIsPasswordValid(validatePassword(password));
-      setIsPasswordMatch(password === passwordCheck);
-    } else {
-      setIsPasswordValid(null);
-      setIsPasswordMatch(null);
-    }
-  }, [password, passwordCheck]);
-
-  // 폼 유효성 검사
-  const validateForm = () => {
-    const nicknameValid = nickname !== user?.nickname && isNicknameValid === "valid";
-    const passwordValid = password === "" || (isPasswordValid && isPasswordMatch);
-    return (nickname === user?.nickname || nicknameValid) && passwordValid;
   };
 
   // 프로필 이미지 변경
@@ -157,23 +120,49 @@ const EditProfile = () => {
     },
   });
 
+  // 저장 버튼 활성화 조건
+  const isFormValid = () => {
+    const isImageChanged = selectedImage !== null;
+    const isNicknameChanged = nickname !== userInfo?.nickname;
+    const isDescriptionChanged = description !== userInfo?.description;
+    const isPasswordEntered = password !== "";
+
+    // 아무것도 변경하지 않은 경우
+    const nothingChanged =
+      !isImageChanged && !isNicknameChanged && !isPasswordEntered && !isDescriptionChanged;
+    if (nothingChanged) return false;
+
+    // 닉네임을 변경한 경우
+    if (isNicknameChanged) {
+      if (!isNicknameCheckSubmitted || isNicknameValid !== "valid") return false;
+    }
+
+    // 위 조건 통과했으면 버튼 활성화
+    return true;
+  };
+
   // 폼 제출
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
 
-    if (validateForm()) {
-      updateProfileMutation.mutate();
-    }
-  };
+    const isPasswordEntered = password !== "";
 
-  const isFormChanged =
-    nickname !== user?.nickname ||
-    description !== userInfo?.description ||
-    selectedImage ||
-    password;
-  const isFormValidForSubmit =
-    isFormChanged && (isNicknameValid === "valid" || nickname === user?.nickname);
+    // 비밀번호 유효성 검사
+    if (isPasswordEntered) {
+      const isValid = validatePassword(password);
+      const isMatch = password === passwordCheck;
+
+      setIsPasswordValid(isValid);
+      setIsPasswordMatch(isMatch);
+
+      if (!isValid || !isMatch) return;
+    }
+
+    if (!isFormValid()) return;
+
+    updateProfileMutation.mutate();
+  };
 
   return (
     <form className="px-[16px]" onSubmit={onSubmit}>
@@ -220,8 +209,8 @@ const EditProfile = () => {
             <Button
               variant="small"
               type="button"
-              disabled={!nickname || nickname === user?.nickname}
-              onClick={handleCheck}
+              disabled={!nickname || nickname === userInfo?.nickname}
+              onClick={handleNicknameCheck}
             >
               중복확인
             </Button>
@@ -287,7 +276,7 @@ const EditProfile = () => {
         </li>
       </ul>
 
-      <Button variant="full" type="submit" disabled={!isFormValidForSubmit} fixed>
+      <Button type="submit" variant="full" fixed disabled={!isFormValid()}>
         저장
       </Button>
     </form>
