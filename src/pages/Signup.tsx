@@ -205,6 +205,7 @@ const Signup = () => {
             type="password"
             placeholder="비밀번호를 입력해주세요"
             label="비밀번호*"
+            value={password || ""}
             {...register("password", {})}
           />
         </div>
@@ -215,6 +216,7 @@ const Signup = () => {
             type="password"
             placeholder="비밀번호를 다시 입력해주세요"
             label="비밀번호 확인*"
+            value={passwordConfirm || ""}
             {...register("passwordConfirm", {
               validate: (value) => {
                 if (!validatePassword(password)) {

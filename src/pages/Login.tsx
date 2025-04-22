@@ -110,6 +110,7 @@ const Login = () => {
               className="mb-6"
               required
               label="비밀번호"
+              value={password || ""}
               {...register("password")}
             />
             {errors.root && (
