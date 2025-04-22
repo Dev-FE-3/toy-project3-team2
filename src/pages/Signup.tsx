@@ -148,6 +148,7 @@ const Signup = () => {
             <Input
               id="email"
               type="text"
+              autoComplete="email"
               placeholder="이메일을 입력해주세요"
               className="flex-grow"
               {...register("email", {
@@ -176,6 +177,7 @@ const Signup = () => {
             <Input
               id="nickname"
               type="text"
+              autoComplete="nickname"
               placeholder="닉네임을 입력해주세요"
               className="flex-grow"
               {...register("nickname", {
@@ -201,10 +203,11 @@ const Signup = () => {
 
         <div>
           <Input
-            id="password"
+            htmlFor="password"
             type="password"
             placeholder="비밀번호를 입력해주세요"
             label="비밀번호*"
+            autoComplete="new-password"
             value={password || ""}
             {...register("password", {})}
           />
@@ -212,10 +215,11 @@ const Signup = () => {
 
         <div>
           <Input
-            id="passwordConfirm"
+            htmlFor="passwordConfirm"
             type="password"
             placeholder="비밀번호를 다시 입력해주세요"
             label="비밀번호 확인*"
+            autoComplete="new-password"
             value={passwordConfirm || ""}
             {...register("passwordConfirm", {
               validate: (value) => {

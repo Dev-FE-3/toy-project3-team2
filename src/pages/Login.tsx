@@ -95,6 +95,7 @@ const Login = () => {
             data-testid="email-input"
             htmlFor="email"
             type="text"
+            autoComplete="email"
             placeholder="이메일을 입력해주세요"
             className="mb-5"
             required
@@ -106,6 +107,7 @@ const Login = () => {
               data-testid="password-input"
               htmlFor="password"
               type="password"
+              autoComplete="current-password"
               placeholder="비밀번호를 입력해주세요"
               className="mb-6"
               required
