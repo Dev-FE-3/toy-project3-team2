@@ -7,13 +7,11 @@ import { useNicknameCheckMutation } from "@/hooks/queries/useNicknameCheckMutati
 import { useUpdateProfileMutation } from "@/hooks/queries/useUpdateProfileMutation";
 
 import ProfileImage from "@/components/editProfile/ProfileImage";
+import NicknameField from "@/components/editProfile/NicknameField";
+import PasswordField from "@/components/editProfile/PasswordField";
+import DescriptionField from "@/components/editProfile/DescriptionField";
 import { Button } from "@/components/common/Button";
-import { Input } from "@/components/common/Input";
-import { TextArea } from "@/components/common/TextArea";
 import { validateNickname, validatePassword } from "@/utils/validation";
-
-import errorIcon from "@/assets/icons/error.svg";
-import successIcon from "@/assets/icons/success.svg";
 
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
@@ -133,88 +131,25 @@ const EditProfile = () => {
 
       {/* Input Fields */}
       <ul className="flex flex-col gap-[20px]">
-        <li>
-          <label htmlFor="user-nickname" className="mb-2 block text-body2">
-            닉네임
-          </label>
-          <div className="flex gap-[8px]">
-            <Input
-              id="user-nickname"
-              className="flex-grow"
-              type="text"
-              placeholder="닉네임을 입력하세요"
-              maxLength={15}
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-            <Button
-              variant="small"
-              type="button"
-              disabled={!nickname || nickname === userInfo?.nickname}
-              onClick={handleNicknameCheck}
-            >
-              중복확인
-            </Button>
-          </div>
-          {isNicknameCheckSubmitted && isNicknameValid === "invalid" && (
-            <p className="mt-2 text-sub text-red-500">
-              <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
-              {validateNickname(nickname)
-                ? "사용 중인 닉네임입니다."
-                : "2~15자의 한글, 영문, 숫자만 사용 가능합니다."}
-            </p>
-          )}
-          {isNicknameCheckSubmitted && isNicknameValid === "valid" && (
-            <p className="mt-2 text-sub text-green-500">
-              <img src={successIcon} alt="success" className="mr-1 inline-block h-4 w-4" />
-              사용 가능한 닉네임입니다.
-            </p>
-          )}
-        </li>
-        <li>
-          <Input
-            htmlFor="user-password"
-            type="password"
-            placeholder="비밀번호를 입력하세요"
-            label="비밀번호"
-            maxLength={32}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </li>
-        <li>
-          <Input
-            htmlFor="user-passwordCheck"
-            type="password"
-            placeholder="비밀번호를 다시 입력하세요"
-            label="비밀번호 확인"
-            maxLength={32}
-            value={passwordCheck}
-            onChange={(e) => setPasswordCheck(e.target.value)}
-          />
-          {isSubmitted && password && !validatePassword(password) && (
-            <p className="mt-2 text-sub text-red-500">
-              <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
-              비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.
-            </p>
-          )}
-          {isSubmitted && password && passwordCheck && password !== passwordCheck && (
-            <p className="mt-2 text-sub text-red-500">
-              <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
-              비밀번호와 비밀번호 확인이 일치하지 않습니다.
-            </p>
-          )}
-        </li>
-        <li>
-          <TextArea
-            htmlFor="user-description"
-            placeholder="소개글을 입력하세요"
-            label="소개"
-            maxLength={300}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </li>
+        <NicknameField
+          nickname={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          onCheck={handleNicknameCheck}
+          isSubmitted={isNicknameCheckSubmitted}
+          isValid={isNicknameValid}
+          originalNickname={userInfo?.nickname || ""}
+        />
+        <PasswordField
+          password={password}
+          passwordCheck={passwordCheck}
+          onPasswordChange={(e) => setPassword(e.target.value)}
+          onPasswordCheckChange={(e) => setPasswordCheck(e.target.value)}
+          isSubmitted={isSubmitted}
+        />
+        <DescriptionField
+          description={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </ul>
 
       <Button type="submit" variant="full" fixed disabled={!isFormValid()}>
