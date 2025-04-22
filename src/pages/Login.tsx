@@ -47,6 +47,11 @@ const Login = () => {
 
   const onSubmit = async (_: LoginForm) => {
     try {
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
       const {
         data: { user: supabaseUser },
       } = await supabase.auth.getUser();
