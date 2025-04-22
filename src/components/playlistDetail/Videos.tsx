@@ -20,14 +20,14 @@ const Videos = ({
             return (
               <li
                 key={video.id}
-                className={`flex w-36 shrink-0 cursor-pointer flex-col gap-2 ${isActive ? "opacity-100" : "opacity-60"}`}
+                className={`group flex w-36 shrink-0 cursor-pointer flex-col gap-2 ${isActive ? "opacity-100" : "opacity-60"}`}
                 onClick={() => onSelect(video)}
               >
                 <div className="relative w-full overflow-hidden rounded-[4px] bg-black pt-[56.25%]">
                   <img
                     src={video.thumbnail}
                     alt={video.title}
-                    className="absolute left-0 top-0 h-full w-full object-cover"
+                    className="absolute left-0 top-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
                 <h4 className="line-clamp-2 text-sub">{video.title}</h4>
