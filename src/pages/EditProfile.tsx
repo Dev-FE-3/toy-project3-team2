@@ -37,8 +37,6 @@ const EditProfile = () => {
   const [isNicknameValid, setIsNicknameValid] = useState<"unchecked" | "valid" | "invalid">(
     "unchecked",
   );
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
-  const [isPasswordMatch, setIsPasswordMatch] = useState<boolean | null>(null);
   const [isNicknameCheckSubmitted, setIsNicknameCheckSubmitted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -147,17 +145,11 @@ const EditProfile = () => {
     setIsSubmitted(true);
 
     const isPasswordEntered = password !== "";
+    const isPasswordValid = validatePassword(password);
+    const isPasswordMatch = password === passwordCheck;
 
     // 비밀번호 유효성 검사
-    if (isPasswordEntered) {
-      const isValid = validatePassword(password);
-      const isMatch = password === passwordCheck;
-
-      setIsPasswordValid(isValid);
-      setIsPasswordMatch(isMatch);
-
-      if (!isValid || !isMatch) return;
-    }
+    if (isPasswordEntered && (!isPasswordValid || !isPasswordMatch)) return;
 
     if (!isFormValid()) return;
 
@@ -251,13 +243,13 @@ const EditProfile = () => {
             value={passwordCheck}
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
-          {isSubmitted && password && !isPasswordValid && (
+          {isSubmitted && password && !validatePassword(password) && (
             <p className="mt-2 text-sub text-red-500">
               <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               비밀번호는 8~32자이며, 영문, 숫자, 특수문자 중 최소 2개 이상을 포함해야 합니다.
             </p>
           )}
-          {isSubmitted && password && passwordCheck && !isPasswordMatch && (
+          {isSubmitted && password && passwordCheck && password !== passwordCheck && (
             <p className="mt-2 text-sub text-red-500">
               <img src={errorIcon} alt="error" className="mr-1 inline-block h-4 w-4" />
               비밀번호와 비밀번호 확인이 일치하지 않습니다.
