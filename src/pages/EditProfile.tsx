@@ -9,7 +9,7 @@ import uploadProfileImage from "@/services/supabase/uploadProfileImage";
 import useUserStore from "@/store/useUserStore";
 import axiosInstance from "@/services/axios/axiosInstance";
 
-import { useNicknameCheckMutation } from "@/hooks/queries/nicknameCheckMutation";
+import { useNicknameCheckMutation } from "@/hooks/queries/useNicknameCheckMutation";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";

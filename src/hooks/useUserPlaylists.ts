@@ -10,7 +10,7 @@ interface FetchParams {
   order: string;
 }
 
-export const fetchUserPlaylists = async ({
+export const useUserPlaylists = async ({
   pageParam = 0,
   creatorId,
   isOwner,
