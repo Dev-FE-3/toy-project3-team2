@@ -4,7 +4,7 @@ import axiosInstance from "@/services/axios/axiosInstance";
 // 액션 정보 가져오기
 const fetchPlaylistActionInfo = async (playlistId: string, userId: string) => {
   const [actionRes, playlistRes] = await Promise.all([
-    axiosInstance.get("/actions", {
+    axiosInstance.get("/action", {
       params: {
         playlist_id: `eq.${playlistId}`,
         user_id: `eq.${userId}`,
