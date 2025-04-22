@@ -1,19 +1,14 @@
 /** 사용자 정보를 수정하는 페이지 */
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useUserInfoQuery } from "@/hooks/queries/useUserInfoQuery";
-import supabase from "@/services/supabase/supabaseClient";
-import uploadProfileImage from "@/services/supabase/uploadProfileImage";
 import useUserStore from "@/store/useUserStore";
-import axiosInstance from "@/services/axios/axiosInstance";
-
 import { useNicknameCheckMutation } from "@/hooks/queries/useNicknameCheckMutation";
+import { useUpdateProfileMutation } from "@/hooks/queries/useUpdateProfileMutation";
+
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
-import { showToast } from "@/utils/toast";
 import { validateNickname, validatePassword } from "@/utils/validation";
 
 import errorIcon from "@/assets/icons/error.svg";
@@ -22,10 +17,8 @@ import Camera from "@/assets/icons/camera.svg?react";
 
 const EditProfile = () => {
   const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const { data: userInfo } = useUserInfoQuery(user?.id);
+  const updateProfileMutation = useUpdateProfileMutation();
 
   // 상태 관리
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -82,42 +75,6 @@ const EditProfile = () => {
     }
   };
 
-  // 프로필 저장
-  const updateProfileMutation = useMutation({
-    mutationFn: async () => {
-      if (!user?.id) throw new Error("유저 정보 없음");
-
-      let imageUrl = previewImage;
-
-      if (selectedImage) {
-        imageUrl = await uploadProfileImage(selectedImage, user.id);
-        setPreviewImage(imageUrl);
-      }
-
-      if (password) {
-        const { error } = await supabase.auth.updateUser({ password });
-        if (error) throw new Error("비밀번호 변경 실패");
-      }
-
-      const { data } = await axiosInstance.patch(
-        "/user",
-        { profile_image: imageUrl, nickname, description },
-        { params: { id: `eq.${user.id}` }, headers: { Prefer: "return=representation" } },
-      );
-      return data[0];
-    },
-    onSuccess: (updatedUser) => {
-      setUser(updatedUser);
-      queryClient.invalidateQueries();
-      showToast("success", "정보 변경이 완료되었습니다");
-
-      navigate(`/mypage/${updatedUser.id}`);
-    },
-    onError: (error) => {
-      console.error("업데이트 실패:", error);
-    },
-  });
-
   // 저장 버튼 활성화 조건
   const isFormValid = () => {
     const isImageChanged = selectedImage !== null;
@@ -153,7 +110,16 @@ const EditProfile = () => {
 
     if (!isFormValid()) return;
 
-    updateProfileMutation.mutate();
+    if (!user?.id) return;
+
+    updateProfileMutation.mutate({
+      userId: user.id,
+      profileImage: selectedImage,
+      previewImage,
+      password,
+      nickname,
+      description,
+    });
   };
 
   return (
