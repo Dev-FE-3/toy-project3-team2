@@ -3,7 +3,7 @@ import { useInfiniteScrollHandler } from "@/hooks/useInfiniteScrollHandler";
 import { usePlaylistsQuery } from "@/hooks/queries/usePlaylistsQuery";
 import useSearchStore from "@/store/useSearchStore";
 import useUserStore from "@/store/useUserStore";
-import PlaylistList from "@/components/common/PlaylistList";
+import PlaylistList from "@/components/listPage/PlaylistList";
 
 const Home = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
