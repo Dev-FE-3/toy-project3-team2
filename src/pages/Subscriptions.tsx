@@ -4,6 +4,7 @@ import { usePlaylistsQuery } from "@/hooks/queries/usePlaylistsQuery";
 import useSearchStore from "@/store/useSearchStore";
 import useUserStore from "@/store/useUserStore";
 import PlaylistList from "@/components/listPage/PlaylistList";
+import { ListPageSkeleton } from "@/components/listPage/ListpageSkeleton";
 
 const Subscriptions = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
@@ -22,11 +23,7 @@ const Subscriptions = () => {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div>Loading...</div>
-      </div>
-    );
+    return <ListPageSkeleton />;
   }
 
   return (
