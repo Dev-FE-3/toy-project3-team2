@@ -6,6 +6,7 @@ import DefaultProfileImage from "@/assets/imgs/profile-image-default.svg";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { ValidationMessage } from "@/components/common/ValidationMessage";
+import { NO_DATA_ERROR } from "@/constants/signupError";
 import supabase from "@/services/supabase/supabaseClient";
 import { showToast } from "@/utils/toast";
 
@@ -78,7 +79,7 @@ const Signup = () => {
 
       if (error) {
         // 데이터가 존재하지 않으면 사용 가능
-        if (error.code === "PGRST116") {
+        if (error.code === NO_DATA_ERROR) {
           clearErrors(type);
           if (type === "email") {
             setEmailVerified(true);
