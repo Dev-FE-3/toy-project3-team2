@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 
 import Header from "./Header";
 import NavBar from "./NavBar";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Layout = () => {
   const location = useLocation();
@@ -11,7 +11,7 @@ const Layout = () => {
   const hideAll = location.pathname === "/login";
   const hideNavOnly = ["/signup", "/user/edit", "/playlist/create"].includes(location.pathname);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // 페이지 이동 시 스크롤을 맨 위로 설정
     if (contentRef.current) {
       contentRef.current.scrollTop = 0;
