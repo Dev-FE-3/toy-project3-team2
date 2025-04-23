@@ -10,11 +10,12 @@ const Subscriptions = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const userId = useUserStore.getState().user?.id;
 
-  const { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
-    order: "updated_at.desc",
-    subscribed_by: userId,
-    title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
-  });
+  const { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } =
+    usePlaylistsQuery({
+      order: "updated_at.desc",
+      subscribed_by: userId,
+      title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
+    });
 
   const { targetRef, isLoadingMore } = useInfiniteScrollHandler({
     hasNextPage,

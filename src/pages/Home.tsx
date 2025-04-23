@@ -9,12 +9,13 @@ const Home = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const userId = useUserStore.getState().user?.id;
 
-  const { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
-    order: "subscribe_count.desc,updated_at.desc",
-    creator_id: `neq.${userId}`,
-    subscribed_by: `neq.${userId}`,
-    title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
-  });
+  const { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } =
+    usePlaylistsQuery({
+      order: "subscribe_count.desc,updated_at.desc",
+      creator_id: `neq.${userId}`,
+      subscribed_by: `neq.${userId}`,
+      title: searchKeyword ? `ilike.%${searchKeyword}%` : undefined,
+    });
 
   const { targetRef, isLoadingMore } = useInfiniteScrollHandler({
     hasNextPage,

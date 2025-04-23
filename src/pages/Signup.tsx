@@ -172,15 +172,15 @@ const Signup = () => {
           )}
         </div>
 
-          <Input
-            htmlFor="password"
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            label="비밀번호*"
-            autoComplete="new-password"
-            value={password || ""}
-            {...register("password", {})}
-          />
+        <Input
+          htmlFor="password"
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          label="비밀번호*"
+          autoComplete="new-password"
+          value={password || ""}
+          {...register("password", {})}
+        />
 
         <div>
           <Input
