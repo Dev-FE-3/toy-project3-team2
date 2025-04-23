@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/imgs/react.svg'
-import viteLogo from './assets/imgs/vite.svg'
-import './styles/App.css'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter as Router } from "react-router-dom";
+
+import AppRoutes from "./routes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // 스타일 import
 
 function App() {
-  const [count, setCount] = useState(0)
+  const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <ToastContainer
+          style={{
+            top: 0,
+            width: "100%",
+            maxWidth: "420px",
+            padding: "16px",
+          }}
+        />
+        <AppRoutes />
+      </Router>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
