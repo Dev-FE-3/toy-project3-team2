@@ -9,7 +9,7 @@ import { ValidationMessage } from "@/components/common/ValidationMessage";
 import { NO_DATA_ERROR } from "@/constants/signupError";
 import supabase from "@/services/supabase/supabaseClient";
 import { showToast } from "@/utils/toast";
-
+import { validateEmail, validateNickname, validatePassword } from "@/utils/validation";
 interface SignupForm {
   email: string;
   password: string;
@@ -30,35 +30,6 @@ const Signup = () => {
     clearErrors,
     watch,
   } = useForm<SignupForm>();
-
-  // 이메일 유효성 검사 함수 추가
-  const validateEmail = (value: string) => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(value);
-  };
-
-  // 닉네임 유효성 검사 함수 추가
-  const validateNickname = (value: string) => {
-    // 한글, 영문, 숫자만 사용 가능
-    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,15}$/;
-    return regex.test(value);
-  };
-
-  // 비밀번호 유효성 검사 함수 추가
-  const validatePassword = (value: string) => {
-    // 최소 8자, 최대 32자
-    if (value.length < 8 || value.length > 32) return false;
-
-    // 영문, 숫자, 특수문자 중 최소 2개 조합
-    const hasLetter = /[a-zA-Z]/.test(value);
-    const hasNumber = /\d/.test(value);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-
-    const conditions = [hasLetter, hasNumber, hasSpecialChar];
-    const metConditions = conditions.filter(Boolean).length;
-
-    return metConditions >= 2;
-  };
 
   // 중복 확인 함수
   const checkDuplicate = async (type: "email" | "nickname", value: string) => {
