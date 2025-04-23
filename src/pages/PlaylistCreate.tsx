@@ -8,7 +8,7 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
 import useUserStore from "@/store/useUserStore";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
@@ -43,7 +43,7 @@ const PlaylistCreate = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // 수정 모드일 경우 playlist id 존재
 
-  const playlist = usePlaylistDetail(id); // playlist id 값을 통해 playlist data 조회
+  const playlist = usePlaylistDetailQuery(id); // playlist id 값을 통해 playlist data 조회
 
   // 훅 호출
   const createPlaylistMutation = useCreatePlaylistMutation();
