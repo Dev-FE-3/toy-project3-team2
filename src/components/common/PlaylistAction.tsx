@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import BookmarkIcon from "@/assets/icons/bookmark.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
 import HeartIcon from "@/assets/icons/heart.svg?react";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
+import { usePlaylistActionInfoQuery } from "@/hooks/queries/usePlaylistActionInfoQuery";
 import axiosInstance from "@/services/axios/axiosInstance";
 import useUserStore from "@/store/useUserStore";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,68 +14,42 @@ interface PlaylistActionsProps {
 }
 
 const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
+  // 유저 정보
   const currentUser = useUserStore((state) => state.user);
   const userId = currentUser?.id;
 
-  // 상태 관리
+  // 유저의 액션 상태
   const [isLiked, setIsLiked] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [likes, setLikes] = useState(0);
+
+  // 구독, 좋아요, 댓글 수
   const [subscriptions, setSubscriptions] = useState(0);
+  const [likes, setLikes] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
 
-  const playlist = usePlaylistDetail(playlistId);
-
+  // API 호출로 액션 정보 로드
+  const { data: actionInfo } = usePlaylistActionInfoQuery(playlistId, userId);
+  const playlist = usePlaylistDetailQuery(playlistId);
   const queryClient = useQueryClient();
 
+  // 댓글 수 불러오기
   useEffect(() => {
     if (!playlist) return;
 
     setCommentCount(playlist?.data?.comment_count ?? 0);
   }, [playlist]);
 
-  // 유저와 플레이리스트에 대한 기존 액션 정보 불러오기
+  // 액션 정보 도착 시 상태 반영
   useEffect(() => {
-    if (!userId) return;
+    if (!actionInfo) return;
 
-    const fetchActions = async () => {
-      try {
-        // 1. action 테이블에서 유저의 기존 상태 불러오기
-        const { data: actionData } = await axiosInstance.get(`/action`, {
-          params: {
-            playlist_id: `eq.${playlistId}`,
-            user_id: `eq.${userId}`,
-            select: "*",
-          },
-        });
+    setIsLiked(actionInfo.isLiked);
+    setIsSubscribed(actionInfo.isSubscribed);
+    setLikes(actionInfo.likes);
+    setSubscriptions(actionInfo.subscriptions);
+  }, [actionInfo]);
 
-        if (actionData && actionData.length > 0) {
-          const action = actionData[0];
-          setIsLiked(action.is_liked);
-          setIsSubscribed(action.is_subscribed);
-        }
-
-        // 2. playlist 테이블에서 좋아요/구독 수 불러오기
-        const { data: playlistData } = await axiosInstance.get(`/playlist`, {
-          params: {
-            id: `eq.${playlistId}`,
-            select: "like_count,subscribe_count",
-          },
-        });
-
-        if (playlistData && playlistData.length > 0) {
-          setLikes(playlistData[0].like_count);
-          setSubscriptions(playlistData[0].subscribe_count);
-        }
-      } catch (error) {
-        console.error("액션 정보를 불러오는 중 오류 발생:", error);
-      }
-    };
-
-    fetchActions();
-  }, [playlistId, userId]);
-
-  // 좋아요/구독 통합 업데이트 함수
+  // 좋아요 & 구독 통합 업데이트 함수
   const updateAction = async ({
     field,
     value,
@@ -180,6 +155,7 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
 
   return (
     <div className="flex flex-row gap-[16px] text-body2">
+      {/* 구독 버튼 */}
       <button
         data-testid="subscribe-button"
         onClick={handleSubscribe}
@@ -192,6 +168,8 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
         />
         <span data-testid="subscribe-count">{subscriptions}</span>
       </button>
+
+      {/* 좋아요 버튼 */}
       <button
         data-testid="like-button"
         onClick={handleLike}
@@ -204,6 +182,8 @@ const PlaylistActions = ({ playlistId }: PlaylistActionsProps) => {
         />
         <span data-testid="like-count">{likes}</span>
       </button>
+
+      {/* 댓글 수 */}
       <div className="flex flex-row items-center gap-[6px]">
         <CommentIcon className="h-[14px] w-[14px]" />
         <span>{commentCount}</span>

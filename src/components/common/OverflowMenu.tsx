@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-
+import { useState, useRef } from "react";
+import useOnClickOutside from "@/hooks/useOnClickOutside";
 import MenuDotsVertical from "@/assets/icons/menu-dots-vertical.svg?react";
 
 interface OverflowMenuOption {
@@ -15,19 +15,9 @@ interface OverflowMenuProps {
 
 const OverflowMenu = ({ options, iconSize = 16 }: OverflowMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  // 페이지 이동 시 메뉴 닫기
-  useEffect(() => {
-    const handleClick = () => {
-      setIsOpen(false);
-    };
-
-    window.addEventListener("click", handleClick);
-
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, [setIsOpen]);
+  useOnClickOutside(menuRef as React.RefObject<HTMLElement>, () => setIsOpen(false));
 
   return (
     <nav className="relative inline-block align-middle leading-none">

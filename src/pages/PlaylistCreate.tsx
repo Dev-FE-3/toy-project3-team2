@@ -12,7 +12,7 @@ import { useCreatePlaylistMutation } from "@/hooks/queries/useCreatePlaylistMuta
 import { useCreateVideosMutation } from "@/hooks/queries/useCreateVideoMutation";
 import { useDeleteVideoMutation } from "@/hooks/queries/useDeleteVideoMutation";
 import { useEditPlaylistMutation } from "@/hooks/queries/useEditPlaylistMutation";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
 import useUserStore from "@/store/useUserStore";
 import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
 import { NewVideoForPlaylist, Video } from "@/types/video";
@@ -24,7 +24,7 @@ const PlaylistCreate = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // 수정 모드일 경우 playlist id 존재
 
-  const playlist = usePlaylistDetail(id); // playlist id 값을 통해 playlist data 조회
+  const playlist = usePlaylistDetailQuery(id); // playlist id 값을 통해 playlist data 조회
 
   const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState("");

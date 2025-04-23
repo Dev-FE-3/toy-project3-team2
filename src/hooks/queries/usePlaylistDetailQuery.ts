@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-
 import axiosInstance from "@/services/axios/axiosInstance";
 import { PlaylistDetailData } from "@/types/playlist";
 
 // 데이터 가져오기
-const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> => {
+const fetchPlaylistDetail = async (playlistId: string): Promise<PlaylistDetailData> => {
   const { data: playlistData } = await axiosInstance.get(`/playlist`, {
     params: {
       id: `eq.${playlistId}`,
@@ -30,10 +29,10 @@ const fetchPlaylist = async (playlistId: string): Promise<PlaylistDetailData> =>
   };
 };
 
-export const usePlaylistDetail = (playlistId?: string) => {
+export const usePlaylistDetailQuery = (playlistId?: string) => {
   return useQuery<PlaylistDetailData>({
     queryKey: ["playlist", playlistId],
-    queryFn: () => fetchPlaylist(playlistId!),
+    queryFn: () => fetchPlaylistDetail(playlistId!),
     enabled: !!playlistId,
   });
 };

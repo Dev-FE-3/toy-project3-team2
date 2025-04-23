@@ -1,17 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-
 import axiosInstance from "@/services/axios/axiosInstance";
-// import useUserStore from "@/store/useUserStore";
-
-interface Playlist {
-  id: string;
-  title: string;
-  thumbnail_image: string;
-  is_owner: boolean;
-  user: {
-    profile_image: string;
-  };
-}
+import { PlaylistCard } from "@/types/playlist";
 
 interface UsePlaylistsOptions {
   order?: string;
@@ -26,7 +15,7 @@ const LIMIT = 4; // 한 번에 4개씩 가져오기
 const fetchPlaylistPage = async (
   { pageParam = 0 }: { pageParam: number },
   options?: UsePlaylistsOptions,
-) => {
+): Promise<{ data: PlaylistCard[]; nextPage?: number }> => {
   const start = pageParam * LIMIT;
   try {
     // 구독하지 않은 플레이리스트를 가져오는 경우
@@ -46,7 +35,7 @@ const fetchPlaylistPage = async (
         actions?.map((action: { playlist_id: string }) => action.playlist_id) || [];
 
       // 2. 구독하지 않은 플레이리스트를 조회
-      const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
+      const { data } = await axiosInstance.get<PlaylistCard[]>(`/playlist`, {
         params: {
           select: "*,user:creator_id(profile_image)",
           id: `not.in.(${subscribedPlaylistIds.join(",")})`,
@@ -81,7 +70,7 @@ const fetchPlaylistPage = async (
 
       const playlistIds = actions.map((action: { playlist_id: string }) => action.playlist_id);
 
-      const { data } = await axiosInstance.get<Playlist[]>(`/playlist`, {
+      const { data } = await axiosInstance.get<PlaylistCard[]>(`/playlist`, {
         params: {
           select: "*,user:creator_id(profile_image)",
           id: `in.(${playlistIds.join(",")})`,
@@ -106,21 +95,18 @@ const fetchPlaylistPage = async (
   }
 };
 
-export const usePlaylists = (options?: UsePlaylistsOptions) => {
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+export const usePlaylistsQuery = (options?: UsePlaylistsOptions) => {
+  const { data, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<{
+    data: PlaylistCard[];
+    nextPage?: number;
+  }>({
     queryKey: ["playlists", options],
-    queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam }, options),
+    queryFn: ({ pageParam }) => fetchPlaylistPage({ pageParam: pageParam as number }, options),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });
 
   const playlists = data?.pages.flatMap((page) => page.data) ?? [];
 
-  return {
-    playlists,
-    isLoading,
-    hasMore: hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  };
+  return { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage };
 };
