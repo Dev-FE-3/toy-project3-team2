@@ -107,7 +107,6 @@ export const usePlaylistsQuery = (options?: UsePlaylistsOptions) => {
   });
 
   const playlists = data?.pages.flatMap((page) => page.data) ?? [];
-  const hasMore = hasNextPage;
 
-  return { playlists, hasMore, isLoading, fetchNextPage, isFetchingNextPage };
+  return { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage };
 };

@@ -3,17 +3,17 @@ import { useState } from "react";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 interface UseInfiniteScrollHandlerProps {
-  hasMore: boolean;
+  hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
 }
 
-export const useInfiniteScrollHandler = ({ hasMore, isFetchingNextPage, fetchNextPage }: UseInfiniteScrollHandlerProps) => {
+export const useInfiniteScrollHandler = ({ hasNextPage, isFetchingNextPage, fetchNextPage }: UseInfiniteScrollHandlerProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const { targetRef } = useInfiniteScroll({
     onIntersect: () => {
-      if (hasMore && !isFetchingNextPage && !isLoadingMore) {
+      if (hasNextPage && !isFetchingNextPage && !isLoadingMore) {
         setIsLoadingMore(true);
         setTimeout(() => {
           fetchNextPage();

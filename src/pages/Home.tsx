@@ -9,7 +9,7 @@ const Home = () => {
   const searchKeyword = useSearchStore((state) => state.searchKeyword);
   const userId = useUserStore.getState().user?.id;
 
-  const { playlists, hasMore, isLoading, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
+  const { playlists, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } = usePlaylistsQuery({
     order: "subscribe_count.desc,updated_at.desc",
     creator_id: `neq.${userId}`,
     subscribed_by: `neq.${userId}`,
@@ -17,7 +17,7 @@ const Home = () => {
   });
 
   const { targetRef, isLoadingMore } = useInfiniteScrollHandler({
-    hasMore,
+    hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
   });
