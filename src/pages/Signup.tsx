@@ -201,7 +201,6 @@ const Signup = () => {
           )}
         </div>
 
-        <div>
           <Input
             htmlFor="password"
             type="password"
@@ -211,7 +210,6 @@ const Signup = () => {
             value={password || ""}
             {...register("password", {})}
           />
-        </div>
 
         <div>
           <Input
