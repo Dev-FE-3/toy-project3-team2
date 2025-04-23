@@ -43,14 +43,20 @@ export const useDeleteVideoMutation = () => {
 // 플레이리스트 삭제 뮤테이션
 export const useDeletePlaylistMutation = (userId: string, isOwner: boolean, sortOption: string) => {
   const queryClient = useQueryClient();
+  const queryKey = ["userPlaylists", userId, isOwner, sortOption] as const;
 
   return useMutation({
     mutationFn: deletePlaylist,
-    onSuccess: (deletedId) => {
-      showToast("success", "플레이리스트가 삭제되었습니다.");
+    onMutate: async (deletedId: string) => {
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousData =
+        queryClient.getQueryData<InfiniteData<{ playlists: Playlist[]; nextPage: number | null }>>(
+          queryKey,
+        );
 
       queryClient.setQueryData<InfiniteData<{ playlists: Playlist[]; nextPage: number | null }>>(
-        ["userPlaylists", userId, isOwner, sortOption],
+        queryKey,
         (old) =>
           old
             ? {
@@ -62,6 +68,11 @@ export const useDeletePlaylistMutation = (userId: string, isOwner: boolean, sort
               }
             : old,
       );
+
+      return { previousData };
+    },
+    onSuccess: () => {
+      showToast("success", "플레이리스트가 삭제되었습니다.");
     },
     onError: (error) => {
       console.error("삭제 실패", error);
