@@ -5,6 +5,7 @@ import { Input } from "@/components/common/Input";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import PlaylistCard from "@/components/common/PlaylistCard";
 import { TextArea } from "@/components/common/TextArea";
+import { ValidationMessage } from "@/components/common/ValidationMessage";
 
 const ButtonGuide = () => {
   return (
@@ -91,7 +92,6 @@ const InputGuide = () => {
           <h5 className="mb-2 text-sm font-medium">둥근 input</h5>
           <Input type="round" placeholder="검색어를 입력하세요" />
         </div>
-        <div className="mb-6"></div>
       </div>
       <h3 className="ml-[10px] text-xl font-bold">TextArea</h3>
       <div className="my-4 rounded-xl border border-gray-600 p-4">
@@ -104,6 +104,18 @@ const InputGuide = () => {
           onChange={(e) => setTextareaValue(e.target.value)}
           placeholder="소개글을 입력하세요"
         />
+      </div>
+
+      <h3 className="ml-[10px] text-xl font-bold">확인 문구</h3>
+      <div className="my-4 rounded-xl border border-gray-600 p-4">
+        <div className="mb-3">
+          <h5 className="mb-2 text-sm font-medium">실패 문구</h5>
+          <ValidationMessage type="error" message="에러 메시지입니다." />
+        </div>
+        <div className="mb-3">
+          <h5 className="mb-2 text-sm font-medium">성공 문구</h5>
+          <ValidationMessage type="success" message="성공 메시지입니다." />
+        </div>
       </div>
     </>
   );

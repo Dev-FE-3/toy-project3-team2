@@ -1,28 +1,30 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Input } from "@/components/common/Input";
-import CommentSkeleton from "./CommentSkeleton";
-import useUserStore from "@/store/useUserStore";
-import { usePostCommentMutation } from "@/hooks/queries/usePostCommentMutation";
-import { useGetCommentQuery } from "@/hooks/queries/useGetCommentQuery";
-
 import AddIcon from "@/assets/icons/fill-add.svg?react";
+import { Input } from "@/components/common/Input";
+import { useCommentsQuery } from "@/hooks/queries/useCommentsQuery";
+import { useCreateCommentMutation } from "@/hooks/queries/useCreateCommentMutation";
+import useUserStore from "@/store/useUserStore";
+
+import CommentSkeleton from "./CommentSkeleton";
 
 const Comments = () => {
   const [content, setContent] = useState("");
   const user = useUserStore((state) => state.user);
   const { id: playlistId } = useParams<{ id: string }>();
 
-  const { data: comments, isPending, isError } = useGetCommentQuery(playlistId ?? "");
+  const { data: comments, isPending, isError } = useCommentsQuery(playlistId ?? "");
 
-  const { mutate: postComment, isError: isPostError } = usePostCommentMutation(playlistId ?? "");
+  const { mutate: createComment, isError: isPostError } = useCreateCommentMutation(
+    playlistId ?? "",
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !content || !playlistId) return;
 
-    postComment({
+    createComment({
       playlist_id: playlistId,
       content,
       author_id: user.id,

@@ -1,3 +1,9 @@
+// 이메일
+export const validateEmail = (value: string) => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(value);
+};
+
 // 닉네임
 export const validateNickname = (nickname: string) => {
   const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,15}$/;

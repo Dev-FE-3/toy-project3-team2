@@ -18,11 +18,6 @@ const SearchBar = ({ onClose }: SearchBarProps) => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // zustand 상태로 로컬 상태 초기화 (한 번만)
-  useEffect(() => {
-    setSearchQuery(searchKeyword);
-  }, [searchKeyword]);
-
   // 검색창이 마운트되면 자동으로 포커스
   useEffect(() => {
     if (searchInputRef.current) {

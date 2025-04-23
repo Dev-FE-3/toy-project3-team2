@@ -16,6 +16,13 @@ export interface Playlist {
   updated_at: string;
 }
 
+export interface PlaylistCard extends Playlist {
+  is_owner: boolean;
+  user: {
+    profile_image: string;
+  };
+}
+
 export interface PlaylistDetailData extends Playlist {
   videos: Video[];
   user?: {
