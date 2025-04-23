@@ -1,6 +1,6 @@
 /** 플레이리스트 생성 페이지 */
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@/components/common/Button";
@@ -8,31 +8,34 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import Toggle from "@/components/playlistCreate/Toggle";
 import VideoCard from "@/components/playlistCreate/VideoCard";
+import { useCreatePlaylistMutation } from "@/hooks/queries/useCreatePlaylistMutation";
+import { useCreateVideosMutation } from "@/hooks/queries/useCreateVideoMutation";
+import { useDeleteVideoMutation } from "@/hooks/queries/useDeleteVideoMutation";
+import { useEditPlaylistMutation } from "@/hooks/queries/useEditPlaylistMutation";
 import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
 import useUserStore from "@/store/useUserStore";
+import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
 import { NewVideoForPlaylist, Video } from "@/types/video";
 import { getYoutubeMeta } from "@/utils/getYoutubeMeta";
-import { areVideoListsEqual } from "@/utils/video";
 import { showToast } from "@/utils/toast";
-import {
-  useAddVideosMutation,
-  useCreatePlaylistMutation,
-  useDeleteVideoMutation,
-  useEditPlaylistMutation,
-} from "@/hooks/queries/usePlaylistMutation";
-import { EditPlaylistPayload, NewPlaylistPayload } from "@/types/playlist";
+import { areVideoListsEqual } from "@/utils/video";
 
 const PlaylistCreate = () => {
+  const navigate = useNavigate();
+  const { id } = useParams(); // 수정 모드일 경우 playlist id 존재
+
+  const playlist = usePlaylistDetailQuery(id); // playlist id 값을 통해 playlist data 조회
+
   const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoList, setVideoList] = useState<NewVideoForPlaylist[]>([]);
 
-  const [initialPublic, setInitialPublic] = useState(isPublic);
-  const [initialTitle, setInitialTitle] = useState(title);
-  const [initialDescription, setInitialDescription] = useState(description);
-  const [initialVideoList, setInitialVideoList] = useState<NewVideoForPlaylist[]>([]);
+  const initialTitle = playlist.data?.title ?? "";
+  const initialDescription = playlist.data?.description ?? "";
+  const initialVideoList = useMemo(() => playlist.data?.videos ?? [], [playlist.data?.videos]); // 배열은 참조 타입이기 때문에 useMemo를 통해 불필요하게 바뀌지 않게 유지
+  const initialPublic = playlist.data?.is_public ?? true;
 
   const [deletedVideoIds, setDeletedVideoIds] = useState<string[]>([]);
 
@@ -40,40 +43,22 @@ const PlaylistCreate = () => {
 
   const user = useUserStore((state) => state.user);
 
-  const navigate = useNavigate();
-  const { id } = useParams(); // 수정 모드일 경우 playlist id 존재
-
-  const playlist = usePlaylistDetailQuery(id); // playlist id 값을 통해 playlist data 조회
-
   // 훅 호출
   const createPlaylistMutation = useCreatePlaylistMutation();
   const editPlaylistMutation = useEditPlaylistMutation();
-  const addVideosMutation = useAddVideosMutation();
+  const addVideosMutation = useCreateVideosMutation();
   const deleteVideoMutation = useDeleteVideoMutation();
 
   // 기존 playlist 정보 매핑
   useEffect(() => {
-    const loadPlaylist = async () => {
-      if (!id || !playlist.data) return;
+    if (!id || !playlist.data) return;
 
-      const playlistData = playlist.data;
+    const { title, description, is_public, videos } = playlist.data;
 
-      try {
-        setTitle(playlistData.title);
-        setDescription(playlistData.description);
-        setIsPublic(playlistData.is_public);
-        setVideoList(playlistData.videos);
-
-        setInitialTitle(playlistData.title);
-        setInitialDescription(playlistData.description);
-        setInitialVideoList(playlistData.videos);
-        setInitialPublic(playlistData.is_public);
-      } catch (error) {
-        console.error("플레이리스트 정보를 불러오지 못했습니다.", error);
-      }
-    };
-
-    loadPlaylist();
+    setTitle(title);
+    setDescription(description);
+    setIsPublic(is_public);
+    setVideoList(videos);
   }, [id, playlist.data]);
 
   const handleAddVideo = async () => {

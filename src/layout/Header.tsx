@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
 import Search from "@/assets/icons/search.svg?react";
 import Logo from "@/assets/imgs/logo.svg?react";
+import { ModalDelete } from "@/components/common/ModalDelete";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
 import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
@@ -11,33 +12,26 @@ import axiosInstance from "@/services/axios/axiosInstance";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
 import { showToast } from "@/utils/toast";
-import { ModalDelete } from "@/components/common/ModalDelete";
+
+const HIDDEN_PATH = "/login";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [nickname, setNickname] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [playlistTitle, setPlaylistTitle] = useState<string | null>(null);
-  const [, setIsLoading] = useState(true);
-  const [isOwner, setIsOwner] = useState(false);
 
   // 삭제 모달 상태
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [playlistToDelete, setPlaylistToDelete] = useState<string | null>(null);
 
-  const hiddenPaths = ["/login"];
-
   const { userId, id: playlistId } = useParams();
   const user = useUserStore((state) => state.user);
   const playlist = usePlaylistDetailQuery(playlistId);
 
-  useEffect(() => {
-    if (!user) return;
-
-    if (playlist.data?.creator_id === user.id) setIsOwner(true);
-    else setIsOwner(false);
-  }, [location, playlist.data?.creator_id, user]);
+  const isOwner = playlist.data?.creator_id === user?.id;
 
   // 플레이리스트 상세 제목 fetch
   useEffect(() => {
@@ -57,7 +51,6 @@ const Header = () => {
           setPlaylistTitle("플레이리스트");
         }
       }
-      setIsLoading(false);
     };
 
     fetchPlaylistTitle();
@@ -85,7 +78,7 @@ const Header = () => {
     fetchNickname();
   }, [userId]);
 
-  if (hiddenPaths.includes(location.pathname)) {
+  if (location.pathname === HIDDEN_PATH) {
     return null;
   }
 

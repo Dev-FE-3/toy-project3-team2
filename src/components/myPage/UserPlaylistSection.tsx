@@ -5,7 +5,7 @@ import PlaylistCard from "@/components/common/PlaylistCard";
 import PlaylistEmpty from "@/components/common/PlaylistEmpty";
 import { useUserPlaylistsQuery } from "@/hooks/queries/useUserPlaylistsQuery";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { useDeletePlaylistMutation } from "@/hooks/queries/usePlaylistMutation";
+import { useDeletePlaylistMutation } from "@/hooks/queries/useDeletePlaylistMutation";
 import DROP_DOWN_MENU_OPTIONS from "@/constants/dropDownMenuOptions";
 
 interface Props {
