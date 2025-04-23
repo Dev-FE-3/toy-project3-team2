@@ -6,7 +6,7 @@ import Search from "@/assets/icons/search.svg?react";
 import Logo from "@/assets/imgs/logo.svg?react";
 import OverflowMenu from "@/components/common/OverflowMenu";
 import SearchBar from "@/components/common/SearchBar";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
 import axiosInstance from "@/services/axios/axiosInstance";
 import supabase from "@/services/supabase/supabaseClient";
 import useUserStore from "@/store/useUserStore";
@@ -30,7 +30,7 @@ const Header = () => {
 
   const { userId, id: playlistId } = useParams();
   const user = useUserStore((state) => state.user);
-  const playlist = usePlaylistDetail(playlistId);
+  const playlist = usePlaylistDetailQuery(playlistId);
 
   useEffect(() => {
     if (!user) return;

@@ -5,12 +5,12 @@ import Comments from "@/components/playlistDetail/Comments";
 import Player from "@/components/playlistDetail/Player";
 import PlaylistSkeleton from "@/components/playlistDetail/playlistSkeleton";
 import Videos from "@/components/playlistDetail/Videos";
-import { usePlaylistDetail } from "@/hooks/usePlaylistDetail";
+import { usePlaylistDetailQuery } from "@/hooks/queries/usePlaylistDetailQuery";
 import { Video } from "@/types/video";
 
 const PlaylistDetail = () => {
   const { id: playlistId } = useParams<{ id: string }>();
-  const { data: playlist, isLoading, isError, error } = usePlaylistDetail(playlistId);
+  const { data: playlist, isLoading, isError, error } = usePlaylistDetailQuery(playlistId);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
   // 플레이리스트 데이터가 도착하면 첫 번째 비디오로 설정
